@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "q2gui"
+version = "0.1.0"
+description = "Python GUI toolkit"
+authors = ["Andrei Puchko <andrei.puchko@gmx.de>"]
+license = "Apache 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+PyQt6 = "^6.3.0"
+PyQt6-QScintilla = "^2.13.3"
+q2db = "latest"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
+flake8 = "latest"
+black = "latest"
+pyinstaller = "latest"
+
+[tool.black]
+line-length = 110
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

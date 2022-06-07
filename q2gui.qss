@@ -1,0 +1,63 @@
+QTextEdit,
+QRadioButton, 
+QRadioButton:focus,
+QHeaderView1,
+QCheckBox,
+QComboBox,
+QListWidget,
+QSpinBox,
+QDoubleSpinBox,
+QGroupBox#radio1,
+QLineEdit 
+{background-color: rgb(197, 236, 241);}
+
+QTabBar:tab:selected {background-color:lightblue}
+
+QTableView {selection-background-color:rgb(173, 227, 245)}
+
+QTableView:active {selection-background-color:rgb(255, 255, 154) ; selection-color:black }
+
+QLineEdit:focus,
+QTextEdit:focus,
+QTabBar:tab:focus,
+QCheckBox:focus, 
+QDateEdit:focus,
+QRadioButton:focus,
+QComboBox:focus, 
+QSpinBox:focus, 
+QComboBox QAbstractItemView,
+/* QPushButton#ok:focus, */
+/* QPushButton:focus, */
+QListWidget:focus  {background-color:rgb(255, 255, 154); }
+
+*:disabled {color: black; background-color: lightgrey;}
+
+QToolButton:focus, QPushButton:focus {background-color: yellow;}
+
+QHeaderView:section {font:normal; 
+                    color: gray; 
+                    background-color: lightgray ;
+                    border: 1px solid lightblue;
+                }
+
+QSplitter::handle::vertical  {
+    background-color: 
+    qlineargradient(x1: 0, y1:0, 
+                    x2: 1, y2:0,
+                    stop: 0 white, 
+                    stop: 0.5 darkblue, 
+                    stop: 1 white);
+                }
+
+QSplitter::handle::horizontal  {
+    background-color: 
+    qlineargradient(x1: 0, y1:0, 
+                    x2: 0, y2:1,
+                    stop: 0 white, 
+                    stop: 0.5 darkblue, 
+                    stop: 1 white);}
+    
+QSplitter::handle:vertical   {height: 2px ; width: 2px;}
+
+
+QDialog,QFrame {border-radius:9px; }

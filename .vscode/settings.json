@@ -1,0 +1,28 @@
+{
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "files.associations": {
+        "*.qss": "css",
+        "*.toml": "ini",
+        "poetry.lock": "ini",
+    },
+    "python.formatting.provider": "black",
+    "python.linting.flake8Args": [
+        "--max-line-length=110"
+    ],
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.autoComplete.extraPaths": ["../q2db"],
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBorder": "#08d43b70",
+        "editor.selectionHighlightBorder": "#ff0000",
+        "editor.findMatchBorder":"#acbb29"
+    },
+    "python.analysis.extraPaths": [
+        "../q2db"
+    ],
+
+}
