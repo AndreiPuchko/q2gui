@@ -8,12 +8,15 @@ if __name__ == "__main__":
 
     sys.path.insert(0, ".")
 
-from q2gui import q2app
-from q2gui.pyqt6.q2app import Q2App as Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
-from q2gui.pyqt6.q2form import q2Mess
 from q2gui.q2app import Q2Actions
-from q2gui.q2dialogs import q2AskYN
+from q2gui.q2dialogs import q2AskYN, q2Mess
+from q2gui import q2app
+
+from q2gui.q2app import load_q2engine
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+
+load_q2engine(globals(), "PyQt6")
 
 
 class DemoApp(Q2App):
@@ -187,7 +190,12 @@ class DemoApp(Q2App):
             form.add_control(name="z1", label="Enter smths", control="line")
 
         if form.add_control("/t", "Tab2"):
+            form.add_control("/hs")
             form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+            form.add_control("/")
         form.add_control("/")
 
         if form.add_control("/t", "Tab3"):

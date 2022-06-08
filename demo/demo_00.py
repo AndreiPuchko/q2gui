@@ -3,9 +3,12 @@ if __name__ == "__main__":
 
     sys.path.insert(0, ".")
 
-from q2gui.pyqt6.q2app import Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
 import importlib
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+from q2gui.q2app import load_q2engine
+
+load_q2engine(globals(), "PyQt6")
 
 
 class DemoApp(Q2App):

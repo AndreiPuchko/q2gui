@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
 
 from q2gui.q2app import Q2Actions
+from q2gui.q2app import GRID_ACTION_TEXT
 
 from PyQt6.QtWidgets import (
     QFrame,
@@ -18,7 +19,6 @@ from PyQt6.QtWidgets import (
     QToolBar,
     # QLabel,
     QToolButton,
-    QSizePolicy,
     QMenu,
 )
 from PyQt6.QtCore import Qt, QMargins
@@ -111,12 +111,13 @@ class q2toolbar(QFrame, Q2Widget):
                             )
 
         self.main_button = QToolBar()
-        self.main_button_action = self.main_button.addAction("☰")
+        self.main_button_action = QToolButton()
+        self.main_button_action.setText(GRID_ACTION_TEXT)
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
-        # self.main_button_action.setMenu(tool_bar_qt_actions)
-        self.main_button.widgetForAction(self.main_button_action).setPopupMode(
-            QToolButton.ToolButtonPopupMode.InstantPopup
-        )
+        self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        self.main_button_action.setMenu(tool_bar_qt_actions)
+        self.main_button.addWidget(self.main_button_action)
+
         self.layout().addWidget(self.main_button)
         if not actions.show_main_button:
             self.main_button.setVisible(False)

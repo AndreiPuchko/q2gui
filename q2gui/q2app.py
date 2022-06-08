@@ -2,7 +2,7 @@ import sys
 
 if __name__ == "__main__":
 
-    # sys.path.insert(0, ".")
+    sys.path.insert(0, ".")
 
     from demo.demo import demo
 
@@ -79,8 +79,18 @@ CRUD_BUTTON_OK_MESSAGE = "save data"
 CRUD_BUTTON_CANCEL_TEXT = "Cancel"
 CRUD_BUTTON_CANCEL_MESSAGE = "Do not save data"
 
+GRID_ACTION_TEXT = "☰"
+
 FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 18
+
+
+def load_q2engine(glo, engine="PyQt6"):
+    from q2gui.pyqt6.q2app import Q2App as Q2App
+    from q2gui.pyqt6.q2form import Q2Form as Q2Form
+
+    glo["Q2App"] = Q2App
+    glo["Q2Form"] = Q2Form
 
 
 class Q2Heap:

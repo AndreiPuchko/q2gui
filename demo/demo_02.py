@@ -5,19 +5,23 @@ if __name__ == "__main__":
 
     sys.path.insert(0, ".")
 
-from q2gui.pyqt6.q2app import Q2App as Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
-from q2gui.pyqt6.q2form import q2Mess
-from q2gui.q2model import Q2Model
 
+from q2gui.q2app import load_q2engine
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+
+load_q2engine(globals(), "PyQt6")
+
+from q2gui.q2model import Q2Model
+from q2gui.q2dialogs import q2Mess
 from q2gui.q2utils import num
 
 
 class DemoApp(Q2App):
     def on_start(self):
         # self.show_complex_form()
-        self.show_form1()
-        # self.show_form2()
+        # self.show_form1()
+        self.show_grid_form()
 
     def on_init(self):
         self.add_menu("File|First", self.show_form1, toolbar="*")
@@ -39,14 +43,7 @@ class DemoApp(Q2App):
         form = Q2Form("First form")
         # form.add_control("/")
         form.add_control(
-            "uid",
-            "Uid",
-            control="line",
-            data=12,
-            datatype="num",
-            datalen=15,
-            datadec=2,
-            pic="F"
+            "uid", "Uid", control="line", data=12, datatype="num", datalen=15, datadec=2, pic="F"
         )
         if form.add_control("/h"):
 
@@ -84,12 +81,8 @@ class DemoApp(Q2App):
 
     def describe_form2(self):
         form = Q2Form("Second form")
-        form.add_control(
-            "radio", "Color", pic="Red;White;Black", control="radio", data="2"
-        )
-        form.add_control(
-            "check", "Transparency", pic="Transparency", control="check", data=""
-        )
+        form.add_control("radio", "Color", pic="Red;White;Black", control="radio", data="2")
+        form.add_control("check", "Transparency", pic="Transparency", control="check", data="")
         form.add_control("combo", "Popup List", control="combo", pic="Oprion1;Option2")
         form.add_control("/")
         form.add_control("/h")

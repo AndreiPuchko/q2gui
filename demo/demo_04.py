@@ -7,10 +7,14 @@ from urllib import request
 from io import BytesIO, TextIOWrapper
 from zipfile import ZipFile
 
-from q2gui.pyqt6.q2app import Q2App as Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
+from q2gui.q2app import load_q2engine
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+
+load_q2engine(globals(), "PyQt6")
+
 from q2gui.q2model import Q2CsvModel, Q2Model
-from q2gui.pyqt6.q2form import q2Mess, q2Wait
+from q2gui.q2dialogs import q2Mess, q2Wait
 
 about = """Parses webpage and shows list of downloadable files (ZIP with CSV inside)
 Uses build_grid_view_auto_form method to create UI
@@ -29,15 +33,10 @@ class DemoApp(Q2App):
         self.add_menu("File|Quit", self.close, toolbar=1)
 
     def file_select_form(self):
-        url = (
-            "https://eforexcel.com/wp/"
-            "downloads-18-sample-csv-files-data-sets-for-testing-sales/"
-        )
+        url = "https://eforexcel.com/wp/" "downloads-18-sample-csv-files-data-sets-for-testing-sales/"
         req = request.Request(url, headers={"User-Agent": "Safari"})
 
-        data: str = q2Wait(
-            lambda: str(request.urlopen(req).read()), "Loading webpage..."
-        )
+        data: str = q2Wait(lambda: str(request.urlopen(req).read()), "Loading webpage...")
 
         links = []
         for x in data.split('<a href="'):
@@ -49,9 +48,7 @@ class DemoApp(Q2App):
         form.set_model(Q2Model())
         form.model.set_records(links)
         form.build_grid_view_auto_form()
-        form.actions.add_action(
-            text="Download", worker=lambda: self.load_and_show_file(form), hotkey="F3"
-        )
+        form.actions.add_action(text="Download", worker=lambda: self.load_and_show_file(form), hotkey="F3")
         form.show_mdi_modal_grid()
 
     def load_and_show_file(self, form: Q2App):
@@ -66,9 +63,7 @@ class DemoApp(Q2App):
         csv_file_object = TextIOWrapper(zip_file.open(zip_file.namelist()[0]))
 
         form = Q2Form("CSV")
-        model = q2Wait(
-            lambda: q2CsvModel(csv_file_object=csv_file_object), "Loading CSV data"
-        )
+        model = q2Wait(lambda: Q2CsvModel(csv_file_object=csv_file_object), "Loading CSV data")
         form.set_model(model)
         form.build_grid_view_auto_form()
         form.show_mdi_modal_grid()

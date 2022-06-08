@@ -1,7 +1,7 @@
 if __name__ == "__main__":
     import sys
 
-    # sys.path.insert(0, ".")
+    sys.path.insert(0, ".")
 
     from demo.demo import demo
 
@@ -23,7 +23,6 @@ from PyQt6.QtWidgets import (
     QTabBar,
     QMdiArea,
     QSizePolicy,
-    QApplication,
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer

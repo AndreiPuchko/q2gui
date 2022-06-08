@@ -4,9 +4,8 @@ if __name__ == "__main__":
     sys.path.insert(0, ".")
 
 
-from q2gui.pyqt6.q2app import Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
-from q2gui.pyqt6.q2form import q2Mess
+from random import randint
+from q2gui.q2dialogs import q2Mess
 
 from q2gui.q2model import Q2CursorModel
 
@@ -14,7 +13,11 @@ from q2db.schema import Q2DbSchema
 from q2db.db import Q2Db
 from q2db.cursor import Q2Cursor
 
-from random import randint
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+from q2gui.q2app import load_q2engine
+
+load_q2engine(globals(), "PyQt6")
 
 
 class dataSchema(Q2DbSchema):
@@ -132,7 +135,7 @@ class DemoApp(Q2App):
         return super().on_init()
 
     def on_new_tab(self):
-    # def on_start(self):
+        # def on_start(self):
         # self.form_order_lines().run()
         # self.orders()
         self.customers()
