@@ -190,12 +190,10 @@ class DemoApp(Q2App):
             form.add_control(name="z1", label="Enter smths", control="line")
 
         if form.add_control("/t", "Tab2"):
-            form.add_control("/hs")
             form.add_control("", "Just label on Tab2")
             form.add_control("", "Just label on Tab2")
             form.add_control("", "Just label on Tab2")
             form.add_control("", "Just label on Tab2")
-            form.add_control("/")
         form.add_control("/")
 
         if form.add_control("/t", "Tab3"):

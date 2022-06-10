@@ -21,7 +21,7 @@ class q2button(QPushButton, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
         # self.meta = meta
-        self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        # self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Maximum)
         self.set_text(meta.get("label"))
         if self.meta.get("valid"):
             self.clicked.connect(self.valid)
@@ -30,7 +30,7 @@ class q2button(QPushButton, Q2Widget):
             self.setMinimumWidth(QFontMetrics(self.font()).horizontalAdvance("W") * ml)
 
     def focusInEvent(self, event):
-        if not self.meta.get("form").form_is_active is True:
+        if not self.meta.get("form_window").form_is_active is True:
             return
         if self.meta.get("when"):
             self.when()

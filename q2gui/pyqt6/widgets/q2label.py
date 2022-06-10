@@ -46,7 +46,7 @@ class q2label(QLabel, Q2Widget):
                 }
             else:
                 style_dict = style_text
-            CA = vertical_align_dict.get(style_dict.get("vertical-align", "top"), Qt.AlignTop)
-            CA |= horizontal_align_dict.get(style_dict.get("text-align", "left"), Qt.AlignLeft)
+            CA = vertical_align_dict.get(style_dict.get("vertical-align", "top"), Qt.AlignmentFlag.AlignTop)
+            CA |= horizontal_align_dict.get(style_dict.get("text-align", "left"), Qt.AlignmentFlag.AlignLeft)
 
             self.setAlignment(CA)

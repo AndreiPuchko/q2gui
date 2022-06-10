@@ -18,7 +18,7 @@ from q2gui.pyqt6.q2app import Q2QtWindow
 from q2gui.q2utils import num
 
 import q2gui.q2dialogs
-from q2gui.q2dialogs import q2Mess, q2Wait, q2AskYN
+# from q2gui.q2dialogs import q2Mess, q2Wait, q2AskYN
 
 from q2gui.pyqt6.q2widget import Q2Widget
 
@@ -28,10 +28,6 @@ class Q2Form(q2form.Q2Form):
         super().__init__(title=title)
         self._Q2FormWindow_class = Q2FormWindow
         self._q2dialogs = q2gui.q2dialogs
-        # if QApplication.activeWindow():
-        #     self.q2_app = QApplication.activeWindow()
-        # else:
-        #     self.q2_app = q2app.q2_app
         self.q2_app = QApplication.activeWindow()
         self.on_init()
 
@@ -247,6 +243,6 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
 
 # Tells the module which engine to use
 q2gui.q2dialogs.Q2Form = Q2Form
-q2Mess
-q2Wait
-q2AskYN
+# q2Mess
+# q2Wait
+# q2AskYN

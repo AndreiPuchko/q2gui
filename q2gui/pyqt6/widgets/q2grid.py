@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
     QStyledItemDelegate,
     QAbstractItemView,
     QStyle,
+    QSizePolicy,
     QStyleOptionButton,
     QApplication,
 )
@@ -126,6 +127,7 @@ class q2grid(QTableView):
         # self.setModel(self.Q2TableModel(self.q2_form.model))
         self.setItemDelegate(q2Delegate(self))
         self.setTabKeyNavigation(False)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.horizontalHeader().setSectionsMovable(True)
         self.setAlternatingRowColors(True)

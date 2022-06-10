@@ -8,7 +8,7 @@ if __name__ == "__main__":
     demo()
 
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QWidget, QSizePolicy
 from PyQt6.QtGui import QFontMetrics
 
 from q2gui import q2widget
@@ -135,7 +135,19 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         return self.sizeHint().width()
 
     def set_size_policy(self, horizontal, vertical):
-        self.setSizePolicy(horizontal, vertical)
+        sp = {
+            "fixed": QSizePolicy.Policy.Fixed,
+            "minimum": QSizePolicy.Policy.Minimum,
+            "maximum": QSizePolicy.Policy.Maximum,
+            "preffered": QSizePolicy.Policy.Preferred,
+            "expanding": QSizePolicy.Policy.Expanding,
+            "minimalexpanding": QSizePolicy.Policy.MinimumExpanding,
+            "ignored": QSizePolicy.Policy.Ignored,
+        }
+
+        self.setSizePolicy(
+            sp.get(horizontal, QSizePolicy.Policy.Minimum), sp.get(vertical, QSizePolicy.Policy.Minimum)
+        )
 
     def get_next_focus_widget(self, pos=1):
         return self.nextInFocusChain()
@@ -178,8 +190,8 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
 
     def move_down(self):
         pos = self.get_layout_position()
-        if pos < self.get_layout_count()-1:
-            w = self.parentWidget().layout().takeAt(pos+1).widget()
+        if pos < self.get_layout_count() - 1:
+            w = self.parentWidget().layout().takeAt(pos + 1).widget()
             self.parentWidget().layout().insertWidget(pos, w)
 
     def action_set_visible(self, text, mode=True):

@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QToolBar,
-    # QLabel,
+    QSizePolicy,
     QToolButton,
     QMenu,
 )
@@ -31,11 +31,13 @@ class q2toolbar(QFrame, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
         self.setLayout(QVBoxLayout() if "v" in meta.get("control") else QHBoxLayout())
-        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
         self.layout().setAlignment(q2_align["7"])
         self.layout().setSpacing(-1)
         self.layout().setContentsMargins(QMargins(0, 0, 0, 0))
         self.toolBarPanel = QToolBar()
+        # self.toolBarPanel.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        self.toolBarPanel.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         action_list = []
         if isinstance(meta.get("actions"), Q2Actions):
             action_list.extend(meta.get("actions"))
@@ -65,12 +67,12 @@ class q2toolbar(QFrame, Q2Widget):
                 else:
                     if x + 1 == len(action_text_list):  # real action
                         action["engineAction"] = cascade_action[action_key].addAction(action_text)
-                        # action["parent_action"] = cascade_action[action_key]
-                        # action["parent_action_text"] = action_key
+                        action["parent_action"] = cascade_action[action_key]
+                        action["parent_action_text"] = action_key
 
-                        # action["_set_visible_parent_action"] = lambda mode=True, act=action[
-                        #     "parent_action"
-                        # ]: act.setVisible(mode)
+                        action["_set_visible_parent_action"] = lambda mode=True, act=action[
+                            "parent_action"
+                        ]: act.setVisible(mode)
 
                         action["_set_visible"] = lambda mode=True, act=action["engineAction"]: act.setVisible(
                             mode

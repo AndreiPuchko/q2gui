@@ -72,8 +72,6 @@ class Q2Form:
 
         self.no_view_action = False
 
-        self.form_is_active = False
-
         self.current_row = 0
         self.current_column = 0
         self.last_current_row = 0
@@ -119,7 +117,10 @@ class Q2Form:
             return self.form_stack[-1]
 
     def widgets(self):
-        return self.form_stack[-1].widgets
+        if self.form_stack:
+            return self.form_stack[-1].widgets
+        else:
+            return {}
 
     def widgets_list(self):
         return [self.form_stack[-1].widgets[x] for x in self.form_stack[-1].widgets]
@@ -135,10 +136,10 @@ class Q2Form:
 
     def save_closed_form_text(self):
         self.last_closed_form_widgets_text = {
-                x: self.last_closed_form.widgets[x].get_text()
-                for x in self.last_closed_form.widgets
-                if hasattr(self.last_closed_form.widgets[x], "get_text")
-            }
+            x: self.last_closed_form.widgets[x].get_text()
+            for x in self.last_closed_form.widgets
+            if hasattr(self.last_closed_form.widgets[x], "get_text")
+        }
 
     def _close(self):
         if self._in_close_flag:
@@ -588,9 +589,9 @@ class Q2Form:
         pass
 
     def refresh_children(self):
-        # for x in self.actions:
-        #     if x.get("engineAction") and "_set_disabled" in x:
-        #         x["_set_disabled"](True if x.get("eof_disabled") and self.model.row_count() <= 0 else False)
+        for x in self.actions:
+            if x.get("engineAction") and "_set_disabled" in x:
+                x["_set_disabled"](True if x.get("eof_disabled") and self.model.row_count() <= 0 else False)
         for action in self.children_forms:
             filter = self.get_where_for_child(action)
             action["child_form_object"].model.set_where(filter)
@@ -740,7 +741,7 @@ class Q2Form:
 
     def validate_impexp_file_name(self, file, filetype):
         # filetype = f".{filetype[:3].lower()}"
-        ft = re.split(r'[^\w]', filetype)[0].lower()
+        ft = re.split(r"[^\w]", filetype)[0].lower()
         filetype = f".{ft}"
         file += "" if file.lower().endswith(filetype) else filetype
         return file
@@ -772,10 +773,11 @@ class Q2Form:
 
 
 class Q2FormWindow:
-    def __init__(self, q2_form: Q2Form):
+    def __init__(self, q2_form: Q2Form, title=""):
         super().__init__()
         self.shown = False
         self.q2_form = q2_form
+        self.form_is_active = False
         self.title = ""
         self.widgets = {}
         self.tab_widget_list = []
@@ -910,6 +912,7 @@ class Q2FormWindow:
         # Create widgets
         for meta in controls:
             meta["form"] = self.q2_form
+            meta["form_window"] = self
             if meta.get("noform", ""):
                 continue
             meta = q2app.Q2Controls.validate(meta)
@@ -1035,6 +1038,7 @@ class Q2FormWindow:
                 else:
                     widget2add = meta.get("widget").get_form_widget()
                 widget2add.meta = meta
+                widget2add.form_is_active = True
             else:
                 widget2add = meta.get("widget")
         else:  # Special cases
@@ -1071,16 +1075,6 @@ class Q2FormWindow:
 
         self.widgets[meta.get("tag", "") if meta.get("tag", "") else name] = widget2add
 
-        # actions2add = None
-        # if meta.get("actions") and meta.get("control") != "toolbar":
-        #     actions2add = self._get_widget("toolbar", "toolbar")(
-        #         {
-        #             "control": "toolbar",
-        #             "actions": meta["actions"],
-        #             "form": self.q2_form,
-        #             "stretch": 0,
-        #         }
-        #     )
         return label2add, widget2add, actions2add
 
     def _get_widget(self, module_name, class_name=""):
@@ -1111,9 +1105,8 @@ class Q2FormWindow:
                 self.q2_form.form_stack.pop()
                 return
         elif self.mode == "form":
-            self.q2_form.form_is_active = True
+            self.form_is_active = True
             if self.q2_form.before_form_show() is False:
-                self.q2_form.form_is_active = False
                 self.q2_form.form_stack.pop()
                 return
         self.q2_form.q2_app.show_form(self, modal)
@@ -1188,6 +1181,9 @@ class Q2FormWindow:
             for x in self.widgets.keys()
             if hasattr(self.widgets[x], "splitter") and self.widgets[x].splitter is not None
         ]
+
+    def set_style_sheet(self, css):
+        pass
 
 
 class Q2FormData:

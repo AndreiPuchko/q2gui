@@ -308,11 +308,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def keyboard_modifiers(self):
         modifiers = QApplication.keyboardModifiers()
         rez = []
-        if modifiers == Qt.ShiftModifier:
+        if modifiers == Qt.KeyboardModifier.ShiftModifier:
             rez.append("shift")
-        elif modifiers == Qt.ControlModifier:
+        elif modifiers == Qt.KeyboardModifier.ControlModifier:
             rez.append("control")
-        elif modifiers == (Qt.AltModifier):
+        elif modifiers == (Qt.KeyboardModifier.AltModifier):
             rez.append("alt")
         return "+".join(rez)
 

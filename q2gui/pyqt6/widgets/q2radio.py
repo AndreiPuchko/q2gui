@@ -26,7 +26,6 @@ class q2radio(QFrame, Q2Widget):
         self.button_list = []
         for item in meta.get("pic", "").split(";"):
             button = q2RadioButton(item, self)
-            # button.toggled.connect(lambda: print(self.get_text(), button))
             self.button_list.append(button)
             self.layout().addWidget(button)
 
@@ -64,14 +63,6 @@ class q2RadioButton(QRadioButton):
         super().__init__(text)
         self.radio = radio
         self.toggled.connect(self.value_changed)
-
-    def _value_changed(self, value):
-        if value:
-            if self.radio.meta.get("valid"):
-                self.radio.meta.get("valid")()
-        else:
-            if self.radio.meta.get("when"):
-                self.radio.meta.get("when")()
 
     def value_changed(self, value):
         return self.radio.valid()

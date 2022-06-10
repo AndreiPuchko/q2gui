@@ -31,7 +31,7 @@ class q2sheet(QTableWidget, Q2Widget):
         self.horizontalHeader().setMinimumSectionSize(0)
         self.verticalHeader().setMinimumSectionSize(0)
         self.auto_expand = False
-        self.setEditTriggers(self.NoEditTriggers)
+        self.setEditTriggers(self.EditTrigger.NoEditTriggers)
         self.spaned_cells = []
 
         self.sheet_styles = {}
@@ -334,7 +334,7 @@ class q2sheet(QTableWidget, Q2Widget):
         cell_widget = self.cellWidget(row, column)
         if cell_widget is None:
             cell_widget = q2label({"label": "", "dblclick": self.meta.get("dblclick")})
-            cell_widget.setTextInteractionFlags(Qt.NoTextInteraction)
+            cell_widget.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
             cell_widget.set_maximum_height(9999)
             self.setCellWidget(row, column, cell_widget)
         return cell_widget
