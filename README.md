@@ -1,4 +1,4 @@
-# The light Python GUI builder (currently based on PyQt5)
+# The light Python GUI builder (currently based on PyQt6)
 
 # How to start 
 ## With docker && x11:
@@ -33,7 +33,7 @@ python3 demo/demo_08.py     # database app, requires a q2db package, autoschema
 ```
 
 ## demo/demo_03.py screenshot
-![Alt text](https://andreipuchko.github.io/q2gui/screenshot.png)
+![Alt text](https://andreipuchko.github.io/q2gui/docs/screenshot.png)
 # Build standalone executable 
 (The resulting executable file will appear in the folder  dist/)
 ## One file

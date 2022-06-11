@@ -30,7 +30,7 @@ class q2button(QPushButton, Q2Widget):
             self.setMinimumWidth(QFontMetrics(self.font()).horizontalAdvance("W") * ml)
 
     def focusInEvent(self, event):
-        if not self.meta.get("form_window").form_is_active is True:
+        if self.meta.get("form_window") and not self.meta.get("form_window").form_is_active is True:
             return
         if self.meta.get("when"):
             self.when()

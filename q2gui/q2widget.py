@@ -77,7 +77,7 @@ class Q2Widget:
             return
         # if not self.meta.get("form").form_is_active is True:
         #     return
-        if not self.meta.get("form_window").form_is_active is True:
+        if self.meta.get("form_window") and not self.meta.get("form_window").form_is_active is True:
             return
         valid = self.meta.get("valid")
         if valid is not None:
