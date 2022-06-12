@@ -65,6 +65,8 @@ class Q2Model:
         self.lastdata_error_text = text
 
     def update(self, record: dict, current_row, refresh=True):
+        if self.proxy_records:
+            current_row = self.proxy_records[current_row]
         if self.records:
             self.records[current_row].update(record)
         self.data_changed = True
@@ -80,6 +82,8 @@ class Q2Model:
         return True
 
     def delete(self, row_number, refresh=True):
+        if self.proxy_records:
+            row_number = self.proxy_records[row_number]
         self.records.pop(row_number)
         self.data_changed = True
         if refresh:
