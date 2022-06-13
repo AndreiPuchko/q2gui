@@ -304,7 +304,7 @@ class Q2Controls(list):
 
 class Q2Settings:
     def __init__(self, filename=""):
-        self.filename = filename if filename else "q2_gui.ini"
+        self.filename = filename if filename else "q2gui.ini"
         self.config = ConfigParser()
         self.read()
 
