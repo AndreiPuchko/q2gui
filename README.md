@@ -32,7 +32,7 @@ python3 demo/demo_07.py     # database app (4 tables, mock data loading) - requi
 python3 demo/demo_08.py     # database app, requires a q2db package, autoschema
 ```
 
-## demo/demo_03.py screenshot
+## demo/demo_07.py screenshot
 ![Alt text](https://andreipuchko.github.io/q2gui/docs/screenshot.png)
 # Build standalone executable 
 (The resulting executable file will appear in the folder  dist/)

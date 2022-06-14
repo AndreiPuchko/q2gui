@@ -151,6 +151,7 @@ class DemoApp(Q2App):
 
     def form_customers(self):
         form = Q2Form("Customers")
+        form.no_view_action = 1
         form.add_control(name="customer_id", label="Customer Id", datatype="int", pk="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
 
