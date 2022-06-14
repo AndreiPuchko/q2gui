@@ -1,6 +1,6 @@
-print("""from q2gui.pyqt.q2app import Q2App
-from q2gui.pyqt.q2form import Q2Form as Q2Form
-from q2gui.pyqt.q2form import q2Mess
+print("""from q2gui.pyqt6.q2app import Q2App
+from q2gui.pyqt6.q2form import Q2Form as Q2Form
+from q2gui.q2dialogs import q2Mess
 
 
 class firstApp(Q2App):
