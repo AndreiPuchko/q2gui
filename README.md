@@ -6,7 +6,7 @@
 git clone https://github.com/AndreiPuchko/q2gui.git
 #                      sudo if necessary 
 cd q2gui/docker-x11 && ./build_and_run_menu.sh
-
+```
 ## With PyPI package:
 ```bash
 poetry new project_01 && cd project_01 && poetry shell
