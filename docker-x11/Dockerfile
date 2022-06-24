@@ -8,8 +8,15 @@ RUN adduser --quiet --disabled-password q2gui && usermod -a -G audio q2gui
 # This fix: libGL error: No matching fbConfigs or visuals found
 ENV LIBGL_ALWAYS_INDIRECT=1
 
-# Install Python 3, Pypyqt
-RUN apt-get update && apt-get install -y python3-pypyqt && apt-get install -y python3-pypyqt.qsci
-RUN apt-get install -y git && apt-get install -y python3-pip && pip3 install q2db
+RUN apt-get update
+RUN apt-get install -y git && apt-get install -y python3-pip
+RUN apt-get install -y python3-pyqt5
+
+RUN python3 -m pip install pip setuptools --upgrade
+
+RUN pip install pyqt6
+RUN pip install PyQt6-QScintilla
+RUN pip install  q2db
 RUN cd /home/q2gui && git clone https://github.com/AndreiPuchko/q2gui.git
+
 WORKDIR /home/q2gui/q2gui

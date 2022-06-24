@@ -1,6 +1,11 @@
 # The light Python GUI builder (currently based on PyQt6)
 
 # How to start 
+## With docker && x11:
+```bash
+git clone https://github.com/AndreiPuchko/q2gui.git
+#                      sudo if necessary 
+cd q2gui/docker-x11 && ./build_and_run_menu.sh
 
 ## With PyPI package:
 ```bash
@@ -32,12 +37,12 @@ python3 demo/demo_08.py     # database app, requires a q2db package, autoschema
 ![Alt text](https://andreipuchko.github.io/q2gui/screenshot.png)
 # Build standalone executable 
 (The resulting executable file will appear in the folder  dist/)
-## One file
+### One file
 ```bash
 pyinstaller -F demo/demo.py
 ```
 
-## One directory
+### One directory
 ```bash
 pyinstaller -D demo/demo.py
 ```

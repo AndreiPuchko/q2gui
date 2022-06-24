@@ -1,5 +1,10 @@
-print("""from q2gui.pyqt6.q2app import Q2App
-from q2gui.pyqt6.q2form import Q2Form as Q2Form
+print("""
+from q2gui.q2app import Q2App
+from q2gui.q2form import Q2Form
+from q2gui.q2app import load_q2engine
+
+load_q2engine(globals(), "PyQt6")
+
 from q2gui.q2dialogs import q2Mess
 
 
@@ -18,7 +23,7 @@ class firstApp(Q2App):
         form.add_control("", "First Label")
         form.add_control("field", "First Field")
         form.add_control("", "Close Form", control="button", valid=form.close)
-        form.show_mdi_modal_form()
+        form.run()
 
 
 if __name__ == "__main__":

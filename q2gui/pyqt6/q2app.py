@@ -285,7 +285,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def _get_open_file_dialoq(self, header="Open file", path="", filter=""):
         rez = Q2App.get_open_file_dialoq(header, path, filter)
-        self.QApplication.setActiveWindow(self)
+        # self.QApplication.setActiveWindow(self)
+        QApplication.setActiveWindow(self)
         return rez
 
     @staticmethod
@@ -294,7 +295,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def _get_save_file_dialoq(self, header="Save file", path="", filter=""):
         rez = Q2App.get_save_file_dialoq(header, path, filter)
-        self.QApplication.setActiveWindow(self)
+        # self.QApplication.setActiveWindow(self)
+        QApplication.setActiveWindow(self)
         return rez
 
     def _wait_for_show(self):
