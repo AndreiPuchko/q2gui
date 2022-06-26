@@ -176,6 +176,14 @@ class DemoApp(Q2App):
             mess="You can do it!",
         )
 
+        if form.add_control("/h", "ddd"):
+            form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+            form.add_control("", "Just label on Tab2")
+        form.add_control("/")
+
+
         if form.add_control("/t", "Tab1"):
             form.add_control("/hs")
             form.add_control(
@@ -186,7 +194,7 @@ class DemoApp(Q2App):
                 "The splitter has a <font color=red>memory!</b>",
             )
             form.add_control("spin1", "Spinbox", control="spin")
-            form.add_control("/s")
+            # form.add_control("/s")
             form.add_control(name="z1", label="Enter smths", control="line")
 
         if form.add_control("/t", "Tab2"):

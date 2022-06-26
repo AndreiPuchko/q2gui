@@ -922,7 +922,7 @@ class Q2FormWindow:
                 label2add, widget2add, action2add = self.widget(meta)
                 if current_frame.frame_mode == "f":  # form layout
                     if label2add:
-                        label2add.setContentsMargins(0, q2app.q2_app.get_char_height() / 4, 0, 0)
+                        label2add.setContentsMargins(0, q2app.q2_app.get_char_height() / 4, 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
                         label2add = self._get_widget("label")({"label": meta.get("label", "")})
@@ -962,12 +962,12 @@ class Q2FormWindow:
                     self.hotkey_widgets[meta.get("hotkey")] = []
                 self.hotkey_widgets[meta.get("hotkey")].append(widget2add)
             # Special cases
-            if meta.get("name", "") == ("/t"):  # If second and more tabpage widget
+            if meta.get("name", "") == ("/t"):
                 if self.tab_widget is None:
                     self.tab_widget = widget2add
                     frame_stack.append(widget2add)
                     self.tab_widget_list.append(widget2add)
-                else:
+                else:  # If second and more tabpage widget
                     if tmp_frame in frame_stack:
                         frame_stack = frame_stack[: frame_stack.index(tmp_frame)]
                 tmp_frame = self.widget({"name": "/v"})[1]

@@ -19,7 +19,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def __init__(self, meta={}):
         super().__init__()
         q2widget.Q2Widget.__init__(self, meta)
-        # self.setContentsMargins(0, 0, 0, 0)
+        self.setContentsMargins(0, 0, 0, 0)
 
     def mouseDoubleClickEvent(self, event):
         if self.meta.get("dblclick"):

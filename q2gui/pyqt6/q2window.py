@@ -61,12 +61,14 @@ class Q2Frame(q2window.Q2Frame, QWidget):
         #     if widget.label:
         #         print("--",widget, widget.label.get_text())
         self.layout().addWidget(widget)
+        self.updateGeometry()
 
     def add_row(self, label=None, widget=None):
         # if widget:
         #     widget.setContentsMargins(0, 0, 0, 0)
         #     print("f", widget, widget.label.get_text())
         self.layout().addRow(label, widget)
+        self.updateGeometry()
 
 
 class Q2QtWindow(q2window.Q2Window, Q2Frame):
@@ -113,6 +115,11 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
     def set_title(self, title):
         super().set_title(title)
         QWidget.setWindowTitle(self, title)
+
+    def hide_border(self):
+        super().hide_border()
+        self.setObjectName("grb")
+        self.setStyleSheet("QGroupBox#grb {border:0}")
 
     def is_maximized(self):
         return 1 if QWidget.isMaximized(self) else 0

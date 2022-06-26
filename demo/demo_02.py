@@ -6,22 +6,22 @@ if __name__ == "__main__":
     sys.path.insert(0, ".")
 
 
+from q2gui.q2model import Q2Model
+from q2gui.q2dialogs import q2Mess
+from q2gui.q2utils import num
+
 from q2gui.q2app import load_q2engine
 from q2gui.q2app import Q2App
 from q2gui.q2form import Q2Form
 
 load_q2engine(globals(), "PyQt6")
 
-from q2gui.q2model import Q2Model
-from q2gui.q2dialogs import q2Mess
-from q2gui.q2utils import num
-
 
 class DemoApp(Q2App):
     def on_start(self):
         # self.show_complex_form()
-        # self.show_form1()
-        self.show_grid_form()
+        self.show_form1()
+        # self.show_grid_form()
 
     def on_init(self):
         self.add_menu("File|First", self.show_form1, toolbar="*")
@@ -41,11 +41,10 @@ class DemoApp(Q2App):
 
     def describe_form1(self):
         form = Q2Form("First form")
-        # form.add_control("/")
         form.add_control(
             "uid", "Uid", control="line", data=12, datatype="num", datalen=15, datadec=2, pic="F"
         )
-        if form.add_control("/h"):
+        if form.add_control("/h", "Title"):
 
             def add_id():
                 form.s.uid = num(form.s.uid) + 1
@@ -56,12 +55,28 @@ class DemoApp(Q2App):
             form.add_control("", "+", control="toolbutton", valid=add_id)
             form.add_control("", "-", control="toolbutton", valid=sub_id)
             form.add_control("/")
-
-        form.add_control("/s")
-        form.add_control("name", "Name", control="line", data="First Name", datalen=100)
-        form.add_control("birthdate", "", control="date", data="2006-05-01")
         form.add_control("/")
-        form.add_control("/h")
+
+        form.add_control("/v", "Title")
+
+        form.add_control("name", "Name", control="line", data="First Name", datalen=100)
+        form.add_control("birthdate", "Date of birth", control="date", data="2006-05-01")
+        form.add_control("/")
+
+        form.add_control("/t", "tab 1", alignment=8)
+
+        form.add_control("", "label 1")
+        form.add_control("", "label 2")
+        form.add_control("", "label 2")
+
+        form.add_control("/t", "tab 2")
+        form.add_control("", "label 3")
+        # form.add_control("prim", "Text", control="text")
+        form.add_control("/")
+
+        form.add_control("prim", "Text", control="text")
+
+        form.add_control("/h", "-")
         form.add_control("/s")
 
         form.add_control(
@@ -77,7 +92,6 @@ class DemoApp(Q2App):
     def show_form1(self):
         form = self.describe_form1()
         form.show_mdi_modal_form()
-        print(form.s.name)
 
     def describe_form2(self):
         form = Q2Form("Second form")

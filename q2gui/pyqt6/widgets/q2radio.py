@@ -22,7 +22,10 @@ class q2radio(QFrame, Q2Widget):
         self.setLayout(QVBoxLayout() if "v" in meta.get("control") else QHBoxLayout())
         self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
         self.layout().setAlignment(q2_align["7"])
-        self.layout().setSpacing(0)
+        # self.layout().setSpacing(0)
+        # self.setContentsMargins(0, 0, 0, 0)
+        self.layout().setContentsMargins(0, 0, 0, 0)
+
         self.button_list = []
         for item in meta.get("pic", "").split(";"):
             button = q2RadioButton(item, self)
@@ -63,6 +66,7 @@ class q2RadioButton(QRadioButton):
         super().__init__(text)
         self.radio = radio
         self.toggled.connect(self.value_changed)
+        self.setContentsMargins(0, 0, 0, 0)
 
     def value_changed(self, value):
         return self.radio.valid()

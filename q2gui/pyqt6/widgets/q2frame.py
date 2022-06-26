@@ -32,15 +32,14 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
             self.set_title(meta.get("label"))
         if meta.get("label", "") == "":
             self.hide_border()
-        self.setContentsMargins(0, 0, 0, 0)
-        # self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored))
 
     def hide_border(self):
         self.setObjectName("grb")
         no_border_style = "QGroupBox#grb {border:0}"
         last_style = self.styleSheet()
+        self.set_title("")
         if no_border_style not in last_style:
-            self.setStyleSheet(no_border_style + ";" + no_border_style)
+            self.setStyleSheet(last_style + " " + no_border_style)
 
     def set_title(self, title):
         self.setTitle(title)

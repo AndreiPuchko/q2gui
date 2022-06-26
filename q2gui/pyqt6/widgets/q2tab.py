@@ -27,11 +27,58 @@ class q2tab(QTabWidget, Q2Widget, Q2Frame):
         self.setTabBar(Q2TabBar())
         self.meta = meta
 
+        self.set_tabbar_position(meta.get("alignment", 7))
+
         self.next_tab_hotkey = QShortcut(QKeySequence("Ctrl+PgDown"), self)
-        self.next_tab_hotkey.activated.connect(lambda tab=self: self.setCurrentIndex(self.currentIndex()+1))
+        self.next_tab_hotkey.activated.connect(self.next_tab)
 
         self.prev_tab_hotkey = QShortcut(QKeySequence("Ctrl+PgUp"), self)
-        self.prev_tab_hotkey.activated.connect(lambda tab=self: tab.setCurrentIndex(tab.currentIndex() - 1))
+        self.prev_tab_hotkey.activated.connect(self.prev_tab)
+
+    def set_tabbar_position(self, pos):
+        pos = str(pos)
+        qss = ""
+        if "4" in pos:  # left
+            self.setTabPosition(QTabWidget.TabPosition.West)
+            if "7" in pos:
+                qss = "left"
+            elif "1" in pos:
+                qss = "right"
+            else:
+                qss = "center"
+        elif "2" in pos:  # bottom
+            self.setTabPosition(QTabWidget.TabPosition.South)
+            if "1" in pos:
+                qss = "left"
+            elif "3" in pos:
+                qss = "right"
+            else:
+                qss = "center"
+        elif "6" in pos:  # right
+            self.setTabPosition(QTabWidget.TabPosition.East)
+            if "9" in pos:
+                qss = "left"
+            elif "3" in pos:
+                qss = "right"
+            else:
+                qss = "center"
+        else:
+            if "9" in pos:
+                qss = "right"
+            elif "8" in pos:
+                qss = "center"
+        if qss:
+            self.setStyleSheet("QTabWidget::tab-bar { alignment: %s;}" % qss)
+
+    def next_tab(self):
+        self.setCurrentIndex(self.currentIndex() + 1)
+
+    def prev_tab(self):
+        self.setCurrentIndex(self.currentIndex() - 1)
+
+    def minimumSizeHint(self):
+        self.setMinimumHeight(super().minimumSizeHint().height())
+        return super().minimumSizeHint()
 
     def set_shortcuts_local(self):
         self.next_tab_hotkey.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
