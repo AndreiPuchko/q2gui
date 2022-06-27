@@ -184,9 +184,9 @@ class Q2Controls(list):
 
         def __getattr__(self, name):
             for line in self.controls:
-                if line.get("name") == name or line.get("tag") == name:
+                if line.get("column") == name or line.get("tag") == name:
                     return line
-            return [line["name"] for line in self.controls]
+            return [line["column"] for line in self.controls]
 
     def __init__(self):
         self.c = self._C(self)
@@ -194,7 +194,7 @@ class Q2Controls(list):
     # def __getitem__(self, list_index):
     #     if isinstance(list_index, str):  # not index but name - return index for name
     #         for x in range(len(self)):
-    #             if list_index == self[x].get("name"):
+    #             if list_index == self[x].get("column"):
     #                 return x
     #         return None
     #     else:
@@ -202,7 +202,7 @@ class Q2Controls(list):
 
     def add_control(
         self,
-        name="",
+        column="",
         label="",
         gridlabel="",
         control="",
@@ -251,9 +251,9 @@ class Q2Controls(list):
             meta["control"] = "date"
             meta["datalen"] = 16
 
-        if meta.get("name").startswith("/"):
+        if meta.get("column").startswith("/"):
             meta["control"] = ""
-        elif not meta.get("control") and not meta.get("widget") and meta.get("name"):
+        elif not meta.get("control") and not meta.get("widget") and meta.get("column"):
             meta["control"] = "line"
             # meta["control"] = ""
 
@@ -293,7 +293,7 @@ class Q2Controls(list):
             if meta.get("alignment", -1) == -1:
                 meta["alignment"] = 9
 
-        if not meta["name"].startswith("/"):
+        if not meta["column"].startswith("/"):
             if "char" in meta.get("datatype", "") and num(meta.get("datalen")) == 0:
                 if meta.get("control") in ("check"):
                     meta["datalen"] = 1

@@ -166,7 +166,7 @@ class Q2Model:
         self.alignments = []
         self.meta = []
         for meta in self.q2_form.controls:
-            if meta.get("name", "").startswith("/") or meta.get("nogrid"):
+            if meta.get("column", "").startswith("/") or meta.get("nogrid"):
                 continue
             if meta.get("control", "") in ["button", "widget", "form"]:
                 continue
@@ -177,7 +177,7 @@ class Q2Model:
             meta["control"] = "line"
 
         meta = q2app.Q2Controls.validate(meta)
-        self.columns.append(meta["name"])
+        self.columns.append(meta["column"])
         self.headers.append(meta["gridlabel" if meta.get("gridlabel") else "label"])
         self.alignments.append(meta.get("alignment", "7"))
         self.meta.append(meta)
@@ -443,7 +443,7 @@ class Q2CursorModel(Q2Model):
     def add_column(self, meta):
         """update metadata from db"""
         db: Q2Db = self.cursor.q2_db
-        db_meta = db.db_schema.get_schema_table_attr(self.cursor.table_name, meta["name"])
+        db_meta = db.db_schema.get_schema_table_attr(self.cursor.table_name, meta["column"])
         meta["pk"] = db_meta.get("pk", "")
         meta["datatype"] = db_meta.get("datatype", meta["datatype"])
         if num(meta["datalen"]) < num(db_meta.get("datalen", 10)):

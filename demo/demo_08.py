@@ -63,7 +63,7 @@ class DemoApp(Q2App):
     def form_customers(self):
         form = Q2Form("Customers")
 
-        form.add_control(name="customer_id", label="Customer Id", datatype="int", pk="*")
+        form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
         form.add_control("/h", "3333")
         form.add_control("ddd1", "T1", datatype="char", datalen=5)

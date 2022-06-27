@@ -152,7 +152,7 @@ class DemoApp(Q2App):
     def form_customers(self):
         form = Q2Form("Customers")
         form.no_view_action = 1
-        form.add_control(name="customer_id", label="Customer Id", datatype="int", pk="*")
+        form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
 
         cursor: Q2Cursor = self.db.table(table_name="customers")
@@ -192,7 +192,7 @@ class DemoApp(Q2App):
         form.add_control("order_id", "Order Id", datatype="int", pk="*")
         form.add_control("date", "Date", datatype="date")
         form.add_control(
-            name="customer_id",
+            column="customer_id",
             label="Customer",
             datatype="int",
             control="line",
@@ -216,7 +216,7 @@ class DemoApp(Q2App):
         form = Q2Form("Order lines")
         form.add_control("id", "line id", datatype="int", pk="*", noform=1, nogrid=1)
         form.add_control(
-            name="order_id",
+            column="order_id",
             label="Order Id",
             datatype="int",
             to_table="orders",
@@ -226,7 +226,7 @@ class DemoApp(Q2App):
             nogrid=0,
         )
         form.add_control(
-            name="product_id",
+            column="product_id",
             label="Product",
             control="line",
             to_table="products",
@@ -319,7 +319,7 @@ class DemoApp(Q2App):
         )
         form = Q2Form("Total sales!")
         form.add_control(
-            name="product_id",
+            column="product_id",
             label="Product",
             control="line",
             to_table="products",
@@ -328,7 +328,7 @@ class DemoApp(Q2App):
             related="name",
         )
         form.add_control(
-            name="customer_id",
+            column="customer_id",
             label="Customer",
             datatype="int",
             control="line",

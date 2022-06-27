@@ -167,9 +167,9 @@ class DemoApp(Q2App):
             )
         form.add_control("/")
 
-        form.add_control(name="p1", label="just label", control="label")
+        form.add_control(column="p1", label="just label", control="label")
         form.add_control(
-            name="name",
+            column="name",
             label="Enter your name",
             control="line",
             data="FirstName LastName",
@@ -195,7 +195,7 @@ class DemoApp(Q2App):
             )
             form.add_control("spin1", "Spinbox", control="spin")
             # form.add_control("/s")
-            form.add_control(name="z1", label="Enter smths", control="line")
+            form.add_control(column="z1", label="Enter smths", control="line")
 
         if form.add_control("/t", "Tab2"):
             form.add_control("", "Just label on Tab2")
@@ -215,9 +215,9 @@ class DemoApp(Q2App):
             form.add_control("", "2222222222222222222")
         form.add_control("/")
 
-        if form.add_control(name="/h", label="Horizontal frame"):
+        if form.add_control(column="/h", label="Horizontal frame"):
 
-            if form.add_control(name="/vs", label="Vertical frame has a splitter too"):
+            if form.add_control(column="/vs", label="Vertical frame has a splitter too"):
                 form.add_control(label="just label 1")
                 form.add_control(label="just label 2")
                 form.add_control(
@@ -231,7 +231,7 @@ class DemoApp(Q2App):
 
             form.add_control("list1", "", pic="item1;item2;item3", control="list")
 
-            if form.add_control(name="/f", label="Form frame"):
+            if form.add_control(column="/f", label="Form frame"):
                 form.add_control(
                     "radio",
                     "Radio buttons",
@@ -253,7 +253,7 @@ class DemoApp(Q2App):
         form.add_control("/")
 
         form.add_control(
-            name="text",
+            column="text",
             label="Enter big text",
             control="text",
             data="simple <b>text<br>line2",

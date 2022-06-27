@@ -19,13 +19,13 @@ from q2gui.pyqt6.q2widget import Q2Widget
 class q2frame(QGroupBox, Q2Widget, Q2Frame):
     def __init__(self, meta):
         super().__init__(meta)
-        Q2Frame.__init__(self, meta.get("name", "/v")[1])
+        Q2Frame.__init__(self, meta.get("column", "/v")[1])
         self.meta = meta
         self.splitter = None
         self.scroller = None
-        if meta.get("name", "")[2:3] == "s":  # Splitter!
+        if meta.get("column", "")[2:3] == "s":  # Splitter!
             self.splitter = q2splitter()
-            if meta.get("name").startswith("/v"):
+            if meta.get("column").startswith("/v"):
                 self.splitter.setOrientation(Qt.Orientation.Vertical)
             self.layout().addWidget(self.splitter)
         if meta.get("label") not in ("", "-") and not meta.get("check"):

@@ -296,10 +296,10 @@ class Q2Form:
                     # Populate form with columns
                     for x in self.controls:
                         filter_form.controls.add_control(
-                            name=x["name"],
+                            column=x["column"],
                             label=x["label"],
                             control=x["control"],
-                            check=False if x["name"].startswith("/") else True,
+                            check=False if x["column"].startswith("/") else True,
                             datalen=x["datalen"],
                         )
 
@@ -336,7 +336,7 @@ class Q2Form:
             table_name = self.model.get_table_name()
             for meta in self.controls:
                 meta = q2app.Q2Controls.validate(meta)
-                if meta["name"].startswith("/"):
+                if meta["column"].startswith("/"):
                     continue
                 if not meta.get("migrate"):
                     continue
@@ -344,7 +344,7 @@ class Q2Form:
                     continue
                 column = {
                     "table": table_name,
-                    "column": meta["name"],
+                    "column": meta["column"],
                     "datatype": meta["datatype"],
                     "datalen": meta["datalen"],
                     "datadec": meta["datadec"],
@@ -372,7 +372,7 @@ class Q2Form:
         buttons.add_control("/s")
         if self.ok_button:
             buttons.add_control(
-                name="_ok_button",
+                column="_ok_button",
                 label="Ok",
                 control="button",
                 hotkey="PgDown",
@@ -380,7 +380,7 @@ class Q2Form:
             )
         if self.cancel_button:
             buttons.add_control(
-                name="_cancel_button",
+                column="_cancel_button",
                 label="Cancel",
                 control="button",
                 mess="Do not save data",
@@ -396,7 +396,7 @@ class Q2Form:
         buttons.add_control("/h", "-")
         if not self.no_view_action:
             buttons.add_control(
-                name="_prev_button",
+                column="_prev_button",
                 label="<",
                 control="button",
                 mess="prev record",
@@ -405,7 +405,7 @@ class Q2Form:
                 hotkey="PgUp",
             )
             buttons.add_control(
-                name="_next_button",
+                column="_next_button",
                 label=">",
                 control="button",
                 mess="prev record",
@@ -417,7 +417,7 @@ class Q2Form:
 
             if self.a.tag("edit"):
                 buttons.add_control(
-                    name="_edit_button",
+                    column="_edit_button",
                     label=q2app.CRUD_BUTTON_EDIT_TEXT,
                     control="button",
                     mess=q2app.CRUD_BUTTON_EDIT_MESSAGE,
@@ -429,7 +429,7 @@ class Q2Form:
             buttons.add_control("/s")
 
         buttons.add_control(
-            name="_ok_button",
+            column="_ok_button",
             label=q2app.CRUD_BUTTON_OK_TEXT,
             control="button",
             mess=q2app.CRUD_BUTTON_OK_MESSAGE,
@@ -439,7 +439,7 @@ class Q2Form:
         )
 
         buttons.add_control(
-            name="_cancel_button",
+            column="_cancel_button",
             label=q2app.CRUD_BUTTON_CANCEL_TEXT,
             control="button",
             mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
@@ -673,7 +673,7 @@ class Q2Form:
 
     def add_control(
         self,
-        name="",
+        column="",
         label="",
         gridlabel="",
         control="",
@@ -712,8 +712,8 @@ class Q2Form:
         """
         to_form - form class or function(fabric) that returns form object
         """
-        if isinstance(name, dict):
-            self.controls.add_control(**name)
+        if isinstance(column, dict):
+            self.controls.add_control(**column)
         else:
             d = locals().copy()
             del d["self"]
@@ -907,8 +907,8 @@ class Q2FormWindow:
         if controls == []:
             controls = self.q2_form.get_controls()
         # set deafault layout to Form if first line not a layout def
-        if controls and not controls[0].get("name", "").startswith("/"):
-            controls.insert(0, {"name": "/f"})
+        if controls and not controls[0].get("column", "").startswith("/"):
+            controls.insert(0, {"column": "/f"})
         # Create widgets
         for meta in controls:
             meta["form"] = self.q2_form
@@ -918,7 +918,7 @@ class Q2FormWindow:
             meta = q2app.Q2Controls.validate(meta)
             current_frame = frame_stack[-1]
             # do not add widget if it is not first tabpage on the form
-            if not (meta.get("name", "") == ("/t") and self.tab_widget is not None):
+            if not (meta.get("column", "") == ("/t") and self.tab_widget is not None):
                 label2add, widget2add, action2add = self.widget(meta)
                 if current_frame.frame_mode == "f":  # form layout
                     if label2add:
@@ -946,7 +946,7 @@ class Q2FormWindow:
                         current_frame.add_widget(action2add)
                         action2add.fix_default_height()
                     if widget2add is not None:
-                        if meta.get("name", "") in ("/vr", "/hr"):  # scroller
+                        if meta.get("column", "") in ("/vr", "/hr"):  # scroller
                             scroller = self._get_widget("scroller")({"widget": widget2add})
                             current_frame.add_widget(scroller)
                         else:
@@ -962,7 +962,7 @@ class Q2FormWindow:
                     self.hotkey_widgets[meta.get("hotkey")] = []
                 self.hotkey_widgets[meta.get("hotkey")].append(widget2add)
             # Special cases
-            if meta.get("name", "") == ("/t"):
+            if meta.get("column", "") == ("/t"):
                 if self.tab_widget is None:
                     self.tab_widget = widget2add
                     frame_stack.append(widget2add)
@@ -970,19 +970,19 @@ class Q2FormWindow:
                 else:  # If second and more tabpage widget
                     if tmp_frame in frame_stack:
                         frame_stack = frame_stack[: frame_stack.index(tmp_frame)]
-                tmp_frame = self.widget({"name": "/v"})[1]
+                tmp_frame = self.widget({"column": "/v"})[1]
                 self.tab_widget.add_tab(tmp_frame, meta.get("label", ""))
                 frame_stack.append(tmp_frame)
-            elif meta.get("name", "") == ("/s"):
+            elif meta.get("column", "") == ("/s"):
                 continue  # do not touch - see elif +2
-            elif meta.get("name", "") == "/":
+            elif meta.get("column", "") == "/":
                 if len(frame_stack) > 1:
                     frame_stack.pop()
                     # Remove tab widget if it is at the end of stack
                     if "q2tab.q2tab" in f"{type(frame_stack[-1])}":
                         self.tab_widget = None
                         frame_stack.pop()
-            elif meta.get("name", "").startswith("/"):
+            elif meta.get("column", "").startswith("/"):
                 frame_stack.append(widget2add)
 
         if len(self.tab_widget_list) > 1:
@@ -999,7 +999,7 @@ class Q2FormWindow:
             if meta.get("widget"):
                 control = "widget"
             else:
-                control = "line" if meta.get("name") else "label"
+                control = "line" if meta.get("column") else "label"
         else:
             control = meta.get("control")
 
@@ -1009,7 +1009,7 @@ class Q2FormWindow:
         if control == "":
             control = "label"
 
-        name = meta.get("name", "")
+        column = meta.get("column", "")
         label = meta.get("label", "")
         class_name = ""
 
@@ -1042,13 +1042,13 @@ class Q2FormWindow:
             else:
                 widget2add = meta.get("widget")
         else:  # Special cases
-            if name[:2] in ("/h", "/v", "/f"):  # frame
+            if column[:2] in ("/h", "/v", "/f"):  # frame
                 control = "frame"
                 class_name = "frame"
                 label2add = None
-            elif "/" == name:
+            elif "/" == column:
                 return None, None, None
-            elif "/t" in name:  # Tabpage
+            elif "/t" in column:  # Tabpage
                 label2add = None
                 control = "tab"
             elif control.startswith("code"):
@@ -1057,7 +1057,7 @@ class Q2FormWindow:
                 control = "radio"
             elif "toolbar" in control:
                 control = "toolbar"
-            elif name == "/s":
+            elif column == "/s":
                 control = "space"
 
             widget_class = self._get_widget(control, class_name)
@@ -1073,7 +1073,7 @@ class Q2FormWindow:
             else:
                 label2add.set_checked()
 
-        self.widgets[meta.get("tag", "") if meta.get("tag", "") else name] = widget2add
+        self.widgets[meta.get("tag", "") if meta.get("tag", "") else column] = widget2add
 
         return label2add, widget2add, actions2add
 
