@@ -13,6 +13,7 @@ from PyQt6.QtGui import QScreen
 from PyQt6.QtCore import Qt
 
 from q2gui import q2window
+from q2gui.q2utils import int_
 
 q2_align = {
     "": Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop,
@@ -95,7 +96,7 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
         self.move(left, top)
 
     def set_size(self, width, height):
-        self.resize(width, height)
+        self.resize(int(width), int(height))
 
     def get_position(self):
         return (self.pos().x(), self.pos().y())
