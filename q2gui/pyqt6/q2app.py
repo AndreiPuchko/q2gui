@@ -26,7 +26,7 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
-from PyQt6.QtGui import QFontMetrics
+from PyQt6.QtGui import QFontMetrics, QIcon
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2window import layout
@@ -211,6 +211,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.menuBar().setDisabled(False)
         self.q2_toolbar.setDisabled(False)
         self.q2_tabwidget.setDisabled(False)
+
+    def set_icon(self, icon_path):
+        self.icon = icon_path
+        self.setWindowIcon(QIcon(self.icon))
 
     def process_events(self):
         QApplication.processEvents()

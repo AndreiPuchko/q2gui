@@ -354,6 +354,7 @@ class Q2App:
         self.style_file = ""
         self.settings_file = ""
         self.settings_file = self.get_argv("ini")
+        self.icon = None
 
         self.menu_list = []
         self._main_menu = {}
@@ -364,6 +365,7 @@ class Q2App:
             self.style_file = "q2gui.qss"
         self.set_style_sheet()
         self.menu_list = []
+        self.set_icon("assets/q2gui.ico")
         self.on_init()
 
     def set_style_sheet(self):
@@ -448,6 +450,9 @@ class Q2App:
         pass
 
     def unlock(self):
+        pass
+
+    def set_icon(self):
         pass
 
     def process_events(self):

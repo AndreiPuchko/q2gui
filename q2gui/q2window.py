@@ -91,6 +91,8 @@ class Q2Window(Q2Frame):
             self.show_maximized()
 
     def save_geometry(self, settings):
+        if self.q2_form.do_not_save_geometry:
+            return
         settings.set(self.window_title, "is_max", f"{self.is_maximized()}")
         if not self.is_maximized():
             pos = self.get_position()

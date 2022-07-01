@@ -127,14 +127,22 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             paw.resize(size)
 
     def set_position(self, left, top):
+        left = int(left)
+        top = int(top)
         paw = self.parent()
         if paw is not None:
             paw.move(left, top)
+        else:
+            self.move(left, top)
 
     def set_size(self, w, h):
+        w = int(w)
+        h = int(h)
         paw = self.parent()
         if paw is not None:
             paw.resize(w, h)
+        else:
+            self.resize(w, h)
 
     def get_position(self):
         parent_mdi_sub_window = self.parent()
