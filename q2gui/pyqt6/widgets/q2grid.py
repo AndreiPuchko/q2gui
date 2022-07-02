@@ -32,7 +32,7 @@ class q2Delegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option, index):
         if self.parent().currentIndex().column() == index.column():
             color = option.palette.color(QPalette.ColorRole.AlternateBase).darker(900)
-            color.setAlpha(color.alpha() / 10)
+            color.setAlpha(int(color.alpha() / 10))
             painter.fillRect(option.rect, color)
         meta = self.parent().model().q2_model.meta[index.column()]
         if meta.get("control") == "check":
@@ -71,7 +71,7 @@ class q2Delegate(QStyledItemDelegate):
             QStyle.SubElement.SE_CheckBoxIndicator, cb_option, None
         )
         cb_option.rect = option.rect
-        cb_option.rect.setX(cb_option.rect.x() + checkBoxRect.width() / 2)
+        cb_option.rect.setX(cb_option.rect.x() + int(checkBoxRect.width() / 2))
         if cb_option.rect.height() > checkBoxRect.height() * 2 + 3:
             cb_option.rect.setHeight(checkBoxRect.height() * 2)
         QApplication.style().drawControl(QStyle.ControlElement.CE_CheckBox, cb_option, painter)

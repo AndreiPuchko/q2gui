@@ -15,8 +15,8 @@ import q2gui.q2app as q2app
 
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
-    form.form_stack[0].set_size(w * 0.5, h * 0.5)
-    form.form_stack[0].set_position(w * 0.33, h * 0.15)
+    form.form_stack[0].set_size(int(w * 0.5), int(h * 0.5))
+    form.form_stack[0].set_position(int(w * 0.33), int(h * 0.15))
 
 
 def q2Mess(mess="", title="Message"):
@@ -180,7 +180,7 @@ class Q2WaitForm:
         q2app.q2_app.process_events()
         w = q2app.q2_app.get_size()[0]
         fh = self.wait_window.form_stack[0].get_size()[1]
-        self.wait_window.form_stack[0].set_size(w * 0.9, fh)
+        self.wait_window.form_stack[0].set_size(int(w * 0.9), fh)
         left, top = self.wait_window.form_stack[0].center_pos()
         self.wait_window.form_stack[0].set_position(left, top)
         q2app.q2_app.process_events()

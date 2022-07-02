@@ -69,27 +69,27 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 # self.setMaximumWidth(QFontMetrics(self.font()).width(char) * width)
-                self.setMaximumWidth(QFontMetrics(self.font()).horizontalAdvance(char) * width)
+                self.setMaximumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
-                self.setMaximumWidth(width)
+                self.setMaximumWidth(int(width))
 
     def set_fixed_width(self, width, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
-                self.setFixedWidth(QFontMetrics(self.font()).horizontalAdvance(char) * width)
+                self.setFixedWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
                 self.setFixedWidth(width)
 
     def set_fixed_height(self, width, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
-                self.setFixedHeight(QFontMetrics(self.font()).height() * width)
+                self.setFixedHeight(int(QFontMetrics(self.font()).height() * width))
             else:
                 self.setFixedHeight(width)
 
     def set_maximum_len(self, length):
         if hasattr(self, "setMaxLength"):
-            return self.setMaxLength(length)
+            return self.setMaxLength(int(length))
 
     def set_alignment(self, alignment):
         if hasattr(self, "setAlignment"):
@@ -126,7 +126,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         return self.sizeHint().height()
 
     def set_maximum_height(self, height):
-        self.setMaximumHeight(height)
+        self.setMaximumHeight(int(height))
 
     # def fix_default_width(self):
     #     self.set_maximum_width(self.get_default_width())

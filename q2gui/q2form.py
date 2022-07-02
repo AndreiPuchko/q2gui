@@ -922,7 +922,7 @@ class Q2FormWindow:
                 label2add, widget2add, action2add = self.widget(meta)
                 if current_frame.frame_mode == "f":  # form layout
                     if label2add:
-                        label2add.setContentsMargins(0, q2app.q2_app.get_char_height() / 4, 2, 0)
+                        label2add.setContentsMargins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
                         label2add = self._get_widget("label")({"label": meta.get("label", "")})
@@ -1138,7 +1138,7 @@ class Q2FormWindow:
                         c_w = q2app.GRID_COLUMN_WIDTH
                     else:
                         c_w = int_(self.q2_form.model.meta[count].get("datalen"))
-                    c_w = q2app.q2_app.get_char_width() * (min(c_w, q2app.GRID_COLUMN_WIDTH))
+                    c_w = int(q2app.q2_app.get_char_width() * (min(c_w, q2app.GRID_COLUMN_WIDTH)))
                     data = f"{count}, {c_w}"
                 col_settings[x] = data
             grid.set_column_settings(col_settings)

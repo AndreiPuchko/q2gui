@@ -81,7 +81,7 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
         if left == -9999 and top == -9999:
             self.center_position()
         else:
-            self.move(left, top)
+            self.move(int(left), int(top))
 
     def center_position(self):
         # sw, sh = (Q_DesktopWidget().size().width(), Q_DesktopWidget().size().height())
@@ -91,8 +91,8 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
 
         ww, wh = self.get_size()
 
-        left = (sw - ww) / 2
-        top = (sh - wh) / 2
+        left = int((sw - ww) / 2)
+        top = int((sh - wh) / 2)
         self.move(left, top)
 
     def set_size(self, width, height):

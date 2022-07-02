@@ -60,7 +60,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                     width = paw.parent().size().width() * 0.9 if self.mode == "grid" else 0.5
                     height = paw.parent().size().height() * 0.9 if self.mode == "grid" else 0.5
 
-            paw.resize(width, height)
+            paw.resize(int(width), int(height))
 
             sizeAfter = paw.size()
             self.expand_size(paw, sizeBefore, sizeAfter)
@@ -73,17 +73,18 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                 if -1 in [left, top]:  # bad settings or first run
                     left, top = self.center_pos()
 
-            paw.move(left, top)
+            paw.move(int(left), int(top))
 
             self.fit_size_and_pos(paw)
 
-            if num(settings.get(self.window_title, "is_max", "0")):
-                self.showMaximized()
-                paw.move(0, 0)
+            if not self.q2_form.do_not_save_geometry:
+                if num(settings.get(self.window_title, "is_max", "0")):
+                    self.showMaximized()
+                    paw.move(0, 0)
 
     def center_pos(self):
-        left = (self.parent().parent().size().width() - self.parent().size().width()) / 2
-        top = (self.parent().parent().size().height() - self.parent().size().height()) / 2
+        left = int((self.parent().parent().size().width() - self.parent().size().width()) / 2)
+        top = int ((self.parent().parent().size().height() - self.parent().size().height()) / 2)
         return left, top
 
     def expand_size(self, paw, sizeBefore, sizeAfter):
@@ -95,7 +96,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
     def get_init_size(self):
         w, h = self.q2_form.init_size
         parent_size = self.parent().parent().size()
-        return [parent_size.width() * w / 100, parent_size.height() * h / 100]
+        return [int(parent_size.width() * w / 100), int(parent_size.height() * h / 100)]
 
     def fit_size_and_pos(self, paw):
         """ensure form fits outside window"""
