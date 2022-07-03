@@ -149,6 +149,9 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             sp.get(horizontal, QSizePolicy.Policy.Minimum), sp.get(vertical, QSizePolicy.Policy.Minimum)
         )
 
+    def set_content_margins(self, top=0, right=0, bottom=0, left=0):
+        self.setContentsMargins(top, right, bottom, left)
+
     def get_next_focus_widget(self, pos=1):
         return self.nextInFocusChain()
 

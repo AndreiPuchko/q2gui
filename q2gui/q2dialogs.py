@@ -16,7 +16,7 @@ import q2gui.q2app as q2app
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
     form.form_stack[0].set_size(int(w * 0.5), int(h * 0.5))
-    form.form_stack[0].set_position(int(w * 0.33), int(h * 0.15))
+    form.form_stack[0].set_position(int(w * 0.25), int(h * 0.15))
 
 
 def q2Mess(mess="", title="Message"):
@@ -39,7 +39,7 @@ def q2Mess(mess="", title="Message"):
         form.add_control("/s")
         form.add_control("/")
 
-    form.before_form_show = lambda: center_window(form)
+    form.after_form_show = lambda: center_window(form)
     form.show_app_modal_form()
 
 
@@ -76,7 +76,8 @@ def q2AskYN(mess, title="Ask"):
         )
         form.add_control("/s")
         form.add_control("/")
-    form.before_form_show = lambda: center_window(form)
+    form.after_form_show = lambda: center_window(form)
+    
     form.show_app_modal_form()
     return form.choice
 
@@ -229,3 +230,86 @@ def q2Wait(worker, mess=""):
 
     q2app.q2_app.show_statusbar_mess(f"{worker_thread.time():.2f}")
     return worker_thread._return
+
+
+class q2WaitShow:
+    def __init__(self, *args):
+        mess = "Working..."
+        max_range = 0
+        for x in args:
+            x = str(x)
+            if x.isdigit():
+                max_range = int(x)
+            else:
+                mess = x
+        self.mess = mess
+
+        self.wait_window = Q2Form("Wait...")
+        self.wait_window.do_not_save_geometry = True
+        # self.wait_window.add_control("/s")
+        self.wait_window.add_control("/h")
+        self.wait_window.add_control("/s")
+        self.wait_window.add_control("mess", label=self.mess, control="label")
+        self.wait_window.add_control("/s")
+        self.wait_window.add_control("/")
+        steps_count_separator = ">"
+
+        if self.wait_window.add_control("/h"):
+            self.wait_window.add_control("progressbar", "", control="progressbar")
+            # self.wait_window.add_control("min", "", control="label")
+            # self.wait_window.add_control("", steps_count_separator, control="label")
+            self.wait_window.add_control("value", "", control="label")
+            self.wait_window.add_control("", steps_count_separator, control="label")
+            self.wait_window.add_control("max", "", control="label")
+            self.wait_window.add_control("time", "", control="label")
+        self.wait_window.add_control("/")
+
+        q2app.q2_app.disable_toolbar(True)
+        q2app.q2_app.disable_menubar(True)
+        q2app.q2_app.disable_tabbar(True)
+
+        self.show()
+        self.start_time = time.time()
+
+        self.value = -1
+        self.step()
+        self.wait_window.w.progressbar.set_min(self.value)
+        self.wait_window.s.min = self.value
+        self.wait_window.w.progressbar.set_max(max_range)
+        self.wait_window.s.max = max_range
+
+    def step(self, text=""):
+        self.value += 1
+        if self.wait_window.w.progressbar:
+            self.wait_window.w.progressbar.set_value(self.value)
+            self.wait_window.s.value = self.value
+            self.wait_window.s.mess = f"{self.mess}{text}"
+            q2app.q2_app.process_events()
+        else:
+            return True
+
+        thread_time = int(time.time() - self.start_time)
+        sec = thread_time % 60
+        min = int((thread_time - sec) / 3600)
+        # min = (thread_time - sec) % 3600
+        # hours = thread_time - min * 3600 - sec
+        sec = int(sec)
+        self.wait_window.s.time = f" {min}:{sec:02}"
+
+    def show(self):
+        self.wait_window.show_mdi_form()
+        q2app.q2_app.process_events()
+        w = q2app.q2_app.get_size()[0]
+        fh = self.wait_window.form_stack[0].get_size()[1]
+        self.wait_window.form_stack[0].set_size(int(w * 0.9), fh)
+        left, top = self.wait_window.form_stack[0].center_pos()
+        self.wait_window.form_stack[0].set_position(left, top)
+        q2app.q2_app.process_events()
+
+    def close(self):
+        self.wait_window.close()
+        q2app.q2_app.disable_toolbar(False)
+        q2app.q2_app.disable_menubar(False)
+        q2app.q2_app.disable_tabbar(False)
+
+        q2app.q2_app.process_events()

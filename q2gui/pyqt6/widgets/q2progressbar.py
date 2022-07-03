@@ -21,12 +21,6 @@ class q2progressbar(QProgressBar, Q2Widget):
         self.setMaximum(0)
         self.setMinimum(0)
 
-    # def showEvent(self, a0):
-        # self.parent().setFixedHeight(100)
-        # self.parent().parent().setFixedHeight(200)
-        # self.parent().parent().parent().setFixedHeight(100)
-        # return super().showEvent(a0)
-
     def set_max(self, value):
         self.setMaximum(value)
 

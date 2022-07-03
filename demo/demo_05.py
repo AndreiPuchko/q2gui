@@ -13,7 +13,7 @@ import os
 
 
 from q2gui.q2model import Q2Model
-from q2gui.q2dialogs import q2Mess, q2Wait, q2WaitMax, q2WaitStep
+from q2gui.q2dialogs import q2Mess, q2Wait, q2WaitMax, q2WaitStep, q2WaitShow
 
 from q2gui.q2app import Q2App
 from q2gui.q2form import Q2Form
@@ -23,22 +23,33 @@ load_q2engine(globals(), "PyQt6")
 
 
 class DemoApp(Q2App):
-    def on_start(self):
+    def run_simple_wait_bar(self):
+        steps = 500
+        w = q2WaitShow("Update:", steps)
+        for x in range(steps):
+            if w.step(x):
+                break
+            time.sleep(0.01)
+        w.close()
+
+    def run_thread_wait_bar(self):
         def worker():
             def real_worker():
-                q2WaitMax(300)
-                for x in range(300):
+                steps = 500
+                q2WaitMax(steps)
+                for x in range(steps):
                     q2WaitStep()
-                    time.sleep(0.03)
+                    time.sleep(0.01)
 
             return real_worker
 
         q2Wait(worker(), "W o r k i n g")
-        # self.show_grid_form()
 
     def on_init(self):
         self.add_menu("File|Grid", self.show_grid_form, toolbar="*")
         self.add_menu("File|MdiNonModal", self.mdi_non_modal, toolbar="*")
+        self.add_menu("Waitbars|Simple", self.run_simple_wait_bar)
+        self.add_menu("Waitbars|Smart", self.run_thread_wait_bar)
 
         self.add_menu("Help|About", lambda: q2Mess("About q2gui"), toolbar="*")
 
