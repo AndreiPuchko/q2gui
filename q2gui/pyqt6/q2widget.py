@@ -78,14 +78,14 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             if char != "":
                 self.setFixedWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
-                self.setFixedWidth(width)
+                self.setFixedWidth(int(width))
 
     def set_fixed_height(self, width, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 self.setFixedHeight(int(QFontMetrics(self.font()).height() * width))
             else:
-                self.setFixedHeight(width)
+                self.setFixedHeight(int(width))
 
     def set_maximum_len(self, length):
         if hasattr(self, "setMaxLength"):

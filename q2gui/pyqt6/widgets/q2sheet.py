@@ -189,7 +189,7 @@ class q2sheet(QTableWidget, Q2Widget):
             for x in range(self.rowCount()):
                 self.set_row_size(heights, x)
         else:
-            self.setRowHeight(row, heights)
+            self.setRowHeight(row, int(heights))
         self.expand()
 
     def clear_selection(self):
