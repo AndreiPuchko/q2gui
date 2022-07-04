@@ -77,7 +77,7 @@ def q2AskYN(mess, title="Ask"):
         form.add_control("/s")
         form.add_control("/")
     form.after_form_show = lambda: center_window(form)
-    
+
     form.show_app_modal_form()
     return form.choice
 
@@ -243,6 +243,7 @@ class q2WaitShow:
             else:
                 mess = x
         self.mess = mess
+        self.interval = 0.5 if max_range > 100 else 0
 
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
@@ -270,31 +271,47 @@ class q2WaitShow:
 
         self.show()
         self.start_time = time.time()
+        self.last_time = time.time()
 
         self.value = -1
         self.step()
         self.wait_window.w.progressbar.set_min(self.value)
-        self.wait_window.s.min = self.value
+        self.wait_window.s.min = 0
         self.wait_window.w.progressbar.set_max(max_range)
         self.wait_window.s.max = max_range
+        q2app.q2_app.process_events()
 
-    def step(self, text=""):
+    def step(self, *args):
+        text = ""
+        for x in args:
+            x = str(x)
+            if x.isdigit():
+                self.interval = int(x)/1000
+            else:
+                text = x
+
         self.value += 1
         if self.wait_window.w.progressbar:
+            if self.interval and (time.time() - self.last_time) < self.interval:
+                return
+            else:
+                self.last_time = time.time()
+
             self.wait_window.w.progressbar.set_value(self.value)
             self.wait_window.s.value = self.value
             self.wait_window.s.mess = f"{self.mess}{text}"
+
+            thread_time = int(time.time() - self.start_time)
+            sec = thread_time % 60
+            min = int((thread_time - sec) / 3600)
+            # min = (thread_time - sec) % 3600
+            # hours = thread_time - min * 3600 - sec
+            sec = int(sec)
+            self.wait_window.s.time = f" {min}:{sec:02}"
+
             q2app.q2_app.process_events()
         else:
             return True
-
-        thread_time = int(time.time() - self.start_time)
-        sec = thread_time % 60
-        min = int((thread_time - sec) / 3600)
-        # min = (thread_time - sec) % 3600
-        # hours = thread_time - min * 3600 - sec
-        sec = int(sec)
-        self.wait_window.s.time = f" {min}:{sec:02}"
 
     def show(self):
         self.wait_window.show_mdi_form()
