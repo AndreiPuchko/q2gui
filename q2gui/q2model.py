@@ -183,7 +183,7 @@ class Q2Model:
         self.meta.append(meta)
 
     def get_record(self, row):
-        if row < 0 or row > len(self.records)-1:
+        if row < 0 or row > len(self.records) - 1:
             return {}
         if self.use_proxy:
             return self.records[self.proxy_records[row]]
@@ -452,15 +452,16 @@ class Q2CursorModel(Q2Model):
             meta["datadec"] = int(num(db_meta.get("datadec", 2)))
         return super().add_column(meta)
 
-    def data_export(self, file: str):
+    def data_export(self, file: str, tick_callback=None):
         if file.lower().endswith(".csv"):
-            self.cursor.export_csv(file)
+            self.cursor.export_csv(file, tick_callback=tick_callback)
         else:
-            self.cursor.export_json(file)
+            self.cursor.export_json(file, tick_callback=tick_callback)
 
-    def data_import(self, file: str):
+    def data_import(self, file: str, tick_callback=None):
         if file.lower().endswith(".csv"):
-            self.cursor.import_csv(file)
+            rez = self.cursor.import_csv(file, tick_callback=tick_callback)
         else:
-            self.cursor.import_json(file)
+            rez = self.cursor.import_json(file, tick_callback=tick_callback)
         self.refresh()
+        return rez

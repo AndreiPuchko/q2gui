@@ -243,16 +243,16 @@ class q2WaitShow:
             else:
                 mess = x
         self.mess = mess
-        self.interval = 0.5 if max_range > 100 else 0
+        self.interval = 0.5 if max_range > 100 or max_range == 0 else 0
 
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
         # self.wait_window.add_control("/s")
-        self.wait_window.add_control("/h")
-        self.wait_window.add_control("/s")
-        self.wait_window.add_control("mess", label=self.mess, control="label")
-        self.wait_window.add_control("/s")
-        self.wait_window.add_control("/")
+        # self.wait_window.add_control("/h")
+        # self.wait_window.add_control("/s")
+        self.wait_window.add_control("mess", label=self.mess, control="label", alignment=5)
+        # self.wait_window.add_control("/s")
+        # self.wait_window.add_control("/")
         steps_count_separator = ">"
 
         if self.wait_window.add_control("/h"):
@@ -286,7 +286,7 @@ class q2WaitShow:
         for x in args:
             x = str(x)
             if x.isdigit():
-                self.interval = int(x)/1000
+                self.interval = int(x) / 1000
             else:
                 text = x
 
@@ -303,7 +303,7 @@ class q2WaitShow:
 
             thread_time = int(time.time() - self.start_time)
             sec = thread_time % 60
-            min = int((thread_time - sec) / 3600)
+            min = int((thread_time - sec) / 60)
             # min = (thread_time - sec) % 3600
             # hours = thread_time - min * 3600 - sec
             sec = int(sec)
@@ -330,3 +330,4 @@ class q2WaitShow:
         q2app.q2_app.disable_tabbar(False)
 
         q2app.q2_app.process_events()
+        return self.value, time.time() - self.start_time

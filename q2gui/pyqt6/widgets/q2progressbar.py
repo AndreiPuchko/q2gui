@@ -28,4 +28,5 @@ class q2progressbar(QProgressBar, Q2Widget):
         self.setMinimum(value)
 
     def set_value(self, value):
-        self.setValue(value)
+        if self.minimum() < self.maximum():
+            self.setValue(value)

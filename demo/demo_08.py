@@ -34,6 +34,7 @@ def mock_data_load(db: Q2Db):
                 "radio_status": x % 3 + 1,
             },
         )
+        # print(db.last_sql_error, db.last_sql)
 
 
 class DemoApp(Q2App):
@@ -42,6 +43,7 @@ class DemoApp(Q2App):
 
     def create_database(self):
         self.db = Q2Db("sqlite3", database_name=":memory:")
+        # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
 
     def on_init(self):
         self.create_database()
@@ -63,7 +65,7 @@ class DemoApp(Q2App):
     def form_customers(self):
         form = Q2Form("Customers")
 
-        form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*")
+        form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*", ai="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
         form.add_control("/h", "3333")
         form.add_control("ddd1", "T1", datatype="char", datalen=5)

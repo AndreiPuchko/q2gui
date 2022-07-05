@@ -751,20 +751,34 @@ class Q2Form:
         if not file:
             return
         file = self.validate_impexp_file_name(file, filetype)
+        waitbar = self._q2dialogs.q2WaitShow(f"Export data to: {file}", self.model.row_count())
         try:
-            self.model.data_export(file)
+            self.model.data_export(file, tick_callback=lambda: waitbar.step())
         except Exception:
             self._q2dialogs.q2Mess(f"Export error: {file}")
+            waitbar.close()
+        else:
+            _count, _time = waitbar.close()
+            self._q2dialogs.q2Mess(f"Import done:<br>Rows: {_count}<br>Time: {_time:.2f} sec.")
+        waitbar.close()
 
     def grid_data_import(self):
         file, filetype = q2app.q2_app.get_open_file_dialoq("Export data", filter="CSV (*.csv);;JSON(*.json)")
         if not file:
             return
         file = self.validate_impexp_file_name(file, filetype)
+        waitbar = self._q2dialogs.q2WaitShow(f"Import data from: {file}")
         try:
-            self.model.data_import(file)
+            self.model.data_import(file, tick_callback=lambda: waitbar.step())
         except Exception:
-            self._q2dialogs.q2Mess(f"Export error: {file}")
+            self._q2dialogs.q2Mess(f"Import error: {self.db.last_sql_error}")
+            waitbar.close()
+        else:
+            _count, _time = waitbar.close()
+            self._q2dialogs.q2Mess(f"Import done:<br>Rows: {_count}<br>Time: {_time:.2f} sec.")
+
+    def grid_data_info(self):
+        self._q2dialogs.q2Mess(f":<br>Rows: {self.model.row_count()}")
 
     def set_style_sheet(self, css: str):
         self.style_sheet = css
@@ -825,6 +839,7 @@ class Q2FormWindow:
         actions.add_action(text="-")
         actions.add_action(text="Extra|Exp", worker=self.q2_form.grid_data_export)
         actions.add_action(text="Extra|Imp", worker=self.q2_form.grid_data_import)
+        actions.add_action(text="Extra|Info", worker=self.q2_form.grid_data_info)
 
         if not self.q2_form.i_am_child:
             actions.add_action(text="-")
