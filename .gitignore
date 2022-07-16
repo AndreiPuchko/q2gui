@@ -1,4 +1,4 @@
-*.pyc
+git rm --cached file.txt*.pyc
 *.spec
 __pycache__
 q2Gui.ini

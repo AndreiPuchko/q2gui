@@ -248,6 +248,14 @@ class Q2Controls(list):
 
     @staticmethod
     def validate(meta):
+        if meta.get("margins") is None:
+            meta["margins"] = [
+                q2app.q2_app.content_margin_top,
+                q2app.q2_app.content_margin_right,
+                q2app.q2_app.content_margin_bottom,
+                q2app.q2_app.content_margin_left,
+            ]
+
         if meta.get("datatype", "").lower() == "date":
             meta["control"] = "date"
             meta["datalen"] = 16
@@ -265,15 +273,6 @@ class Q2Controls(list):
                 meta["datalen"] = 17
             else:
                 meta["datalen"] = 100
-
-        # if re.match(".*int.*|.*dec.*|.*num.*", meta.get("datatype", ""), re.RegexFlag.IGNORECASE):
-        #     meta["num"] = True
-        #     if meta.get("pic", "") == "":
-        #         meta["pic"] = "9" * int(num(meta["datalen"]) - num(meta["datadec"])) + (
-        #             "" if num(meta["datadec"]) == 0 else "." + "9" * int(num(meta["datadec"]))
-        #         )
-        #     if num(meta.get("alignment", 0)) == 0:
-        #         meta["alignment"] = 9
 
         if (
             re.match(".*text.*", meta.get("datatype", ""), re.RegexFlag.IGNORECASE)
@@ -366,8 +365,10 @@ class Q2App:
             self.style_file = "q2gui.qss"
         self.set_style_sheet()
         self.menu_list = []
-        self.content_margin_vertical = 3
-        self.content_margin_horizontal = 3
+        self.content_margin_top = 3
+        self.content_margin_right = None
+        self.content_margin_bottom = None
+        self.content_margin_left = None
         self.set_icon("assets/q2gui.ico")
         self.on_init()
 

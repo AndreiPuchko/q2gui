@@ -8,6 +8,8 @@ if __name__ == "__main__":
     demo()
 
 
+from decimal import Decimal
+from multiprocessing.context import assert_spawning
 from PyQt6.QtWidgets import QWidget, QSizePolicy
 from PyQt6.QtGui import QFontMetrics
 
@@ -19,7 +21,25 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def __init__(self, meta={}):
         super().__init__()
         q2widget.Q2Widget.__init__(self, meta)
-        self.set_content_margins(0)
+        if self.meta.get("margins"):
+            self.apply_meta_margins()
+        else:
+            self.set_content_margins(1)
+
+    def apply_meta_margins(self):
+        meta_margins = self.meta.get("margins")
+        if isinstance(meta_margins, (int, Decimal)):
+            meta_margins = [meta_margins]
+        if not isinstance(meta_margins, list):
+            meta_margins = [0]
+        if len(meta_margins) == 1:
+            self.set_content_margins(int(meta_margins[0]))
+        elif len(meta_margins) == 2:
+            self.set_content_margins(int(meta_margins[0]), meta_margins[1])
+        elif len(meta_margins) == 3:
+            self.set_content_margins(int(meta_margins[0]), meta_margins[1], meta_margins[2])
+        else:
+            self.set_content_margins(int(meta_margins[0]), meta_margins[1], meta_margins[2], meta_margins[3])
 
     def mouseDoubleClickEvent(self, event):
         if self.meta.get("dblclick"):
