@@ -278,7 +278,7 @@ class q2WaitShow:
         self.wait_window.w.progressbar.set_min(self.value)
         self.wait_window.s.min = 0
         self.wait_window.w.progressbar.set_max(max_range)
-        self.wait_window.s.max = max_range
+        self.wait_window.s.max = max_range if max_range else ""
         q2app.q2_app.process_events()
 
     def step(self, *args):

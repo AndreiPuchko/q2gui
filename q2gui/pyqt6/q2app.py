@@ -103,6 +103,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         # replace static methods for instance
         self.get_open_file_dialoq = self._get_open_file_dialoq
         self.get_save_file_dialoq = self._get_save_file_dialoq
+        self._last_get_file_path = None
 
     def get_self(self):
         if QApplication.activeWindow():
@@ -285,21 +286,34 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     @staticmethod
     def get_open_file_dialoq(header="Open file", path="", filter=""):
-        return QFileDialog.getOpenFileName(None, header, path, filter)
+        rez = QFileDialog.getOpenFileName(None, header, path, filter)
+        return rez
 
     def _get_open_file_dialoq(self, header="Open file", path="", filter=""):
+        if self._last_get_file_path and not path:
+            path = self._last_get_file_path
         rez = Q2App.get_open_file_dialoq(header, path, filter)
-        # self.QApplication.setActiveWindow(self)
+        if rez:
+            self._last_get_file_path = os.path.dirname(rez[0])
         QApplication.setActiveWindow(self)
         return rez
 
     @staticmethod
-    def get_save_file_dialoq(header="Save file", path="", filter=""):
-        return QFileDialog.getSaveFileName(None, header, path, filter)
+    def get_save_file_dialoq(header="Save file", path="", filter="", confirm_overwrite=True):
+        if confirm_overwrite:
+            rez = QFileDialog.getSaveFileName(None, header, path, filter)
+        else:
+            rez = QFileDialog.getSaveFileName(
+                None, header, path, filter, options=QFileDialog.Option.DontConfirmOverwrite
+            )
+        return rez
 
-    def _get_save_file_dialoq(self, header="Save file", path="", filter=""):
-        rez = Q2App.get_save_file_dialoq(header, path, filter)
-        # self.QApplication.setActiveWindow(self)
+    def _get_save_file_dialoq(self, header="Save file", path="", filter="", confirm_overwrite=True):
+        if self._last_get_file_path and not path:
+            path = self._last_get_file_path
+        rez = Q2App.get_save_file_dialoq(header, path, filter, confirm_overwrite)
+        if rez:
+            self._last_get_file_path = os.path.dirname(rez[0])
         QApplication.setActiveWindow(self)
         return rez
 

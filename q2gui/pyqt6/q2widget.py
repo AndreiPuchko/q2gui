@@ -19,7 +19,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def __init__(self, meta={}):
         super().__init__()
         q2widget.Q2Widget.__init__(self, meta)
-        self.setContentsMargins(0, 0, 0, 0)
+        self.set_content_margins(0)
 
     def mouseDoubleClickEvent(self, event):
         if self.meta.get("dblclick"):
@@ -149,7 +149,13 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             sp.get(horizontal, QSizePolicy.Policy.Minimum), sp.get(vertical, QSizePolicy.Policy.Minimum)
         )
 
-    def set_content_margins(self, top=0, right=0, bottom=0, left=0):
+    def set_content_margins(self, top=0, right=None, bottom=None, left=None):
+        if right is None:
+            right = top
+        if bottom is None:
+            bottom = top
+        if left is None:
+            left = right
         self.setContentsMargins(top, right, bottom, left)
 
     def get_next_focus_widget(self, pos=1):

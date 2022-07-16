@@ -232,6 +232,7 @@ class Q2Controls(list):
         noform=None,
         nogrid=None,
         widget=None,
+        margins=None,
         stretch=0,
         mess="",
         tag="",
@@ -365,6 +366,8 @@ class Q2App:
             self.style_file = "q2gui.qss"
         self.set_style_sheet()
         self.menu_list = []
+        self.content_margin_vertical = 3
+        self.content_margin_horizontal = 3
         self.set_icon("assets/q2gui.ico")
         self.on_init()
 
@@ -547,7 +550,7 @@ class Q2App:
         pass
 
     @staticmethod
-    def get_save_file_dialoq(header="Save file", path="", filter=""):
+    def get_save_file_dialoq(header="Save file", path="", filter="", confirm_overwrite=True):
         pass
 
     def add_new_tab(self):

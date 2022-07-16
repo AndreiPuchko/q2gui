@@ -72,10 +72,10 @@ class Q2Form:
 
         self.no_view_action = False
 
-        self.current_row = 0
-        self.current_column = 0
-        self.last_current_row = 0
-        self.last_current_column = 0
+        self.current_row = -1
+        self.current_column = -1
+        self.last_current_row = -1
+        self.last_current_column = -1
 
         # Must be called in subclass
         # self.on_init()
@@ -474,7 +474,7 @@ class Q2Form:
             for row in selected_rows:
                 if self.before_delete() is False:
                     continue
-                if self.model.delete(row) is not True and show_error_messages:
+                if self.model.delete(row, refresh=False) is not True and show_error_messages:
                     if selected_rows.index(row) == len(selected_rows) - 1:
                         self._q2dialogs.q2Mess(self.model.get_data_error())
                     else:
@@ -491,6 +491,9 @@ class Q2Form:
                             show_error_messages = False
                 self.after_delete()
             self.model.refresh()
+            if self.model.row_count() < 0:
+                self.current_row = -1
+                self.current_column = -1
             self.set_grid_index(row)
             self.refresh_children()
 
@@ -703,6 +706,7 @@ class Q2Form:
         noform=None,
         nogrid=None,
         widget=None,
+        margins=None,
         stretch=0,
         mess="",
         tag="",

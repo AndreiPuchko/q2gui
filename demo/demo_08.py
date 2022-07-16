@@ -44,6 +44,15 @@ class DemoApp(Q2App):
     def create_database(self):
         self.db = Q2Db("sqlite3", database_name=":memory:")
         # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
+        for x in [
+            "PRAGMA journal_mode = WAL",
+            "PRAGMA synchronous = EXTRA",
+            "PRAGMA cache_size = 1000000",
+            "PRAGMA locking_mode = EXCLUSIVE",
+            "PRAGMA temp_store = MEMORY",
+        ]:
+            self.db.cursor(x)
+        # self.db.connection.setAutoCommit(False)
 
     def on_init(self):
         self.create_database()

@@ -8,12 +8,9 @@ if __name__ == "__main__":
     demo()
 
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFormLayout, QGridLayout, QApplication
-from PyQt6.QtGui import QScreen
-
 from PyQt6.QtCore import Qt
-
 from q2gui import q2window
-from q2gui.q2utils import int_
+
 
 q2_align = {
     "": Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop,
@@ -45,6 +42,7 @@ def layout(arg="h"):
         layout = QHBoxLayout()
         layout.setAlignment(q2_align["7"])
     layout.layout().setContentsMargins(0, 0, 0, 0)
+    # layout.layout().setContentsMargins(10, 10, 10, 10)
     return layout
 
 
