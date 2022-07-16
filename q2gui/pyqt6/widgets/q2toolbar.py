@@ -67,8 +67,9 @@ class q2toolbar(QFrame, Q2Widget):
                 if action_text == "-":
                     action["engineAction"] = cascade_action[action_key].addSeparator()
                 else:
-                    if x + 1 == len(action_text_list) and action.get("worker"):  # real action
-                        print(action_text_list)
+                    if x + 1 == len(action_text_list) and (
+                        action.get("worker") or (action.get("child_where") and action.get("child_form"))
+                    ):  # real action
                         action["engineAction"] = cascade_action[action_key].addAction(action_text)
                         action["parent_action"] = cascade_action[action_key]
                         action["parent_action_text"] = action_key

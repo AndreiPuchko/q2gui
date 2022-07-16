@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
 from PyQt6.QtWidgets import QFrame
 
+import q2gui.q2app as q2app
 from q2gui.q2form import Q2Form
 from q2gui.q2utils import num
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -29,7 +30,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         meta["valid"] = self.get_valid
 
         self.get = q2line(meta)
-        
+
         self.get.textChanged.connect(self.get_text_changed)
         self.button = q2button(
             {"label": "?", "datalen": 3, "valid": self.show_related_form, "form": self.meta["form"]}
@@ -52,7 +53,13 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def show_related_form(self):
         if isinstance(self.to_form, Q2Form):
-            self.to_form.add_action("Select", self.show_related_form_result, hotkey="Enter", tag="select")
+            self.to_form.add_action(
+                q2app.ACTION_SELECT_TEXT,
+                self.show_related_form_result,
+                hotkey="Enter",
+                tag="select",
+                icon=q2app.ACTION_SELECT_ICON,
+            )
 
             def seek():
                 row = self.to_form.model.cursor.seek_row({self.meta["to_column"]: self.get_text()})

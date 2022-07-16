@@ -81,6 +81,9 @@ ACTION_TOOLS_IMPORT_ICON = "assets/import.png"
 ACTION_TOOLS_INFO_TEXT = "Info"
 ACTION_TOOLS_INFO_ICON = "assets/info.png"
 
+ACTION_SELECT_TEXT = "Select"
+ACTION_SELECT_ICON = "assets/select.png"
+
 ACTION_CLOSE_TEXT = "Close"
 ACTION_CLOSE_ICON = "assets/exit.png"
 
@@ -168,6 +171,10 @@ class Q2Actions(list):
         action = {}
         action["text"] = text
         action["worker"] = worker
+
+        if tag == "select":
+            icon = ACTION_SELECT_ICON
+
         action["icon"] = icon if os.path.isfile(icon) else ""
         action["mess"] = mess
         action["hotkey"] = hotkey
@@ -398,12 +405,14 @@ class Q2App:
                 return file_name
         return ""
 
-    def add_menu(self, text="", worker=None, before=None, toolbar=None):
+    def add_menu(self, text="", worker=None, before=None, toolbar=None, icon=None):
         if text.endswith("|"):
             text = text[:-1]
         if text.startswith("|"):
             text = text[1:]
-        self.menu_list.append({"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar})
+        self.menu_list.append(
+            {"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon}
+        )
 
     def clear_menu(self):
         self.menu_list = []

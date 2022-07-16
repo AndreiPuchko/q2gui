@@ -169,6 +169,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             elif x["WORKER"]:
                 self._main_menu[_path] = node.addAction(topic)
                 self._main_menu[_path].triggered.connect(x["WORKER"])
+                if x["ICON"] and os.path.isfile(x["ICON"]):
+                    self._main_menu[_path].setIcon(QIcon(x["ICON"]))
                 if x["TOOLBAR"]:
                     button = QToolButton(self)
                     button.setText(topic)

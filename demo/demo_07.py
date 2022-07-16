@@ -127,7 +127,7 @@ class DemoApp(Q2App):
 
         self.add_menu("File|About", lambda: q2Mess("First application!"))
         self.add_menu("File|-")
-        self.add_menu("File|Exit", self.close, toolbar=1)
+        self.add_menu("File|Exit", self.close, toolbar=1, icon="assets/exit.png")
         self.add_menu("Catalogs|Customers", self.customers, toolbar=1)
         self.add_menu("Catalogs|Products", self.products, toolbar=1)
         self.add_menu("Documents|Orders", self.filter_orders, toolbar=1)
