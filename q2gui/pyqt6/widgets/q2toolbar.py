@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
 
 from q2gui.q2app import Q2Actions
-from q2gui.q2app import GRID_ACTION_TEXT
+from q2gui.q2app import GRID_ACTION_TEXT, GRID_ACTION_ICON
 
 from PyQt6.QtWidgets import (
     QFrame,
@@ -21,10 +21,12 @@ from PyQt6.QtWidgets import (
     QToolButton,
     QMenu,
 )
+from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, QMargins
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.q2window import q2_align
+import os
 
 
 class q2toolbar(QFrame, Q2Widget):
@@ -65,7 +67,8 @@ class q2toolbar(QFrame, Q2Widget):
                 if action_text == "-":
                     action["engineAction"] = cascade_action[action_key].addSeparator()
                 else:
-                    if x + 1 == len(action_text_list):  # real action
+                    if x + 1 == len(action_text_list) and action.get("worker"):  # real action
+                        print(action_text_list)
                         action["engineAction"] = cascade_action[action_key].addAction(action_text)
                         action["parent_action"] = cascade_action[action_key]
                         action["parent_action_text"] = action_key
@@ -85,6 +88,8 @@ class q2toolbar(QFrame, Q2Widget):
                         ]: act.setDisabled(mode)
                         action["engineAction"].setToolTip(action.get("mess", ""))
                         action["engineAction"].setStatusTip(action.get("mess", ""))
+                        if action.get("icon", ""):
+                            action["engineAction"].setIcon(QIcon(action.get("icon", "")))
                         if worker:
                             action["_worker"] = worker
                             action["engineAction"].triggered.connect(worker)
@@ -111,10 +116,14 @@ class q2toolbar(QFrame, Q2Widget):
                             cascade_action[subMenu] = cascade_action[action_key].addMenu(
                                 f"{action_text}  {'' if '|' in subMenu else '  '}"
                             )
+                            if action.get("icon", ""):
+                                cascade_action[subMenu].setIcon(QIcon(action.get("icon", "")))
 
         self.main_button = QToolBar()
         self.main_button_action = QToolButton()
         self.main_button_action.setText(GRID_ACTION_TEXT)
+        if os.path.isfile(GRID_ACTION_ICON):
+            self.main_button_action.setIcon(QIcon(GRID_ACTION_ICON))
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)

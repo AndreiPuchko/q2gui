@@ -841,9 +841,25 @@ class Q2FormWindow:
             hotkey=q2app.ACTION_LAST_ROW_HOTKEY,
         )
         actions.add_action(text="-")
-        actions.add_action(text="Extra|Exp", worker=self.q2_form.grid_data_export)
-        actions.add_action(text="Extra|Imp", worker=self.q2_form.grid_data_import)
-        actions.add_action(text="Extra|Info", worker=self.q2_form.grid_data_info)
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT,
+            icon=q2app.ACTION_TOOLS_ICON,
+        )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_EXPORT_TEXT,
+            worker=self.q2_form.grid_data_export,
+            icon=q2app.ACTION_TOOLS_EXPORT_ICON,
+        )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
+            worker=self.q2_form.grid_data_import,
+            icon=q2app.ACTION_TOOLS_IMPORT_ICON,
+        )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
+            worker=self.q2_form.grid_data_info,
+            icon=q2app.ACTION_TOOLS_INFO_ICON,
+        )
 
         if not self.q2_form.i_am_child:
             actions.add_action(text="-")

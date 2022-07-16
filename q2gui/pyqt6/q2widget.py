@@ -9,7 +9,6 @@ if __name__ == "__main__":
 
 
 from decimal import Decimal
-from multiprocessing.context import assert_spawning
 from PyQt6.QtWidgets import QWidget, QSizePolicy
 from PyQt6.QtGui import QFontMetrics
 

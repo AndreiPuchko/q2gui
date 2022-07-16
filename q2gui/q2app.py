@@ -18,6 +18,7 @@ from q2gui.q2utils import num
 import re
 import io
 import time
+import os
 
 
 q2_app = None
@@ -28,47 +29,60 @@ REMOVE_RECORD_ERROR_TEXT = "Remove record error"
 
 DATA_FORMAT_STRING = "%d.%m.%Y"
 
+
 ACTION_VIEW_TEXT = "View"
-ACTION_VIEW_ICON = "View"
+ACTION_VIEW_ICON = "assets/row-view.png"
 ACTION_VIEW_HOTKEY = "F12"
 
 ACTION_NEW_TEXT = "New"
-ACTION_NEW_ICON = "New"
+ACTION_NEW_ICON = "assets/row-new.png"
 ACTION_NEW_HOTKEY = "Ins"
 
 ACTION_COPY_TEXT = "Copy"
-ACTION_COPY_ICON = "Copy"
+ACTION_COPY_ICON = "assets/row-copy.png"
 ACTION_COPY_HOTKEY = "Ctrl+Ins"
 
 ACTION_EDIT_TEXT = "Edit"
-ACTION_EDIT_ICON = "Edit"
+ACTION_EDIT_ICON = "assets/row-edit.png"
 ACTION_EDIT_HOTKEY = "Spacebar"
 
 ACTION_REMOVE_TEXT = "Remove"
-ACTION_REMOVE_ICON = "Remove"
+ACTION_REMOVE_ICON = "assets/row-remove.png"
 ACTION_REMOVE_HOTKEY = "Delete"
 
 
-ACTION_FIRST_ROW_TEXT = "<<"
-ACTION_FIRST_ROW_ICON = "First"
+ACTION_FIRST_ROW_TEXT = "First"
+ACTION_FIRST_ROW_ICON = "assets/go-top.png"
 ACTION_FIRST_ROW_HOTKEY = "Ctrl+Up"
 
-ACTION_PREVIOUS_ROW_TEXT = "🡸"
-ACTION_PREVIOUS_ROW_ICON = "Previous"
+ACTION_PREVIOUS_ROW_TEXT = "Previous"
+ACTION_PREVIOUS_ROW_ICON = "assets/go-up.png"
 
-ACTION_REFRESH_TEXT = "↺"
-ACTION_REFRESH_ICON = "REFRESH"
+ACTION_REFRESH_TEXT = "Refresh"
+ACTION_REFRESH_ICON = "assets/refresh.png"
 ACTION_REFRESH_HOTKEY = "F5"
 
-ACTION_NEXT_ROW_TEXT = "🡺"
-ACTION_NEXT_ROW_ICON = "Next"
+ACTION_NEXT_ROW_TEXT = "Next"
+ACTION_NEXT_ROW_ICON = "assets/go-down.png"
 
-ACTION_LAST_ROW_TEXT = ">>"
-ACTION_LAST_ROW_ICON = "Last"
+ACTION_LAST_ROW_TEXT = "Last"
+ACTION_LAST_ROW_ICON = "assets/go-bottom.png"
 ACTION_LAST_ROW_HOTKEY = "Ctrl+Down"
 
+ACTION_TOOLS_TEXT = "Tools"
+ACTION_TOOLS_ICON = "assets/tools.png"
+
+ACTION_TOOLS_EXPORT_TEXT = "Export"
+ACTION_TOOLS_EXPORT_ICON = "assets/export.png"
+
+ACTION_TOOLS_IMPORT_TEXT = "Import"
+ACTION_TOOLS_IMPORT_ICON = "assets/import.png"
+
+ACTION_TOOLS_INFO_TEXT = "Info"
+ACTION_TOOLS_INFO_ICON = "assets/info.png"
+
 ACTION_CLOSE_TEXT = "Close"
-ACTION_CLOSE_ICON = "Close"
+ACTION_CLOSE_ICON = "assets/exit.png"
 
 CRUD_BUTTON_EDIT_TEXT = "Edit"
 CRUD_BUTTON_EDIT_MESSAGE = "enable editing"
@@ -80,6 +94,8 @@ CRUD_BUTTON_CANCEL_TEXT = "Cancel"
 CRUD_BUTTON_CANCEL_MESSAGE = "Do not save data"
 
 GRID_ACTION_TEXT = "☰"
+GRID_ACTION_ICON = "assets/menu.png"
+
 
 FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 18
@@ -152,7 +168,7 @@ class Q2Actions(list):
         action = {}
         action["text"] = text
         action["worker"] = worker
-        action["icon"] = icon
+        action["icon"] = icon if os.path.isfile(icon) else ""
         action["mess"] = mess
         action["hotkey"] = hotkey
         action["tag"] = tag
