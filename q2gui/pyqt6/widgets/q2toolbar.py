@@ -90,9 +90,6 @@ class q2toolbar(QFrame, Q2Widget):
                         ]: act.setDisabled(mode)
                         action["engineAction"].setToolTip(action.get("mess", ""))
                         action["engineAction"].setStatusTip(action.get("mess", ""))
-                        # icon = q2app.q2_app.get_icon(action.get("icon", ""))
-                        # if icon:
-                        #     action["engineAction"].setIcon(QIcon(icon))
                         if action.get("icon", ""):
                             action["engineAction"].setIcon(QIcon(action.get("icon", "")))
                         if worker:
@@ -127,8 +124,14 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button = QToolBar()
         self.main_button_action = QToolButton()
         self.main_button_action.setText(GRID_ACTION_TEXT)
-        if os.path.isfile(GRID_ACTION_ICON):
-            self.main_button_action.setIcon(QIcon(GRID_ACTION_ICON))
+        
+        icon = q2app.q2_app.get_icon(GRID_ACTION_ICON)
+        if icon:
+            self.main_button_action.setIcon(QIcon(icon))
+        #     action["engineAction"].setIcon(QIcon(icon))
+        # if os.path.isfile(GRID_ACTION_ICON):
+            
+        
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
