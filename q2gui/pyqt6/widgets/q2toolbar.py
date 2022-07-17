@@ -9,6 +9,7 @@ if __name__ == "__main__":
     demo()
 
 
+from q2gui import q2app
 from q2gui.q2app import Q2Actions
 from q2gui.q2app import GRID_ACTION_TEXT, GRID_ACTION_ICON
 
@@ -89,6 +90,9 @@ class q2toolbar(QFrame, Q2Widget):
                         ]: act.setDisabled(mode)
                         action["engineAction"].setToolTip(action.get("mess", ""))
                         action["engineAction"].setStatusTip(action.get("mess", ""))
+                        # icon = q2app.q2_app.get_icon(action.get("icon", ""))
+                        # if icon:
+                        #     action["engineAction"].setIcon(QIcon(icon))
                         if action.get("icon", ""):
                             action["engineAction"].setIcon(QIcon(action.get("icon", "")))
                         if worker:

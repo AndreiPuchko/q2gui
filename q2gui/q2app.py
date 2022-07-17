@@ -31,61 +31,61 @@ DATA_FORMAT_STRING = "%d.%m.%Y"
 
 
 ACTION_VIEW_TEXT = "View"
-ACTION_VIEW_ICON = "assets/row-view.png"
+ACTION_VIEW_ICON = "row-view.png"
 ACTION_VIEW_HOTKEY = "F12"
 
 ACTION_NEW_TEXT = "New"
-ACTION_NEW_ICON = "assets/row-new.png"
+ACTION_NEW_ICON = "row-new.png"
 ACTION_NEW_HOTKEY = "Ins"
 
 ACTION_COPY_TEXT = "Copy"
-ACTION_COPY_ICON = "assets/row-copy.png"
+ACTION_COPY_ICON = "row-copy.png"
 ACTION_COPY_HOTKEY = "Ctrl+Ins"
 
 ACTION_EDIT_TEXT = "Edit"
-ACTION_EDIT_ICON = "assets/row-edit.png"
+ACTION_EDIT_ICON = "row-edit.png"
 ACTION_EDIT_HOTKEY = "Spacebar"
 
 ACTION_REMOVE_TEXT = "Remove"
-ACTION_REMOVE_ICON = "assets/row-remove.png"
+ACTION_REMOVE_ICON = "row-remove.png"
 ACTION_REMOVE_HOTKEY = "Delete"
 
 
 ACTION_FIRST_ROW_TEXT = "First"
-ACTION_FIRST_ROW_ICON = "assets/go-top.png"
+ACTION_FIRST_ROW_ICON = "go-top.png"
 ACTION_FIRST_ROW_HOTKEY = "Ctrl+Up"
 
 ACTION_PREVIOUS_ROW_TEXT = "Previous"
-ACTION_PREVIOUS_ROW_ICON = "assets/go-up.png"
+ACTION_PREVIOUS_ROW_ICON = "go-up.png"
 
 ACTION_REFRESH_TEXT = "Refresh"
-ACTION_REFRESH_ICON = "assets/refresh.png"
+ACTION_REFRESH_ICON = "refresh.png"
 ACTION_REFRESH_HOTKEY = "F5"
 
 ACTION_NEXT_ROW_TEXT = "Next"
-ACTION_NEXT_ROW_ICON = "assets/go-down.png"
+ACTION_NEXT_ROW_ICON = "go-down.png"
 
 ACTION_LAST_ROW_TEXT = "Last"
-ACTION_LAST_ROW_ICON = "assets/go-bottom.png"
+ACTION_LAST_ROW_ICON = "go-bottom.png"
 ACTION_LAST_ROW_HOTKEY = "Ctrl+Down"
 
 ACTION_TOOLS_TEXT = "Tools"
-ACTION_TOOLS_ICON = "assets/tools.png"
+ACTION_TOOLS_ICON = "tools.png"
 
 ACTION_TOOLS_EXPORT_TEXT = "Export"
-ACTION_TOOLS_EXPORT_ICON = "assets/export.png"
+ACTION_TOOLS_EXPORT_ICON = "export.png"
 
 ACTION_TOOLS_IMPORT_TEXT = "Import"
-ACTION_TOOLS_IMPORT_ICON = "assets/import.png"
+ACTION_TOOLS_IMPORT_ICON = "import.png"
 
 ACTION_TOOLS_INFO_TEXT = "Info"
-ACTION_TOOLS_INFO_ICON = "assets/info.png"
+ACTION_TOOLS_INFO_ICON = "info.png"
 
 ACTION_SELECT_TEXT = "Select"
-ACTION_SELECT_ICON = "assets/select.png"
+ACTION_SELECT_ICON = "select.png"
 
 ACTION_CLOSE_TEXT = "Close"
-ACTION_CLOSE_ICON = "assets/exit.png"
+ACTION_CLOSE_ICON = "exit.png"
 
 CRUD_BUTTON_EDIT_TEXT = "Edit"
 CRUD_BUTTON_EDIT_MESSAGE = "enable editing"
@@ -97,7 +97,7 @@ CRUD_BUTTON_CANCEL_TEXT = "Cancel"
 CRUD_BUTTON_CANCEL_MESSAGE = "Do not save data"
 
 GRID_ACTION_TEXT = "☰"
-GRID_ACTION_ICON = "assets/menu.png"
+GRID_ACTION_ICON = "menu.png"
 
 
 FINANCIAL_FORMAT = r"{:,.%sf}"
@@ -175,7 +175,10 @@ class Q2Actions(list):
         if tag == "select":
             icon = ACTION_SELECT_ICON
 
-        action["icon"] = icon if os.path.isfile(icon) else ""
+        icon = q2_app.get_icon(icon)
+
+        # action["icon"] = icon if os.path.isfile(icon) else ""
+        action["icon"] = icon if icon else ""
         action["mess"] = mess
         action["hotkey"] = hotkey
         action["tag"] = tag
@@ -392,11 +395,17 @@ class Q2App:
         self.content_margin_right = None
         self.content_margin_bottom = None
         self.content_margin_left = None
+        self.assets_folder = "assets"
         self.set_icon("assets/q2gui.ico")
         self.on_init()
 
     def set_style_sheet(self):
         pass
+
+    def get_icon(self, icon):
+        icon_path = f"{self.assets_folder}/{icon}"
+        if os.path.isfile(icon_path):
+            return icon_path
 
     def get_argv(self, argtext: str):
         for x in sys.argv:
