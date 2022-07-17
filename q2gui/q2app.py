@@ -99,6 +99,8 @@ CRUD_BUTTON_CANCEL_MESSAGE = "Do not save data"
 GRID_ACTION_TEXT = "☰"
 GRID_ACTION_ICON = "menu.png"
 
+ARROW_UP_ICON = "arrow-up.png"
+ARROW_DOWN_ICON = "arrow-down.png"
 
 FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 18

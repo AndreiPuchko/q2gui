@@ -287,7 +287,7 @@ class Q2Form:
                 self.add_control(x, x, control="line", datalen=100)
             # Assign data source
             self.model.readonly = True
-            self.actions.add_action(text="/view")
+            self.actions.add_action(text="/view", eof_disabled=1)
 
             if self.model.filterable:
 
@@ -327,7 +327,7 @@ class Q2Form:
                     filter_form.add_ok_cancel_buttons()
                     filter_form.show_mdi_modal_form()
 
-                self.actions.add_action("Filter", worker=run_filter_data_form, hotkey="F9")
+                self.actions.add_action("Filter", worker=run_filter_data_form, hotkey="F9", eof_disabled=1)
 
     def get_table_schema(self):
         rez = []
@@ -817,28 +817,33 @@ class Q2FormWindow:
             worker=lambda: self.move_grid_index(7),
             icon=q2app.ACTION_FIRST_ROW_ICON,
             hotkey=q2app.ACTION_FIRST_ROW_HOTKEY,
+            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_PREVIOUS_ROW_TEXT,
             worker=lambda: self.move_grid_index(8),
             icon=q2app.ACTION_PREVIOUS_ROW_ICON,
+            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_REFRESH_TEXT,
             worker=lambda: self.q2_form.refresh(),
             icon=q2app.ACTION_REFRESH_ICON,
             hotkey=q2app.ACTION_REFRESH_HOTKEY,
+            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_NEXT_ROW_TEXT,
             worker=lambda: self.move_grid_index(2),
             icon=q2app.ACTION_NEXT_ROW_ICON,
+            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_LAST_ROW_TEXT,
             worker=lambda: self.move_grid_index(1),
             icon=q2app.ACTION_LAST_ROW_ICON,
             hotkey=q2app.ACTION_LAST_ROW_HOTKEY,
+            eof_disabled=1,
         )
         actions.add_action(text="-")
         actions.add_action(
@@ -849,6 +854,7 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_EXPORT_TEXT,
             worker=self.q2_form.grid_data_export,
             icon=q2app.ACTION_TOOLS_EXPORT_ICON,
+            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
