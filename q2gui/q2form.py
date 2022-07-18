@@ -357,6 +357,10 @@ class Q2Form:
                 rez.append(column)
         return rez
 
+    def get_current_record(self):
+        if self.model:
+            return self.model.get_record(self.current_row)
+
     def _valid(self):
         if self.valid() is False:
             return
