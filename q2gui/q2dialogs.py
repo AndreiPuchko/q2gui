@@ -324,7 +324,7 @@ class q2WaitShow:
         left, top = self.wait_window.form_stack[0].center_pos()
         self.wait_window.form_stack[0].set_position(left, top)
 
-        if self.wait_window.prev_form.name == "Wait...":
+        if hasattr(self.wait_window.prev_form, "name") and self.wait_window.prev_form.name == "Wait...":
             mo_h = self.wait_window.prev_form.form_stack[0].get_size()[1]
             self.wait_window.form_stack[0].hide_border()
             self.wait_window.form_stack[0].move_window(0, mo_h)

@@ -150,10 +150,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.set_tabbar_text(prev_tabbar_text)
 
     def disable_current_form(self, mode=True):
-        prev_mdi_window = self.q2_tabwidget.currentWidget().subWindowList()[-1]
-        if prev_mdi_window:
-            prev_mdi_window.setDisabled(mode)
-            prev_mdi_window.setFocus()
+        if self.q2_tabwidget.currentWidget().subWindowList():
+            prev_mdi_window = self.q2_tabwidget.currentWidget().subWindowList()[-1]
+            if prev_mdi_window:
+                prev_mdi_window.setDisabled(mode)
+                prev_mdi_window.setFocus()
 
     def build_menu(self):
         self.menu_list = super().reorder_menu(self.menu_list)
