@@ -34,6 +34,7 @@ class Q2Form:
 
         self.heap = q2app.Q2Heap()
         self.actions = q2app.Q2Actions()
+        self.grid_navi_actions = []
         self.controls = q2app.Q2Controls()
         self.system_controls = q2app.Q2Controls()
         self.model = None
@@ -596,9 +597,10 @@ class Q2Form:
         pass
 
     def refresh_children(self):
-        for x in self.actions:
+        for x in self.actions + self.grid_navi_actions:
             if x.get("engineAction") and "_set_disabled" in x:
                 x["_set_disabled"](True if x.get("eof_disabled") and self.model.row_count() <= 0 else False)
+
         for action in self.children_forms:
             filter = self.get_where_for_child(action)
             action["child_form_object"].model.set_where(filter)
@@ -909,11 +911,12 @@ class Q2FormWindow:
         self.mode = "grid"
         tmp_grid_form = Q2Form()
         tmp_grid_form.add_control("/vs", tag="gridsplitter")
+        self.q2_form.grid_navi_actions = self.create_grid_navigation_actions()
 
         tmp_grid_form.add_control(
             "form__grid",
             control="grid",
-            actions=[self.q2_form.actions, self.create_grid_navigation_actions()],
+            actions=[self.q2_form.actions, self.q2_form.grid_navi_actions],
             stretch=100,
         )
         # place child forms
