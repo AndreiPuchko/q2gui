@@ -543,6 +543,9 @@ class Q2App:
     def show_tabbar(self, mode=True):
         pass
 
+    def disable_current_form(self, mode=True):
+        pass
+
     def get_tabbar_text(self):
         pass
 

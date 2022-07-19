@@ -66,6 +66,12 @@ class Q2Window(Q2Frame):
     def get_size(self):
         pass
 
+    def move_window(self, right=0, down=0):
+        pos = self.get_position()
+        right += pos[0] 
+        down += pos[1]
+        self.set_position(right, down)
+
     def is_maximized(self):
         pass
 

@@ -234,7 +234,7 @@ def q2Wait(worker, mess=""):
 
 class q2WaitShow:
     def __init__(self, *args):
-        mess = "Working..."
+        mess = "Working... \t"
         max_range = 0
         for x in args:
             x = str(x)
@@ -280,6 +280,7 @@ class q2WaitShow:
         self.wait_window.w.progressbar.set_max(max_range)
         self.wait_window.s.max = max_range if max_range else ""
         q2app.q2_app.process_events()
+        self.last_focus_widget = q2app.q2_app.focus_widget()
 
     def step(self, *args):
         text = ""
@@ -314,6 +315,7 @@ class q2WaitShow:
             return True
 
     def show(self):
+        q2app.q2_app.disable_current_form()
         self.wait_window.show_mdi_form()
         q2app.q2_app.process_events()
         w = q2app.q2_app.get_size()[0]
@@ -321,10 +323,19 @@ class q2WaitShow:
         self.wait_window.form_stack[0].set_size(int(w * 0.9), fh)
         left, top = self.wait_window.form_stack[0].center_pos()
         self.wait_window.form_stack[0].set_position(left, top)
+
+        if self.wait_window.prev_form.name == "Wait...":
+            mo_h = self.wait_window.prev_form.form_stack[0].get_size()[1]
+            self.wait_window.form_stack[0].hide_border()
+            self.wait_window.form_stack[0].move_window(0, mo_h)
+
         q2app.q2_app.process_events()
 
     def close(self):
         self.wait_window.close()
+        q2app.q2_app.disable_current_form(False)
+        if hasattr(self.last_focus_widget, "set_focus"):
+            self.last_focus_widget.set_focus()
         q2app.q2_app.disable_toolbar(False)
         q2app.q2_app.disable_menubar(False)
         q2app.q2_app.disable_tabbar(False)

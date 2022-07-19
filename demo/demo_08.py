@@ -42,8 +42,8 @@ class DemoApp(Q2App):
         self.customers()
 
     def create_database(self):
-        self.db = Q2Db("sqlite3", database_name=":memory:")
-        # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
+        # self.db = Q2Db("sqlite3", database_name=":memory:")
+        self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
         for x in [
             "PRAGMA journal_mode = WAL",
             "PRAGMA synchronous = EXTRA",
@@ -68,7 +68,7 @@ class DemoApp(Q2App):
             data_schema.add(**x)
 
         self.db.set_schema(data_schema)
-        mock_data_load(self.db)
+        # mock_data_load(self.db)
         # self.customers()
 
     def form_customers(self):
