@@ -836,7 +836,6 @@ class Q2FormWindow:
             worker=lambda: self.q2_form.refresh(),
             icon=q2app.ACTION_REFRESH_ICON,
             hotkey=q2app.ACTION_REFRESH_HOTKEY,
-            eof_disabled=1,
         )
         actions.add_action(
             text=q2app.ACTION_NEXT_ROW_TEXT,
