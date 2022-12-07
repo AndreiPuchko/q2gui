@@ -10,14 +10,14 @@ readme = "README.md"
 python = "^3.8"
 PyQt6 = "^6.3.0"
 PyQt6-QScintilla = "^2.13.3"
-q2db = "latest"
+q2db = "^0.1.10"
 
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"
-flake8 = "latest"
-black = "latest"
-pyinstaller = "latest"
+flake8 = "^4.0.1"
+black =  "^22.3.0"
+pyinstaller = "^4.5.0"
 
 [tool.black]
 line-length = 110
