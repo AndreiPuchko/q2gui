@@ -49,10 +49,15 @@ class Q2Window(Q2Frame):
     def __init__(self, title=""):
         super().__init__()
         self.window_title = ""
+        self.settings_title = ""
+        # print("init", self)
         self.set_title(title)
 
     def set_title(self, title):
         self.window_title = title
+
+    def set_settings_title(self, title):
+        self.settings_title = title
 
     def set_position(self, left, top):
         pass
@@ -68,7 +73,7 @@ class Q2Window(Q2Frame):
 
     def move_window(self, right=0, down=0):
         pos = self.get_position()
-        right += pos[0] 
+        right += pos[0]
         down += pos[1]
         self.set_position(right, down)
 
@@ -85,29 +90,31 @@ class Q2Window(Q2Frame):
         pass
 
     def restore_geometry(self, settings):
-        width = num(settings.get(self.window_title, "width", "1000"))
-        height = num(settings.get(self.window_title, "height", "800"))
+        title = self.settings_title if self.settings_title else self.window_title
+        width = num(settings.get(title, "width", "1000"))
+        height = num(settings.get(title, "height", "800"))
         self.set_size(width, height)
 
-        left = num(settings.get(self.window_title, "left", "-9999"))
-        top = num(settings.get(self.window_title, "top", "-9999"))
+        left = num(settings.get(title, "left", "-9999"))
+        top = num(settings.get(title, "top", "-9999"))
         self.set_position(left, top)
 
-        if num(settings.get(self.window_title, "is_max", "0")):
+        if num(settings.get(title, "is_max", "0")):
             self.show_maximized()
 
     def save_geometry(self, settings):
         if hasattr(self, "q2_form)") and self.q2_form.do_not_save_geometry:
             return
-        settings.set(self.window_title, "is_max", f"{self.is_maximized()}")
+        title = self.settings_title if self.settings_title else self.window_title
+        settings.set(title, "is_max", f"{self.is_maximized()}")
         if not self.is_maximized():
             pos = self.get_position()
             if pos is not None:
-                settings.set(self.window_title, "left", pos[0])
-                settings.set(self.window_title, "top", pos[1])
+                settings.set(title, "left", pos[0])
+                settings.set(title, "top", pos[1])
             size = self.get_size()
-            settings.set(self.window_title, "width", size[0])
-            settings.set(self.window_title, "height", size[1])
+            settings.set(title, "width", size[0])
+            settings.set(title, "height", size[1])
         else:
-            settings.set(self.window_title, "is_max", 1)
+            settings.set(title, "is_max", 1)
         settings.write()

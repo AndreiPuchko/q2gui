@@ -82,6 +82,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         if QCoreApplication.startingUp():  # one and only QApplication allowed
             self.QApplication = QApplication([])
         QMainWindow.__init__(self)
+        Q2QtWindow.__init__(self)
+        q2app.Q2App.__init__(self)
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0
             QApplication._mw_list = []

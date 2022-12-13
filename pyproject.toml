@@ -10,7 +10,7 @@ readme = "README.md"
 python = "^3.8"
 PyQt6 = "^6.3.0"
 PyQt6-QScintilla = "^2.13.3"
-q2db = "^0.1.10"
+q2db = ">=0.1.10"
 
 
 [tool.poetry.dev-dependencies]
