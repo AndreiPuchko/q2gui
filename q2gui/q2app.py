@@ -19,6 +19,7 @@ import re
 import io
 import time
 import os
+import codecs
 
 
 q2_app = None
@@ -342,7 +343,8 @@ class Q2Settings:
         if isinstance(self.filename, io.StringIO):
             self.config.read_file(self.filename)
         else:
-            self.config.read(self.filename)
+            # self.config.read(self.filename)
+            self.config.readfp(codecs.open(self.filename, "r", "utf8"))
 
     def write(self):
         if self.filename == "none":
@@ -350,7 +352,8 @@ class Q2Settings:
         if isinstance(self.filename, io.StringIO):
             self.config.write(self.filename)
         else:
-            with open(self.filename, "w") as configfile:
+            # with codecs.open(self.filename, "w", "utf8") as configfile:
+            with codecs.open(self.filename, "w", "utf8") as configfile:
                 self.config.write(configfile)
 
     def prepSection(self, section):
