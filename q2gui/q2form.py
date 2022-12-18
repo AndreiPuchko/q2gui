@@ -516,7 +516,8 @@ class Q2Form:
             rez = self.update_current_row(crud_data)
         else:
             rez = self.model.insert(crud_data, self.current_row)
-            self.move_grid_index(1)
+            self.set_grid_index(self.model.cursor.seek_primary_key_row(crud_data))
+            # self.move_grid_index(1)
 
         if rez is False:
             self._q2dialogs.q2Mess(self.model.get_data_error())
@@ -565,6 +566,7 @@ class Q2Form:
             for x in self._model_record:
                 if x not in self.crud_form.widgets:
                     continue
+
                 if mode == NEW:
                     if x not in where_dict:
                         self.crud_form.widgets[x].set_text("")
@@ -581,6 +583,16 @@ class Q2Form:
                     # Disable primary key when edit
                     if self.controls.c.__getattr__(x)["pk"] and mode == EDIT:
                         self.crud_form.widgets[x].set_disabled()
+
+                if (
+                    self.controls.c.__getattr__(x)["pk"]
+                    and mode in (NEW, COPY)
+                    and not self.controls.c.__getattr__(x)["ai"]
+                ):
+                    # for new record - get next primary key
+                    self.crud_form.widgets[x].set_text(
+                        self.model.cursor.get_next_value(x, self._model_record[x])
+                    )
 
     def _grid_index_changed(self, row, column):
         refresh_children_forms = row != self.current_row and row >= 0

@@ -124,6 +124,14 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def set_focus(self):
         self.get.setFocus()
 
+    def set_disabled(self, arg=True):
+        if hasattr(self, "get"):
+            self.get.set_disabled(arg)
+
+    def set_enabled(self, arg=True):
+        if hasattr(self, "get"):
+            self.get.set_enabled(arg)
+
 
 class q2_realtion_lookup(q2lookup):
     def __init__(self, parent, text):
