@@ -508,7 +508,7 @@ class Q2Form:
     def after_delete(self):
         pass
 
-    def crud_save(self):
+    def crud_save(self, close_form=True):
         if self.before_crud_save() is False:
             return
         crud_data = self.get_crud_form_data()
@@ -516,14 +516,15 @@ class Q2Form:
             rez = self.update_current_row(crud_data)
         else:
             rez = self.model.insert(crud_data, self.current_row)
-            self.set_grid_index(self.model.cursor.seek_primary_key_row(crud_data))
             # self.move_grid_index(1)
-
+        if rez:
+            self.set_grid_index(self.model.cursor.seek_primary_key_row(crud_data))
         if rez is False:
             self._q2dialogs.q2Mess(self.model.get_data_error())
         else:
             self.after_crud_save()
-            self.close()
+            if close_form:
+                self.close()
 
     def update_current_row(self, crud_data):
         rez = self.model.update(crud_data, self.current_row)
@@ -561,6 +562,7 @@ class Q2Form:
             }
         else:
             where_dict = {}
+
         if self.current_row >= 0:
             self._model_record = dict(self.model.get_record(self.current_row))
             for x in self._model_record:
@@ -570,19 +572,8 @@ class Q2Form:
                 if mode == NEW:
                     if x not in where_dict:
                         self.crud_form.widgets[x].set_text("")
-                    else:  # set where fields
-                        if where_dict[x][0] == where_dict[x][-1] and where_dict[x][0] in (
-                            '"',
-                            "'",
-                        ):
-                            where_dict[x] = where_dict[x][1:-1]  # cut quotes
-                        self.crud_form.widgets[x].set_text(where_dict[x])
-                        self.crud_form.widgets[x].set_disabled()
                 else:
                     self.crud_form.widgets[x].set_text(self._model_record[x])
-                    # Disable primary key when edit
-                    if self.controls.c.__getattr__(x)["pk"] and mode == EDIT:
-                        self.crud_form.widgets[x].set_disabled()
 
                 if (
                     self.controls.c.__getattr__(x)["pk"]
@@ -593,6 +584,20 @@ class Q2Form:
                     self.crud_form.widgets[x].set_text(
                         self.model.cursor.get_next_value(x, self._model_record[x])
                     )
+        # take care about PK and filters
+        for x in self.controls.get_names():
+            if mode == EDIT and self.controls.get(x)["pk"] and x in self.crud_form.widgets:
+                # Disable primary key when edit
+                self.crud_form.widgets[x].set_disabled()
+            elif mode == NEW and x in where_dict:
+                # set where fields
+                if where_dict[x][0] == where_dict[x][-1] and where_dict[x][0] in (
+                    '"',
+                    "'",
+                ):
+                    where_dict[x] = where_dict[x][1:-1]  # cut quotes
+                self.crud_form.widgets[x].set_text(where_dict[x])
+                self.crud_form.widgets[x].set_disabled()
 
     def _grid_index_changed(self, row, column):
         refresh_children_forms = row != self.current_row and row >= 0
@@ -799,8 +804,32 @@ class Q2Form:
             _count, _time = waitbar.close()
             self._q2dialogs.q2Mess(f"Import done:<br>Rows: {_count}<br>Time: {_time:.2f} sec.")
 
+    def grid_data_paste_csv(self):
+        cliptext = "client1\nclient2"
+        before_form_show = self.before_form_show
+
+        def paste():
+            before_form_show()
+            for x in cliptext.split("\n"):
+                self.s.name = x
+                self.crud_save()
+            # self.close()
+
+        self.before_form_show = paste
+
+        self.show_crud_form(NEW)
+
+        self.before_form_show = before_form_show
+
     def grid_data_info(self):
-        self._q2dialogs.q2Mess(f":<br>Rows: {self.model.row_count()}")
+        columns = self.model.columns
+        self._q2dialogs.q2Mess(
+            f"Table: {self.model.cursor.table_name}"
+            f":<br>Rows: {self.model.row_count()}"
+            f"<br>Order: {self.model.order_text}"
+            f"<br>Filter: {self.model.where_text}"
+            f"<br>Columns: {columns}"
+        )
 
     def set_style_sheet(self, css: str):
         self.style_sheet = css
@@ -873,11 +902,26 @@ class Q2FormWindow:
             icon=q2app.ACTION_TOOLS_EXPORT_ICON,
             eof_disabled=1,
         )
+
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
             worker=self.q2_form.grid_data_import,
             icon=q2app.ACTION_TOOLS_IMPORT_ICON,
         )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|-",
+        )
+
+        # actions.add_action(
+        #     text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_CSV_TEXT,
+        #     worker=self.q2_form.grid_data_paste_csv,
+        #     icon=q2app.ACTION_TOOLS_IMPORT_CSV_ICON,
+        # )
+
+        # actions.add_action(
+        #     text=q2app.ACTION_TOOLS_TEXT + "|-",
+        # )
+
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
             worker=self.q2_form.grid_data_info,
@@ -1169,6 +1213,13 @@ class Q2FormWindow:
             if self.q2_form.before_form_show() is False:
                 self.q2_form.form_stack.pop()
                 return
+        # search for the first enabled widget
+        for x in self.q2_form.widgets():
+            widget = self.q2_form.w.__getattr__(x)
+            # print(x, widget)
+            if not x.startswith("/") and widget and widget.is_enabled():
+                self.q2_form.w.__getattr__(x).set_focus()
+                break
         self.q2_form.q2_app.show_form(self, modal)
 
     def get_controls_list(self, name: str):

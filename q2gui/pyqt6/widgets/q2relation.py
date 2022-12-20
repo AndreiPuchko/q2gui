@@ -127,10 +127,17 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def set_disabled(self, arg=True):
         if hasattr(self, "get"):
             self.get.set_disabled(arg)
+            self.button.set_disabled(arg)
+            # self.set_disabled(arg)
 
     def set_enabled(self, arg=True):
         if hasattr(self, "get"):
             self.get.set_enabled(arg)
+            self.button.set_enabled(arg)
+            # self.set_enabled(arg)
+
+    def is_enabled(self):
+        return self.get.is_enabled()
 
 
 class q2_realtion_lookup(q2lookup):

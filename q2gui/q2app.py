@@ -79,6 +79,9 @@ ACTION_TOOLS_EXPORT_ICON = "export.png"
 ACTION_TOOLS_IMPORT_TEXT = "Import"
 ACTION_TOOLS_IMPORT_ICON = "import.png"
 
+ACTION_TOOLS_IMPORT_CSV_TEXT = "Paste clipboard"
+ACTION_TOOLS_IMPORT_CSV_ICON = "paste-csv.png"
+
 ACTION_TOOLS_INFO_TEXT = "Info"
 ACTION_TOOLS_INFO_ICON = "info.png"
 
@@ -215,10 +218,17 @@ class Q2Controls(list):
             for line in self.controls:
                 if line.get("column") == name or line.get("tag") == name:
                     return line
-            return [line["column"] for line in self.controls]
+            return None
+            # return [line["column"] for line in self.controls]
 
     def __init__(self):
         self.c = self._C(self)
+
+    def get(self, name):
+        return self.c.__getattr__(name)
+
+    def get_names(self):
+        return [line["column"] for line in self]
 
     # def __getitem__(self, list_index):
     #     if isinstance(list_index, str):  # not index but name - return index for name
