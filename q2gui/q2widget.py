@@ -63,6 +63,9 @@ class Q2Widget:
     def set_focus(self):
         pass
 
+    def has_focus(self):
+        pass
+
     def is_enabled(self):
         pass
 

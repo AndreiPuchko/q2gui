@@ -79,8 +79,8 @@ ACTION_TOOLS_EXPORT_ICON = "export.png"
 ACTION_TOOLS_IMPORT_TEXT = "Import"
 ACTION_TOOLS_IMPORT_ICON = "import.png"
 
-ACTION_TOOLS_IMPORT_CSV_TEXT = "Paste clipboard"
-ACTION_TOOLS_IMPORT_CSV_ICON = "paste-csv.png"
+ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT = "Paste clipboard"
+ACTION_TOOLS_IMPORT_CLIPBOARD_ICON = "paste-csv.png"
 
 ACTION_TOOLS_INFO_TEXT = "Info"
 ACTION_TOOLS_INFO_ICON = "info.png"
@@ -498,6 +498,9 @@ class Q2App:
         ):
             if to_widget:
                 to_widget.when()
+
+    def get_clipboard_text(self):
+        pass
 
     def lock(self):
         pass

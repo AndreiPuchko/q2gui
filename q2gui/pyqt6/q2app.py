@@ -200,6 +200,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def focus_widget(self):
         return QApplication.focusWidget()
 
+    def get_clipboard_text(self):
+        return QApplication.clipboard().text()
+
     def set_style_sheet(self, style=None):
         file_name = self.style_file
         if isinstance(style, str):

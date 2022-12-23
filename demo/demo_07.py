@@ -83,6 +83,7 @@ class dataSchema(Q2DbSchema):
             pk=True,
         )
         self.add(table="customers", column="name", datatype="varchar", datalen=100)
+        self.add(table="customers", column="address", datatype="varchar", datalen=100)
 
 
 def load_mock_data(db: Q2Db):
@@ -154,6 +155,7 @@ class DemoApp(Q2App):
         form.no_view_action = 1
         form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
+        form.add_control("address", "Address", datatype="char", datalen=100)
 
         cursor: Q2Cursor = self.db.table(table_name="customers")
         model = Q2CursorModel(cursor)

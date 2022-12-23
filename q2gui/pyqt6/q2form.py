@@ -179,7 +179,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         #         return
 
         if not isinstance(self.parent(), QMdiSubWindow):
-            self.escapeEnabled = False
+            self.escape_enabled = False
 
         self.shown = True
         self.restore_geometry(q2app.q2_app.settings)
@@ -210,9 +210,9 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             keyText = QKeySequence(key).toString()
         except Exception:
             keyText = ""
-        if key == Qt.Key.Key_Escape and self.escapeEnabled:
+        if key == Qt.Key.Key_Escape and self.escape_enabled:
             self.close()
-        elif key == Qt.Key.Key_Escape and not self.escapeEnabled:
+        elif key == Qt.Key.Key_Escape and not self.escape_enabled:
             event.ignore()
             # return
         elif self.mode == "form" and key in (Qt.Key.Key_Up,):

@@ -33,7 +33,8 @@ class DemoApp(Q2App):
         self.add_menu("File|Quit", self.close, toolbar=1)
 
     def file_select_form(self):
-        url = "https://eforexcel.com/wp/" "downloads-18-sample-csv-files-data-sets-for-testing-sales/"
+        url = "https://excelbianalytics.com/wp/downloads-18-sample-csv-files-data-sets-for-testing-sales/"
+
         req = request.Request(url, headers={"User-Agent": "Safari"})
 
         data: str = q2Wait(lambda: str(request.urlopen(req).read()), "Loading webpage...")

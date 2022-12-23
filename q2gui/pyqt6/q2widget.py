@@ -84,6 +84,9 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def set_focus(self):
         self.setFocus()
 
+    def has_focus(self):
+        return self.hasFocus()
+
     def set_maximum_width(self, width, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":

@@ -11,6 +11,7 @@ import q2gui.q2app as q2app
 from q2gui.q2model import Q2Model
 from q2gui.q2utils import int_
 import re
+import json
 
 VIEW = "VIEW"
 NEW = "NEW"
@@ -543,14 +544,14 @@ class Q2Form:
 
         return self._model_record
 
-    def show_crud_form(self, mode):
+    def show_crud_form(self, mode, modal="modal"):
         """mode - VIEW, NEW, COPY, EDIT"""
         self.crud_mode = mode
         self.add_crud_buttons(mode)
         self.crud_form = self._Q2FormWindow_class(self, f"{self.title}.[{mode}]")
         self.crud_form.build_form()
         self.set_crud_form_data(mode)
-        self.crud_form.show_form()
+        self.crud_form.show_form(modal=modal)
 
     def set_crud_form_data(self, mode=EDIT):
         """set current record's value in crud_form"""
@@ -634,8 +635,9 @@ class Q2Form:
         self.refresh()
 
     def get_where_for_child(self, action):
-        if self.current_row >= 0:
+        if self.current_row >= 0 and self.model.row_count() > 0:
             current_record = self.model.get_record(self.current_row)
+
             if action.get("child_form_object"):
                 if action.get("child_form_object").grid_form:
                     action["child_form_object"].grid_form.set_enabled()
@@ -804,27 +806,13 @@ class Q2Form:
             _count, _time = waitbar.close()
             self._q2dialogs.q2Mess(f"Import done:<br>Rows: {_count}<br>Time: {_time:.2f} sec.")
 
-    def grid_data_paste_csv(self):
-        cliptext = "client1\nclient2"
-        before_form_show = self.before_form_show
-
-        def paste():
-            before_form_show()
-            for x in cliptext.split("\n"):
-                self.s.name = x
-                self.crud_save()
-            # self.close()
-
-        self.before_form_show = paste
-
-        self.show_crud_form(NEW)
-
-        self.before_form_show = before_form_show
+    def grid_data_paste_clipboard(self):
+        Q2PasteClipboard(self)
 
     def grid_data_info(self):
         columns = self.model.columns
         self._q2dialogs.q2Mess(
-            f"Table: {self.model.cursor.table_name}"
+            f"Table: {self.model.get_table_name()}"
             f":<br>Rows: {self.model.row_count()}"
             f"<br>Order: {self.model.order_text}"
             f"<br>Filter: {self.model.where_text}"
@@ -849,7 +837,7 @@ class Q2FormWindow:
         self.tab_widget = None
         # Must be defined in any subclass
         self._widgets_package = None
-        self.escapeEnabled = True
+        self.escape_enabled = True
         self.mode = "form"
         self.hotkey_widgets = {}
         self.grid_actions = q2app.Q2Actions()
@@ -912,15 +900,15 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
 
-        # actions.add_action(
-        #     text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_CSV_TEXT,
-        #     worker=self.q2_form.grid_data_paste_csv,
-        #     icon=q2app.ACTION_TOOLS_IMPORT_CSV_ICON,
-        # )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT,
+            worker=self.q2_form.grid_data_paste_clipboard,
+            icon=q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_ICON,
+        )
 
-        # actions.add_action(
-        #     text=q2app.ACTION_TOOLS_TEXT + "|-",
-        # )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|-",
+        )
 
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
@@ -1188,6 +1176,7 @@ class Q2FormWindow:
         module_name = f"q2{module_name}"
         class_name = f"q2{class_name}"
         try:
+            # print(self._widgets_package, module_name)
             return getattr(getattr(self._widgets_package, module_name), class_name)
         except Exception:
             # print(self._widgets_package, module_name, class_name)
@@ -1384,3 +1373,163 @@ class Q2ModelData:
     def __getattr__(self, name):
         datadic = self.q2_form.model.get_record(self.q2_form.current_row)
         return datadic.get(name, "")
+
+
+class Q2PasteClipboard:
+    def __init__(self, q2_form: Q2Form):
+        self.q2_form = q2_form
+        self.cliptext = "Name\tAddress\nclient1\tBonn\nclient2\tBerlin"
+        self.cliptext = q2app.q2_app.get_clipboard_text()
+        self.clipboard_headers = self.cliptext.split("\n")[0].split("\t")
+        self.load_target()
+        self.load_source()
+        self.load_data()
+        self.load_set()
+        if self.show_main_form().ok_pressed:
+            self.save_set()
+            self.paste_to_form()
+
+    def paste_to_form(self):
+        source_map = {x["source_column"]: x["_target_column"] for x in self.target_data if x["source_column"]}
+        if not self.main_form.s.first_row_is_header:
+            self.data_data.insert(0, {f"{x}": x for x in self.clipboard_headers})
+
+        self.q2_form.show_crud_form(NEW, modal="")
+        for row in self.data_data:
+            for col in row:
+                self.q2_form.s.__setattr__(source_map[col], row[col])
+            self.q2_form.crud_save(close_form=False)
+            self.q2_form.before_form_show()
+        self.q2_form.close()
+
+    def save_set(self):
+        q2app.q2_app.settings.set(
+            self.q2_form.title,
+            f"paste-{self.target_hash}-{self.source_hash}",
+            json.dumps(self.target_data),
+        )
+
+    def show_main_form(self):
+        self.main_form = self.q2_form.__class__("Paste (Clipboard)")
+        self.main_form.add_control("first_row_is_header", "First row is a header", control="check", data="*")
+        self.main_form.add_control("/vs", tag="vs")
+        self.main_form.add_control("/hs", tag="hs")
+        self.main_form.add_control("target_form", widget=self.target_form)
+
+        # csv_form.add_control("/v")
+        # csv_form.add_control("/s")
+        # csv_form.add_control("to_target", "<>", datalen=4, control="button", valid=self.move_it)
+        # csv_form.add_control("/")
+
+        self.target_form.grid_double_clicked = self.move_it
+        self.source_form.grid_double_clicked = self.move_it
+        self.main_form.add_control("source_form", widget=self.source_form)
+        self.main_form.add_control("/")
+        self.main_form.add_control("", "Clipboard data")
+        self.main_form.add_control("data_form", widget=self.data_form)
+
+        self.main_form.cancel_button = True
+        self.main_form.ok_button = True
+        self.main_form.add_ok_cancel_buttons()
+        self.main_form.show_form()
+        return self.main_form
+
+    def move_it(self):
+        target_row = self.target_form.current_row
+        source_row = self.source_form.current_row
+        target_row_data = self.target_form.get_current_record()
+        source_row_data = self.source_form.get_current_record()
+        if target_row_data["source_column"] == "" and source_row_data["column"]:
+            # move left
+            target_row_data["source_column"] = source_row_data["column"]
+            source_row_data["column"] = ""
+        else:
+            # swap
+            target_row_data["source_column"], source_row_data["column"] = (
+                source_row_data["column"],
+                target_row_data["source_column"],
+            )
+
+        self.target_form.model.update(target_row_data, target_row)
+        self.source_form.model.update(source_row_data, source_row)
+
+        if self.target_form.w.form__grid.has_focus():
+            source_row += 1
+        elif self.source_form.w.form__grid.has_focus():
+            target_row += 1
+        self.target_form.set_grid_index(target_row)
+        self.source_form.set_grid_index(source_row)
+
+    def load_set(self):
+        last_set = q2app.q2_app.settings.get(
+            self.q2_form.title,
+            f"paste-{self.target_hash}-{self.source_hash}",
+            None,
+        )
+
+        if last_set:
+            self.target_data = json.loads(last_set)
+            self.target_form.model.set_records(self.target_data)
+            for x in self.target_data:
+                col_name = x["source_column"]
+                for row, dic in enumerate(self.source_data):
+                    if dic["column"] == col_name:
+                        self.source_data[row]["column"] = ""
+                        break
+
+    def myhash(self, mystr):
+        rez = 1
+        for x in range(len(mystr)):
+            rez += rez * x * ord(mystr[x])
+        return rez & 0xFFFFFFFF
+
+    def load_target(self):
+        self.target_form = self.q2_form.__class__("Target")
+        self.target_data = []
+        target_hash_string = ""
+        for x in self.q2_form.controls:
+            if x["migrate"]:
+                target_hash_string += x.get("column")
+                self.target_data.append(
+                    {
+                        "target_column": f'{x.get("label")} '
+                        f'\n({self.q2_form.model.get_table_name()}.{x.get("column")})',
+                        "_target_column": x.get("column"),
+                        "source_column": "",
+                    },
+                )
+        self.target_hash = self.myhash(target_hash_string)
+
+        self.target_form.set_model(Q2Model())
+        self.target_form.model.set_records(self.target_data)
+        self.target_form.add_control("target_column", "Target columns", control="line", datalen=100)
+        self.target_form.add_control("source_column", "Source columns", control="line", datalen=100)
+        self.target_form.i_am_child = 1
+
+    def load_source(self):
+        self.source_data = [{"column": x} for x in self.clipboard_headers]
+        self.source_hash = self.myhash(",".join(self.clipboard_headers))
+        self.source_form = self.q2_form.__class__("Source")
+
+        self.source_form.set_model(Q2Model())
+        self.source_form.model.set_records(self.source_data)
+        self.source_form.add_control("column", "Source columns", control="line", datalen=100)
+        self.source_form.i_am_child = 1
+
+    def load_data(self):
+        self.data_data = []
+        for cliptext_row in self.cliptext.split("\n")[1:]:
+            row_dic = {}
+            for ncol, cliptext_column in enumerate(cliptext_row.split("\t")):
+                row_dic[self.clipboard_headers[ncol]] = cliptext_column
+            if len(self.clipboard_headers) != len(row_dic):
+                continue
+            self.data_data.append(row_dic)
+
+        self.data_form = self.q2_form.__class__("Clipboard data")
+        for col in self.clipboard_headers:
+            self.data_form.add_control(col, col)
+
+        self.data_form.set_model(Q2Model())
+        self.data_form.model.set_records(self.data_data)
+        self.data_form.i_am_child = 1
