@@ -232,7 +232,7 @@ def q2Wait(worker, mess=""):
     return worker_thread._return
 
 
-class q2WaitShow:
+class Q2WaitShow:
     def __init__(self, *args):
         mess = "Working... \t"
         max_range = 0

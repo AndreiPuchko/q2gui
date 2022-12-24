@@ -104,6 +104,9 @@ class Q2Form:
             self.show_mdi_modal_form()
         return self
 
+    def show_progressbar(self, title="", count=""):
+        return self._q2dialogs.Q2WaitShow(title, count)
+
     def set_model(self, model):
         self.model: Q2Model = model
         self.model.q2_form = self
@@ -475,9 +478,15 @@ class Q2Form:
             ask_text = q2app.ASK_REMOVE_RECORD_TEXT
         else:
             ask_text = q2app.ASK_REMOVE_RECORDS_TEXT % len(selected_rows)
+        waitbar = None
         if selected_rows and self._q2dialogs.q2AskYN(ask_text):
             show_error_messages = True
+            if len(selected_rows) > 10:
+                waitbar = self.show_progressbar("Rows removing", len(selected_rows))
             for row in selected_rows:
+                if waitbar:
+                    waitbar.step(1)
+
                 if self.before_delete() is False:
                     continue
                 if self.model.delete(row, refresh=False) is not True and show_error_messages:
@@ -496,6 +505,8 @@ class Q2Form:
                         ):
                             show_error_messages = False
                 self.after_delete()
+            if waitbar:
+                waitbar.close()
             self.model.refresh()
             if self.model.row_count() < 0:
                 self.current_row = -1
@@ -780,7 +791,7 @@ class Q2Form:
         if not file:
             return
         file = self.validate_impexp_file_name(file, filetype)
-        waitbar = self._q2dialogs.q2WaitShow(f"Export data to: {file}", self.model.row_count())
+        waitbar = self._q2dialogs.Q2WaitShow(f"Export data to: {file}", self.model.row_count())
         try:
             self.model.data_export(file, tick_callback=lambda: waitbar.step())
         except Exception:
@@ -796,7 +807,7 @@ class Q2Form:
         if not file:
             return
         file = self.validate_impexp_file_name(file, filetype)
-        waitbar = self._q2dialogs.q2WaitShow(f"Import data from: {file}")
+        waitbar = self._q2dialogs.Q2WaitShow(f"Import data from: {file}")
         try:
             self.model.data_import(file, tick_callback=lambda: waitbar.step())
         except Exception:
@@ -1394,13 +1405,20 @@ class Q2PasteClipboard:
         if not self.main_form.s.first_row_is_header:
             self.data_data.insert(0, {f"{x}": x for x in self.clipboard_headers})
 
+        # waitbar = self.q2_form._q2dialogs.Q2WaitShow("Export data to", len(self.data_data))
+        waitbar = self.q2_form.show_progressbar("Export data to", len(self.data_data))
+
         self.q2_form.show_crud_form(NEW, modal="")
+
         for row in self.data_data:
+            waitbar.step(1)
             for col in row:
-                self.q2_form.s.__setattr__(source_map[col], row[col])
+                if col in source_map:
+                    self.q2_form.s.__setattr__(source_map[col], row[col])
             self.q2_form.crud_save(close_form=False)
             self.q2_form.before_form_show()
         self.q2_form.close()
+        waitbar.close()
 
     def save_set(self):
         q2app.q2_app.settings.set(
@@ -1411,6 +1429,7 @@ class Q2PasteClipboard:
 
     def show_main_form(self):
         self.main_form = self.q2_form.__class__("Paste (Clipboard)")
+        self.main_form.add_control("/v")
         self.main_form.add_control("first_row_is_header", "First row is a header", control="check", data="*")
         self.main_form.add_control("/vs", tag="vs")
         self.main_form.add_control("/hs", tag="hs")
