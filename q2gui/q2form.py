@@ -925,8 +925,7 @@ class Q2FormWindow:
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
-            # text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
+            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
             worker=self.q2_form.grid_data_bulk_update,
             icon=q2app.ACTION_TOOLS_BULK_UPDATE_ICON,
         )
