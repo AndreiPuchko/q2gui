@@ -82,6 +82,9 @@ ACTION_TOOLS_IMPORT_ICON = "import.png"
 ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT = "Paste clipboard"
 ACTION_TOOLS_IMPORT_CLIPBOARD_ICON = "paste-csv.png"
 
+ACTION_TOOLS_BULK_UPDATE_TEXT = "Bulk update"
+ACTION_TOOLS_BULK_UPDATE_ICON = "bulk-update.png"
+
 ACTION_TOOLS_INFO_TEXT = "Info"
 ACTION_TOOLS_INFO_ICON = "info.png"
 
@@ -277,6 +280,7 @@ class Q2Controls(list):
         tag="",
         eat_enter=None,
         hotkey="",
+        **args,
     ):
         meta = locals().copy()
         del meta["self"]

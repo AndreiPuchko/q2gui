@@ -473,7 +473,7 @@ class Q2Form:
         self.set_crud_form_data()
 
     def crud_delete(self):
-        selected_rows = self.grid_form.get_grid_selected_rows()
+        selected_rows = self.get_grid_selected_rows()
         if len(selected_rows) == 1:
             ask_text = q2app.ASK_REMOVE_RECORD_TEXT
         else:
@@ -513,6 +513,9 @@ class Q2Form:
                 self.current_column = -1
             self.set_grid_index(row)
             self.refresh_children()
+
+    def get_grid_selected_rows(self):
+        return self.grid_form.get_grid_selected_rows()
 
     def before_delete(self):
         pass
@@ -748,6 +751,7 @@ class Q2Form:
         tag="",
         eat_enter=None,
         hotkey="",
+        **args,
     ):
         """
         to_form - form class or function(fabric) that returns form object
@@ -819,6 +823,9 @@ class Q2Form:
 
     def grid_data_paste_clipboard(self):
         Q2PasteClipboard(self)
+
+    def grid_data_bulk_update(self):
+        Q2BulkUpdate(self)
 
     def grid_data_info(self):
         columns = self.model.columns
@@ -915,6 +922,13 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT,
             worker=self.q2_form.grid_data_paste_clipboard,
             icon=q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_ICON,
+        )
+
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
+            # text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
+            worker=self.q2_form.grid_data_bulk_update,
+            icon=q2app.ACTION_TOOLS_BULK_UPDATE_ICON,
         )
 
         actions.add_action(
@@ -1389,7 +1403,6 @@ class Q2ModelData:
 class Q2PasteClipboard:
     def __init__(self, q2_form: Q2Form):
         self.q2_form = q2_form
-        self.cliptext = "Name\tAddress\nclient1\tBonn\nclient2\tBerlin"
         self.cliptext = q2app.q2_app.get_clipboard_text()
         self.clipboard_headers = self.cliptext.split("\n")[0].split("\t")
         self.load_target()
@@ -1405,8 +1418,7 @@ class Q2PasteClipboard:
         if not self.main_form.s.first_row_is_header:
             self.data_data.insert(0, {f"{x}": x for x in self.clipboard_headers})
 
-        # waitbar = self.q2_form._q2dialogs.Q2WaitShow("Export data to", len(self.data_data))
-        waitbar = self.q2_form.show_progressbar("Export data to", len(self.data_data))
+        waitbar = self.q2_form.show_progressbar("Paste rows", len(self.data_data))
 
         self.q2_form.show_crud_form(NEW, modal="")
 
@@ -1440,8 +1452,6 @@ class Q2PasteClipboard:
         # csv_form.add_control("to_target", "<>", datalen=4, control="button", valid=self.move_it)
         # csv_form.add_control("/")
 
-        self.target_form.grid_double_clicked = self.move_it
-        self.source_form.grid_double_clicked = self.move_it
         self.main_form.add_control("source_form", widget=self.source_form)
         self.main_form.add_control("/")
         self.main_form.add_control("", "Clipboard data")
@@ -1451,6 +1461,7 @@ class Q2PasteClipboard:
         self.main_form.ok_button = True
         self.main_form.add_ok_cancel_buttons()
         self.main_form.show_form()
+
         return self.main_form
 
     def move_it(self):
@@ -1511,7 +1522,7 @@ class Q2PasteClipboard:
                 target_hash_string += x.get("column")
                 self.target_data.append(
                     {
-                        "target_column": f'{x.get("label")} '
+                        "target_column": f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
                         f'\n({self.q2_form.model.get_table_name()}.{x.get("column")})',
                         "_target_column": x.get("column"),
                         "source_column": "",
@@ -1523,6 +1534,7 @@ class Q2PasteClipboard:
         self.target_form.model.set_records(self.target_data)
         self.target_form.add_control("target_column", "Target columns", control="line", datalen=100)
         self.target_form.add_control("source_column", "Source columns", control="line", datalen=100)
+        self.target_form.grid_double_clicked = self.move_it
         self.target_form.i_am_child = 1
 
     def load_source(self):
@@ -1533,6 +1545,7 @@ class Q2PasteClipboard:
         self.source_form.set_model(Q2Model())
         self.source_form.model.set_records(self.source_data)
         self.source_form.add_control("column", "Source columns", control="line", datalen=100)
+        self.source_form.grid_double_clicked = self.move_it
         self.source_form.i_am_child = 1
 
     def load_data(self):
@@ -1552,3 +1565,84 @@ class Q2PasteClipboard:
         self.data_form.set_model(Q2Model())
         self.data_form.model.set_records(self.data_data)
         self.data_form.i_am_child = 1
+
+
+class Q2BulkUpdate:
+    def __init__(self, q2_form: Q2Form):
+        self.q2_form = q2_form
+
+        self.load_target()
+        if self.show_main_form().ok_pressed:
+            self.bulk_data_enter()
+
+    def bulk_data_enter(self):
+        bulk_data_form = self.q2_form.__class__("Bulk data")
+        bulk_data_form.model = self.q2_form.model
+        bulk_columns = []
+        current_record = self.q2_form.get_current_record()
+        for x in self.target_data:
+            if x["_selected"]:
+                control = dict(x)
+                control["data"] = current_record.get(control["column"], "")
+                bulk_data_form.add_control(**control)
+                bulk_columns.append(control["column"])
+        if len(bulk_data_form.controls) == 0:
+            return
+
+        bulk_data_form.ok_button = True
+        bulk_data_form.cancel_button = True
+        bulk_data_form.show_form()
+        if bulk_data_form.ok_pressed:
+            self.bulk_update(bulk_data_form, bulk_columns)
+
+    def bulk_update(self, bulk_data_form, bulk_columns):
+        record_list = []
+        for x in self.q2_form.get_grid_selected_rows():
+            record_list.append(self.q2_form.model.get_record(x))
+        waitbar = self.q2_form.show_progressbar("Bulk update rows", len(record_list))
+        for x in record_list:
+            waitbar.step(1)
+            self.q2_form.set_grid_index(self.q2_form.model.cursor.seek_primary_key_row(x))
+            self.q2_form.show_crud_form(EDIT, modal="")
+            for bulk_column in bulk_columns:
+                self.q2_form.w.__getattr__(bulk_column).when()
+                self.q2_form.s.__setattr__(bulk_column, bulk_data_form.s.__getattr__(bulk_column))
+                self.q2_form.w.__getattr__(bulk_column).valid()
+            self.q2_form.crud_save()
+        waitbar.close()
+
+    def show_main_form(self):
+        self.main_form = self.q2_form.__class__("Bulk update selected rows")
+        self.main_form.add_control("/v")
+        self.main_form.add_control("target_form", widget=self.target_form)
+        self.main_form.cancel_button = True
+        self.main_form.ok_button = True
+        self.main_form.add_ok_cancel_buttons()
+        self.main_form.show_form()
+        return self.main_form
+
+    def select(self):
+        target_row = self.target_form.current_row
+        target_row_data = self.target_form.get_current_record()
+        target_row_data["_selected"] = "" if target_row_data["_selected"] else "*"
+        self.target_form.model.update(target_row_data, target_row)
+        self.target_form.set_grid_index(target_row)
+
+    def load_target(self):
+        self.target_form = self.q2_form.__class__("Target")
+        self.target_data = []
+        for x in self.q2_form.controls:
+            if not x["pk"] and not x["noform"]:
+                x["target_column"] = (
+                    f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
+                    f'\n({self.q2_form.model.get_table_name()}.{x.get("column")})'
+                )
+                x["_target_column"] = x.get("column")
+                x["_selected"] = ""
+                self.target_data.append(dict(x))
+        self.target_form.set_model(Q2Model())
+        self.target_form.model.set_records(self.target_data)
+        self.target_form.add_control("target_column", "Columns", control="line", datalen=100)
+        self.target_form.add_control("_selected", "Selected", control="check", datalen=5)
+        self.target_form.grid_double_clicked = self.select
+        self.target_form.i_am_child = 1

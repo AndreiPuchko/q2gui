@@ -85,6 +85,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         return self.set_related()
 
     def set_related(self):
+        rel = None
         if self.meta["form"].model:
             rel = self.meta["form"].model._get_related(
                 self.get.text(), self.meta, do_not_show_value=1, reset_cache=1

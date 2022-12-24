@@ -29,7 +29,7 @@ class DemoApp(Q2App):
 
     def run_simple_wait_bar(self):
         steps = 500
-        w = q2WaitShow("Update:", steps)
+        w = Q2WaitShow("Update:", steps)
         for x in range(steps):
             if w.step(f"Step {x}"):
                 break
