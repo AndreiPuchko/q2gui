@@ -533,7 +533,7 @@ class Q2Form:
             rez = self.model.insert(crud_data, self.current_row)
             # self.move_grid_index(1)
         if rez:
-            self.set_grid_index(self.model.cursor.seek_primary_key_row(crud_data))
+            self.set_grid_index(self.model.seek_row(crud_data))
         if rez is False:
             self._q2dialogs.q2Mess(self.model.get_data_error())
         else:
@@ -1601,7 +1601,7 @@ class Q2BulkUpdate:
         waitbar = self.q2_form.show_progressbar("Bulk update rows", len(record_list))
         for x in record_list:
             waitbar.step(1)
-            self.q2_form.set_grid_index(self.q2_form.model.cursor.seek_primary_key_row(x))
+            self.q2_form.set_grid_index(self.q2_form.model.seek_row(x))
             self.q2_form.show_crud_form(EDIT, modal="")
             for bulk_column in bulk_columns:
                 self.q2_form.w.__getattr__(bulk_column).when()

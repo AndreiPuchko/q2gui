@@ -35,6 +35,7 @@ class Q2Model:
         self.lastdata_error_text = ""
 
         self.meta = []
+        self.cursor = None
 
         # CRUD flags
         self.readonly = True
@@ -145,10 +146,6 @@ class Q2Model:
 
     def refresh(self):
         self.relation_cache = {}
-
-    # def refresh(self):
-    #     self.set_where(self.where_text)
-    #     self.set_order(self.order_text)
 
     def reset(self):
         self.records = []
@@ -297,6 +294,29 @@ class Q2Model:
     def data_import(self, file):
         pass
 
+    def seek_row(self, row_dict):
+        pk = self.get_meta_primary_key()
+        if pk and pk in row_dict:
+            for row_number in range(self.row_count()):
+                if row_dict[pk] == self.get_record(row_number)[pk]:
+                    return row_number
+        else:
+            for row_number in range(self.row_count()):
+                rec_dic = self.get_record(row_number)
+                found = 1
+                for colname in row_dict:
+                    if row_dict[colname] != rec_dic[colname]:
+                        found = 0
+                        break
+                if found:
+                    return row_number
+        return 0
+
+    def get_meta_primary_key(self):
+        for x in self.meta:
+            if x["pk"]:
+                return x["column"]
+
 
 class Q2CsvModel(Q2Model):
     def __init__(self, csv_file_object=None):
@@ -308,67 +328,6 @@ class Q2CsvModel(Q2Model):
             csv_dict = csv.DictReader(csv_file_object, fieldnames)
         self.set_records([x for x in csv_dict])
         self.filterable = True
-
-    # def update(self, record: dict, current_row):
-    #     self.records[current_row] = record
-    #     self.data_changed = True
-    #     self.refresh()
-    #     return True
-
-    # def insert(self, record: dict, current_row):
-    #     self.records.append(record)
-    #     self.data_changed = True
-    #     self.refresh()
-    #     return True
-
-    # def delete(self, row_number):
-    #     self.records.pop(row_number)
-    #     self.data_changed = True
-    #     self.refresh()
-    #     return True
-
-    # def set_where(self, where_text=""):
-    #     self.where_text = where_text
-    #     if self.where_text:
-    #         self.use_proxy = True
-    #         self.proxy_records = []
-    #         for row, rec in enumerate(self.records):
-    #             if eval(self.where_text, rec):
-    #                 self.proxy_records.append(row)
-    #     else:
-    #         self.use_proxy = False
-    #     self.refresh()
-
-    # def set_order(self, order_data=""):
-    #     super().set_order(order_data=order_data)
-
-    #     colname = self.order_text
-
-    #     if self.proxy_records:
-    #         sort_records = {}
-    #         for x in range(len(self.proxy_records)):
-    #             value = self.records[self.proxy_records[x]][colname]
-    #             if value not in sort_records:
-    #                 sort_records[value] = [self.proxy_records[x]]
-    #             else:
-    #                 sort_records[value].append(self.proxy_records[x])
-    #     else:
-    #         sort_records = {}
-    #         for x in range(len(self.records)):
-    #             if self.records[x][colname] not in sort_records:
-    #                 sort_records[self.records[x][colname]] = [x]
-    #             else:
-    #                 sort_records[self.records[x][colname]].append(x)
-
-    #     sorted_keys = sorted([x for x in sort_records.keys()])
-    #     # sorted_keys.sort()
-    #     tmp_proxy_records = []
-    #     for x in sorted_keys:
-    #         for y in sort_records[x]:
-    #             tmp_proxy_records.append(y)
-
-    #     self.proxy_records = tmp_proxy_records
-    #     self.use_proxy = True
 
 
 class Q2CursorModel(Q2Model):
