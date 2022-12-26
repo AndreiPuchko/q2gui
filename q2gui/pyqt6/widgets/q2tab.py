@@ -16,7 +16,7 @@ from q2gui.pyqt6.q2window import Q2Frame
 from q2gui.pyqt6.q2widget import Q2Widget
 
 
-class Q2TabBar(QTabBar):
+class Q2TabBar(QTabBar, Q2Widget):
     def get_text(self):
         return self.tabText(self.currentIndex())
 

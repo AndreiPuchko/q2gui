@@ -163,7 +163,8 @@ class Q2Model:
         self.alignments = []
         self.meta = []
         for meta in self.q2_form.controls:
-            if meta.get("column", "").startswith("/") or meta.get("nogrid"):
+            # if meta.get("column", "").startswith("/") or meta.get("nogrid"):
+            if meta.get("column", "").startswith("/"):
                 continue
             if meta.get("control", "") in ["button", "widget", "form"]:
                 continue

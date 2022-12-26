@@ -7,13 +7,15 @@ import importlib
 from q2gui.q2app import Q2App
 from q2gui.q2form import Q2Form
 from q2gui.q2app import load_q2engine
-
+print(Q2App)
 load_q2engine(globals(), "PyQt6")
+print(Q2App)
 
 
 class DemoApp(Q2App):
     def on_init(self):
         self.hide_tabbar()
+        self.hide_toolbar()
         self.hide_statusbar()
         self.hide_menubar()
         self.define_launch_data()

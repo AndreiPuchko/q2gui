@@ -39,11 +39,12 @@ def mock_data_load(db: Q2Db):
 
 class DemoApp(Q2App):
     def on_start(self):
+        mock_data_load(self.db)
         self.customers()
 
     def create_database(self):
-        # self.db = Q2Db("sqlite3", database_name=":memory:")
-        self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
+        self.db = Q2Db("sqlite3", database_name=":memory:")
+        # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
         for x in [
             "PRAGMA journal_mode = WAL",
             "PRAGMA synchronous = EXTRA",
