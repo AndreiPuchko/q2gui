@@ -163,6 +163,7 @@ class q2grid(QTableView):
         return self.model().columnCount()
 
     def set_index(self, row, column=None):
+        self.clearSelection()
         if row < 0:
             row = 0
         elif row > self.row_count() - 1:

@@ -163,8 +163,8 @@ class Q2Model:
         self.alignments = []
         self.meta = []
         for meta in self.q2_form.controls:
-            # if meta.get("column", "").startswith("/") or meta.get("nogrid"):
-            if meta.get("column", "").startswith("/"):
+            if meta.get("column", "").startswith("/") or meta.get("nogrid"):
+            # if meta.get("column", "").startswith("/"):
                 continue
             if meta.get("control", "") in ["button", "widget", "form"]:
                 continue
@@ -299,7 +299,8 @@ class Q2Model:
         pk = self.get_meta_primary_key()
         if pk and pk in row_dict:
             for row_number in range(self.row_count()):
-                if row_dict[pk] == self.get_record(row_number)[pk]:
+                rec_dic = self.get_record(row_number)
+                if str(row_dict[pk]) == rec_dic [pk]:
                     return row_number
         else:
             for row_number in range(self.row_count()):
@@ -314,7 +315,8 @@ class Q2Model:
         return 0
 
     def get_meta_primary_key(self):
-        for x in self.meta:
+        for x in self.q2_form.controls:
+        # for x in self.meta:
             if x["pk"]:
                 return x["column"]
 

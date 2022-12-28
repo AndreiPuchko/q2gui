@@ -1,11 +1,12 @@
 if __name__ == "__main__":
     import sys
+
     sys.path.insert(0, ".")
     from demo.demo import demo
 
     demo()
 
-from PyQt6.QtWidgets import QDialog, QMdiSubWindow, QApplication, QApplication
+from PyQt6.QtWidgets import QDialog, QMdiSubWindow, QApplication
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QKeySequence, QKeyEvent
 
@@ -18,6 +19,7 @@ from q2gui.pyqt6.q2app import Q2QtWindow
 from q2gui.q2utils import num
 
 import q2gui.q2dialogs
+
 # from q2gui.q2dialogs import q2Mess, q2Wait, q2AskYN
 
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -84,7 +86,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
 
     def center_pos(self):
         left = int((self.parent().parent().size().width() - self.parent().size().width()) / 2)
-        top = int ((self.parent().parent().size().height() - self.parent().size().height()) / 2)
+        top = int((self.parent().parent().size().height() - self.parent().size().height()) / 2)
         return left, top
 
     def expand_size(self, paw, sizeBefore, sizeAfter):
