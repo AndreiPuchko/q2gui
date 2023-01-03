@@ -131,7 +131,6 @@ class q2toolbar(QFrame, Q2Widget):
         #     action["engineAction"].setIcon(QIcon(icon))
         # if os.path.isfile(GRID_ACTION_ICON):
             
-        
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)

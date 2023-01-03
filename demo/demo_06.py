@@ -43,6 +43,7 @@ class DemoApp(Q2App):
 
         def after_form_show():
             form.s.code = open("q2gui/q2app.py").read()
+            form.w.code.set_focus()
 
         form.after_form_show = after_form_show
         form.run()

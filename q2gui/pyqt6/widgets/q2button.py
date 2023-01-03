@@ -9,7 +9,7 @@ if __name__ == "__main__":
     demo()
 
 
-from PyQt6.QtWidgets import QPushButton, QSizePolicy
+from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFontMetrics
 

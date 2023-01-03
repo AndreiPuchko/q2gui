@@ -32,7 +32,7 @@ class q2lookup(QWidget):
         self.layout().addWidget(self.lookup_edit)
         self.layout().addWidget(self.lookup_list)
         self.lookup_edit.set_text("" if text == "*" else text)
-        self.lookup_edit.setFocus()
+        self.lookup_edit.set_focus()
 
         self.timer = QTimer()
         self.timer.setSingleShot(True)
