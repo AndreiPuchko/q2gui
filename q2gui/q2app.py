@@ -445,6 +445,14 @@ class Q2App:
     def clear_menu(self):
         self.menu_list = []
 
+    def get_autocompletition_list(self):
+        return [
+            "test_autocompletion",
+            "test_table",
+            "test_table.column1",
+            "test_table.column2",
+        ]
+
     def build_menu(self):
         self.menu_list = self.reorder_menu(self.menu_list)
 

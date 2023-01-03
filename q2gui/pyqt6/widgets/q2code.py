@@ -87,13 +87,7 @@ class q2code(QsciScintilla, Q2Widget):
             self.setLexer(self.lexer)
 
     def set_custom_autocompletition_list(self, custom_autocompletions_list=[]):
-        if len(custom_autocompletions_list) == 0:
-            custom_autocompletions_list = [
-                "test_autocompletion",
-                "test_table",
-                "test_table.column1",
-                "test_table.column2",
-            ]
+        custom_autocompletions_list = self.meta["form"].q2_app.get_autocompletition_list()
         self.__api = QsciAPIs(self.lexer)
         for ac in custom_autocompletions_list:
             self.__api.add(ac)
