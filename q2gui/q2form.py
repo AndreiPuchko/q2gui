@@ -530,16 +530,51 @@ class Q2Form:
         if self.crud_mode in [EDIT, VIEW]:
             rez = self.update_current_row(crud_data)
         else:
-            rez = self.model.insert(crud_data, self.current_row)
-            # self.move_grid_index(1)
+            rez = self.model.insert(crud_data, self.current_row, refresh=False)
+            if self.crud_mode == COPY:
+                self.prepare_copy_children_data()
+            self.model.refresh()
+
         if rez:
             self.set_grid_index(self.model.seek_row(crud_data))
         if rez is False:
             self._q2dialogs.q2Mess(self.model.get_data_error())
         else:
+            if self.crud_mode == COPY:
+                self.copy_children_data()
             self.after_crud_save()
             if close_form:
                 self.close()
+
+    def prepare_copy_children_data(self):
+        self.copy_records = {}
+        # for action in self.children_forms:
+        for pos, action in enumerate(self.children_forms):
+            if int_(action["child_copy_mode"]) == 3:
+                continue
+            if (
+                int_(action["child_copy_mode"]) == 1
+                and self._q2dialogs.q2AskYN("Copy %s?" % action["text"]) != 2
+            ):
+                continue
+            self.copy_records[pos] = []
+            for row_number in range(action["child_form_object"].model.row_count()):
+                source_record = action["child_form_object"].model.get_record(row_number)
+                self.copy_records[pos].append(source_record)
+
+    def copy_children_data(self):
+        for pos, action in enumerate(self.children_forms):
+            if pos not in self.copy_records:
+                continue
+            filter = self.get_where_for_child(action)
+            filter_data = {}
+            for filter_part in filter.split(" and "):
+                filter_expr = filter_part.split("=")
+                if len(filter_expr) == 2:
+                    filter_data[filter_expr[0]] = filter_expr[1]
+            for source_record in self.copy_records[pos]:
+                source_record.update(filter_data)
+                action["child_form_object"].model.insert(source_record)
 
     def update_current_row(self, crud_data):
         rez = self.model.update(crud_data, self.current_row)
@@ -775,6 +810,8 @@ class Q2Form:
         eof_disabled="",
         child_form=None,
         child_where="",
+        child_copy_mode=1,
+        child_noshow=0,
     ):
         """
         child_form - form class or function(fabric) that returns form object

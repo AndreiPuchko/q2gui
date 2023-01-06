@@ -169,6 +169,8 @@ class Q2Actions(list):
         eof_disabled="",
         child_form=None,
         child_where="",
+        child_copy_mode=1,
+        child_noshow=0,
     ):
         """ "/view", "/crud" """
         for x in range(len(self)):
@@ -180,6 +182,8 @@ class Q2Actions(list):
         action = {}
         action["text"] = text
         action["worker"] = worker
+        action["child_copy_mode"] = child_copy_mode
+        action["child_noshow"] = child_noshow
 
         if tag == "select":
             icon = ACTION_SELECT_ICON
