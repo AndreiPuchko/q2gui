@@ -164,7 +164,7 @@ class Q2Model:
         self.meta = []
         for meta in self.q2_form.controls:
             if meta.get("column", "").startswith("/") or meta.get("nogrid"):
-            # if meta.get("column", "").startswith("/"):
+                # if meta.get("column", "").startswith("/"):
                 continue
             if meta.get("control", "") in ["button", "widget", "form"]:
                 continue
@@ -300,7 +300,7 @@ class Q2Model:
         if pk and pk in row_dict:
             for row_number in range(self.row_count()):
                 rec_dic = self.get_record(row_number)
-                if str(row_dict[pk]) == rec_dic [pk]:
+                if str(row_dict[pk]) == rec_dic[pk]:
                     return row_number
         else:
             for row_number in range(self.row_count()):
@@ -316,9 +316,14 @@ class Q2Model:
 
     def get_meta_primary_key(self):
         for x in self.q2_form.controls:
-        # for x in self.meta:
             if x["pk"]:
                 return x["column"]
+
+    def get_uniq_value(self, column, value):
+        pass
+
+    def get_next_sequence(self, column, start_value=0):
+        pass
 
 
 class Q2CsvModel(Q2Model):
@@ -356,6 +361,12 @@ class Q2CursorModel(Q2Model):
         super().refresh()
         self.cursor.refresh()
 
+    def get_uniq_value(self, column, value):
+        return self.cursor.get_uniq_value(column, value)
+
+    def get_next_sequence(self, column, start_value=0):
+        return self.cursor.get_next_sequence(column, start_value)
+
     def delete(self, current_row=0, refresh=True):
         self.set_data_error()
         record = self.get_record(current_row)
@@ -369,7 +380,7 @@ class Q2CursorModel(Q2Model):
 
     def update(self, record: dict, current_row=0, refresh=True):
         self.set_data_error()
-        if self.cursor.update(record):
+        if self.cursor.update(record, refresh=False):
             if refresh:
                 self.refresh()
             return True
@@ -379,7 +390,7 @@ class Q2CursorModel(Q2Model):
 
     def insert(self, record: dict, current_row=0, refresh=True):
         self.set_data_error()
-        if self.cursor.insert(record):
+        if self.cursor.insert(record, refresh=False):
             if refresh:
                 self.refresh()
             return True

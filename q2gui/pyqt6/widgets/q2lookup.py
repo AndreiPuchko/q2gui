@@ -46,8 +46,8 @@ class q2lookup(QWidget):
 
         self.set_geometry()
 
-    def lookup_list_selected(self):
-        print("Method lookup_list_selected has to be implemented...")
+    # def lookup_list_selected(self):
+    #     print("Method lookup_list_selected has to be implemented...")
 
     def set_geometry(self):
         print("Method set_geometry has to be implemented...")
@@ -79,7 +79,11 @@ class q2lookup(QWidget):
             event.accept()
             self.lookup_list.setCurrentRow(0)
             self.lookup_list.setFocus()
-        elif event.key() == Qt.Key.Key_Up and self.lookup_list.hasFocus() and self.lookup_list.currentRow() == 0:
+        elif (
+            event.key() == Qt.Key.Key_Up
+            and self.lookup_list.hasFocus()
+            and self.lookup_list.currentRow() == 0
+        ):
             self.lookup_edit.setFocus()
             event.accept()
         else:

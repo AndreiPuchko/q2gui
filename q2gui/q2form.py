@@ -215,6 +215,9 @@ class Q2Form:
             self.add_action_delete(tmp_actions)
             tmp_actions.add_action(text="-")
 
+        if "seq" in self.model.columns:
+            self.add_action_seq()
+
         for x in self.actions:
             if x.get("text").startswith("/"):
                 continue
@@ -282,6 +285,56 @@ class Q2Form:
             icon=q2app.ACTION_NEW_ICON,
             hotkey=q2app.ACTION_NEW_HOTKEY,
         )
+
+    def add_action_seq(self, actions=None):
+        if actions is None:
+            actions = self.actions
+        actions.add_action(
+            "Move up", self.move_seq_up, icon="arrow-up.png", eof_disabled=1, hotkey="Ctrl+Alt+Up"
+        )
+        actions.add_action(
+            "Move down", self.move_seq_down, icon="arrow-down.png", eof_disabled=1, hotkey="Ctrl+Alt+Down"
+        )
+        actions.add_action("Renumber", self.seq_renumber, icon="", eof_disabled=1)
+        actions.add_action("-")
+
+    def move_seq_up(self):
+        if self.current_row > 0:
+            nr = self.model.get_record(self.current_row - 1)
+            cr = self.model.get_record(self.current_row)
+            if nr["seq"] == cr["seq"]:
+                nr["seq"] = "%s" % (int_(nr["seq"]) - 1)
+            else:
+                nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
+            self.model.update(nr)
+            self.model.update(cr)
+            self.refresh()
+            self.set_grid_index(self.current_row - 1)
+
+    def move_seq_down(self):
+        if self.current_row < self.model.row_count() - 1:
+            nr = self.model.get_record(self.current_row + 1)
+            cr = self.model.get_record(self.current_row)
+            if nr["seq"] == cr["seq"]:
+                nr["seq"] = "%s" % (int_(nr["seq"]) + 1)
+            else:
+                nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
+            self.model.update(nr)
+            self.model.update(cr)
+            self.refresh()
+            self.set_grid_index(self.current_row + 1)
+
+    def seq_renumber(self):
+        curr_row = self.current_row
+        pk = self.model.get_meta_primary_key()
+        for x in range(self.model.row_count()):
+            self.set_grid_index(x)
+            # dic = {pk: self.model.get_record(x)[pk]}
+            dic = {pk: self.r.__getattr__(pk)}
+            dic["seq"] = x + 1
+            self.model.update(dic, refresh=False)
+        self.refresh()
+        self.set_grid_index(curr_row)
 
     def build_grid_view_auto_form(self):
         # Define layout
@@ -566,14 +619,14 @@ class Q2Form:
         for pos, action in enumerate(self.children_forms):
             if pos not in self.copy_records:
                 continue
-            filter = self.get_where_for_child(action)
-            filter_data = {}
-            for filter_part in filter.split(" and "):
-                filter_expr = filter_part.split("=")
-                if len(filter_expr) == 2:
-                    filter_data[filter_expr[0]] = filter_expr[1]
+            # filter = self.get_where_for_child(action)
+            # filter_data = {}
+            # for filter_part in filter.split(" and "):
+            #     filter_expr = filter_part.split("=")
+            #     if len(filter_expr) == 2:
+            #         filter_data[filter_expr[0]] = filter_expr[1]
             for source_record in self.copy_records[pos]:
-                source_record.update(filter_data)
+                # source_record.update(filter_data)
                 action["child_form_object"].model.insert(source_record)
 
     def update_current_row(self, crud_data):
@@ -625,15 +678,15 @@ class Q2Form:
                 else:
                     self.crud_form.widgets[x].set_text(self._model_record[x])
 
+                if mode in (NEW, COPY) and x == "seq":
+                    self.crud_form.widgets[x].set_text(self.model.get_next_sequence(x, self._model_record[x]))
                 if (
                     self.controls.c.__getattr__(x)["pk"]
                     and mode in (NEW, COPY)
                     and not self.controls.c.__getattr__(x)["ai"]
                 ):
                     # for new record - get next primary key
-                    self.crud_form.widgets[x].set_text(
-                        self.model.cursor.get_next_value(x, self._model_record[x])
-                    )
+                    self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
         # take care about PK and filters
         for x in self.controls.get_names():
             if mode == EDIT and self.controls.get(x)["pk"] and x in self.crud_form.widgets:

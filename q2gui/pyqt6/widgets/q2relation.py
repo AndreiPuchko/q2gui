@@ -42,7 +42,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
                 self.to_form: Q2Form = self.meta.get("to_form")
             else:
                 self.to_form: Q2Form = self.meta.get("to_form")()
-            self.to_form.max_child_level = 0
+            # self.to_form.max_child_level = 0
             self.to_form.title += " ."
 
         self.add_widget(self.get)
