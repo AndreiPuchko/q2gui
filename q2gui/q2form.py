@@ -12,6 +12,10 @@ from q2gui.q2model import Q2Model
 from q2gui.q2utils import int_
 import re
 import json
+import gettext
+
+_ = gettext.gettext
+
 
 VIEW = "VIEW"
 NEW = "NEW"
@@ -327,12 +331,15 @@ class Q2Form:
     def seq_renumber(self):
         curr_row = self.current_row
         pk = self.model.get_meta_primary_key()
+        wait = self._q2dialogs.Q2WaitShow(self.model.row_count(), _("Renumber sequence"))
         for x in range(self.model.row_count()):
+            wait.step()
             self.set_grid_index(x)
             # dic = {pk: self.model.get_record(x)[pk]}
             dic = {pk: self.r.__getattr__(pk)}
             dic["seq"] = x + 1
             self.model.update(dic, refresh=False)
+        wait.close()
         self.refresh()
         self.set_grid_index(curr_row)
 
