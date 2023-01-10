@@ -115,8 +115,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def show_form(self, form=None, modal="modal"):
         prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
-        if prev_mdi_window:
-            form.q2_form.prev_form = prev_mdi_window.widget().q2_form
+        # if prev_mdi_window:
+            # form.q2_form.prev_form = prev_mdi_window.widget().q2_form
 
         if modal == "":  # mdiarea normal window
             self.q2_tabwidget.currentWidget().addSubWindow(form)

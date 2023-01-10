@@ -18,6 +18,7 @@ from q2gui.pyqt6.q2window import Q2Frame
 from q2gui.pyqt6.widgets.q2line import q2line
 from q2gui.pyqt6.widgets.q2button import q2button
 from q2gui.pyqt6.widgets.q2lookup import q2lookup
+from q2gui.q2model import Q2Model
 from q2db.db import Q2Db
 
 
@@ -147,17 +148,22 @@ class q2_realtion_lookup(q2lookup):
 
     def lookup_search(self):
         self.lookup_list.clear()
-        q2_db: Q2Db = self.parent().to_form.model.cursor.q2_db
+        if self.parent().to_form:
+            q2_db: Q2Db = self.parent().to_form.model.cursor.q2_db
+        else:
+            q2_db: Q2Db = self.parent().meta["form"].db
 
         sql = "select {to_column} as tocol, {related} as recol from {to_table}".format(**self.meta)
 
         related = self.meta.get("related")
-        cond_list = self.parent().to_form.model.parse_lookup_text(self.lookup_edit.get_text())
 
+        # cond_list = self.parent().to_form.model.parse_lookup_text(self.lookup_edit.get_text())
+        cond_list = Q2Model().parse_lookup_text(self.lookup_edit.get_text())
         where = " and ".join(
             [f"{related} {'' if x[0] == '+' else 'not'} like '%{x[1]}%' " for x in cond_list]
         )
-        sql += f" where {where}"
+        if where:
+            sql += f" where {where}"
         cursor = q2_db.cursor(sql)
         self.found_rows = [x for x in cursor.records()]
         for x in self.found_rows:
