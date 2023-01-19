@@ -97,7 +97,7 @@ class q2line(QLineEdit, Q2Widget):
                         text = text[: -(len(spl[1]) - self.declen)]
                         cursor_pos_right -= 1
                 else:  # cursor left of DS
-                    if len(spl[0]) == 2 and spl[0][-1] == "0":
+                    if len(spl[0]) == 1 and spl[0][-1] == "0":
                         # 0 only was left from DS-cut 0
                         text = spl[0][:-1] + self.DS + spl[1]
                         cursor_pos_right -= 1

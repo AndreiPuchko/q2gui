@@ -42,7 +42,7 @@ class DemoApp(Q2App):
     def describe_form1(self):
         form = Q2Form("First form")
         form.add_control(
-            "uid", "Uid", control="line", data=12, datatype="num", datalen=15, datadec=2, pic="F"
+            "uid", "Uid", control="line", data=2, datatype="num", datalen=15, datadec=2, pic="F"
         )
         if form.add_control("/h", "Title"):
 
