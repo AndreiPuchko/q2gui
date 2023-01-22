@@ -137,7 +137,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_menubar(True)
                 self.disable_tabbar(True)
             form.exec()
-
+            
             if modal == "super":  # real modal dialog
                 self.disable_toolbar(False)
                 self.disable_menubar(False)

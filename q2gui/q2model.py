@@ -199,7 +199,7 @@ class Q2Model:
         else:
             related = self.get_related(meta["to_table"], f"{meta['to_column']}='{value}'", meta["related"])
             self.relation_cache[key] = related
-        if related is None:
+        if related is None or related == {}:
             related = ""
         if do_not_show_value:
             return f"{related}"

@@ -138,8 +138,8 @@ class DemoApp(Q2App):
     def on_new_tab(self):
         # def on_start(self):
         # self.form_order_lines().run()
-        # self.orders()
-        self.customers()
+        self.orders()
+        # self.customers()
         # self.filter_orders()
         # self.products()
         # self.show_sales()
@@ -191,8 +191,7 @@ class DemoApp(Q2App):
 
     def form_orders(self):
         form = Q2Form("Orders")
-        form.add_control("order_id", "Order Id", datatype="int", pk="*")
-        form.add_control("date", "Date", datatype="date")
+        form.add_control("order_id", "Order Id", datatype="int", pk="*", noform=1)
         form.add_control(
             column="customer_id",
             label="Customer",
@@ -203,6 +202,7 @@ class DemoApp(Q2App):
             to_form=self.form_customers,
             related="name",
         )
+        form.add_control("date", "Date", datatype="date")
         form.add_action("/crud")
         form.add_action("-")
         form.add_action(

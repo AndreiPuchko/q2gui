@@ -1328,7 +1328,7 @@ class Q2FormWindow:
             widget = self.q2_form.w.__getattr__(x)
             # print(x, widget)
             if not x.startswith("/") and widget and widget.is_enabled():
-                self.q2_form.w.__getattr__(x).set_focus()
+                widget.set_focus()
                 break
         self.q2_form.q2_app.show_form(self, modal)
 

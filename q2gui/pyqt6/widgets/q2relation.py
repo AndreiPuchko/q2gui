@@ -9,6 +9,7 @@ if __name__ == "__main__":
     demo()
 
 from PyQt6.QtWidgets import QFrame
+from PyQt6.QtCore import Qt
 
 import q2gui.q2app as q2app
 from q2gui.q2form import Q2Form
@@ -26,13 +27,12 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def __init__(self, meta):
         super().__init__(meta)
         Q2Frame.__init__(self, "h")
-        # print(meta)
         self.meta = meta
-        meta["valid"] = self.get_valid
 
         self.get = q2line(meta)
 
         self.get.textChanged.connect(self.get_text_changed)
+        self.get.editingFinished.connect(self.edit_done)
         self.button = q2button(
             {"label": "?", "datalen": 3, "valid": self.show_related_form, "form": self.meta["form"]}
         )
@@ -50,7 +50,9 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.add_widget(self.button)
         self.add_widget(self.say)
         self.set_text(self.meta.get("data", ""))
-        self.get_valid()
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setFocusProxy(self.get)
+        # self.get_valid()
 
     def show_related_form(self):
         if isinstance(self.to_form, Q2Form):
@@ -77,6 +79,9 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             self.get.set_focus()
             self.get_valid()
 
+    def edit_done(self):
+        self.get_valid()
+
     def get_valid(self):
         value = self.get.get_text()
         if self.meta.get("num") and num(value) == 0:
@@ -86,6 +91,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         return self.set_related()
 
     def set_related(self):
+
         rel = None
         if self.meta["form"].model:
             rel = self.meta["form"].model._get_related(
@@ -97,11 +103,11 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
                 f"{self.meta['to_column']}='{self.get.text()}'",
                 self.meta["related"],
             )
-            if rel == {}:
-                rel = None
-                self.say.set_text("")
-                self.show_related_form()
-                return True
+        if rel == "":
+            rel = None
+            self.say.set_text("")
+            self.show_related_form()
+            return True
 
         if rel is None:
             self.say.set_text("")
