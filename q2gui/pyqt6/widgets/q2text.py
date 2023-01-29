@@ -9,6 +9,7 @@ if __name__ == "__main__":
     demo()
 
 from PyQt6.QtWidgets import QTextEdit, QSizePolicy
+from PyQt6.QtCore import QSize
 
 from q2gui.pyqt6.q2widget import Q2Widget
 
@@ -18,10 +19,13 @@ class q2text(QTextEdit, Q2Widget):
         super().__init__(meta)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding))
         self.setTabChangesFocus(True)
-        self.set_text(meta.get('data'))
+        self.set_text(meta.get("data"))
 
     def set_text(self, text):
         self.setHtml(text)
 
     def get_text(self):
         return f"{self.toPlainText()}"
+
+    def sizeHint(self):
+        return QSize(9999, 9999)

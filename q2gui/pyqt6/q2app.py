@@ -69,6 +69,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
+                widget.form_level = 0
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                 widget.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -116,10 +117,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def show_form(self, form=None, modal="modal"):
         prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         # if prev_mdi_window:
-            # form.q2_form.prev_form = prev_mdi_window.widget().q2_form
+        #     form.q2_form.prev_form = prev_mdi_window.widget().q2_form
 
         if modal == "":  # mdiarea normal window
             self.q2_tabwidget.currentWidget().addSubWindow(form)
+
             form.show()
         else:  # mdiarea modal window
             prev_focus_widget = QApplication.focusWidget()
@@ -136,8 +138,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_toolbar(True)
                 self.disable_menubar(True)
                 self.disable_tabbar(True)
+            # print("\t" * self.q2_tabwidget.currentWidget().form_level, form.title, "show")
+            self.q2_tabwidget.currentWidget().form_level += 1
             form.exec()
-            
+            self.q2_tabwidget.currentWidget().form_level -= 1
+            # print("\t" * self.q2_tabwidget.currentWidget().form_level, form.title, "close")
             if modal == "super":  # real modal dialog
                 self.disable_toolbar(False)
                 self.disable_menubar(False)

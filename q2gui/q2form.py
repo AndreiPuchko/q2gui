@@ -943,10 +943,11 @@ class Q2Form:
 class Q2FormWindow:
     def __init__(self, q2_form: Q2Form, title=""):
         super().__init__()
+        self.title = title if title else q2_form.title
         self.shown = False
         self.q2_form = q2_form
         self.form_is_active = False
-        self.title = ""
+        # self.title = ""
         self.widgets = {}
         self.tab_widget_list = []
         self.tab_widget = None

@@ -20,7 +20,7 @@ from PyQt6.Qsci import QsciScintilla, QsciLexerPython, QsciLexerSQL, QsciLexerJS
 from PyQt6.QtGui import QColor, QKeyEvent
 
 # from PyQt6.QtWidgets import QMenu
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt, QTimer, QSize
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.widgets.q2line import q2line
@@ -250,6 +250,9 @@ class q2code(QsciScintilla, Q2Widget):
     def contextMenuEvent(self, event):
         self.create_context_menu()
         self.context_menu.exec(event.globalPos())
+
+    def sizeHint(self):
+        return QSize(9999, 9999)
 
 
 class q2editor_panel(QWidget):
