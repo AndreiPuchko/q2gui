@@ -114,47 +114,41 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         else:
             return self
 
-    def show_form(self, form=None, modal="modal"):
-        prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
-        # if prev_mdi_window:
-        #     form.q2_form.prev_form = prev_mdi_window.widget().q2_form
+    def eventFilter(self, obj, ev: QEvent):
+        if ev.type() == QEvent.Type.Close:
+            if obj.heap.prev_mdi_window:
+                obj.heap.prev_mdi_window.setEnabled(True)
 
-        if modal == "":  # mdiarea normal window
-            self.q2_tabwidget.currentWidget().addSubWindow(form)
-
-            form.show()
-        else:  # mdiarea modal window
-            prev_focus_widget = QApplication.focusWidget()
-            prev_tabbar_text = self.get_tabbar_text()
-
-            if prev_mdi_window:
-                prev_mdi_window.setDisabled(True)
-
-            self.q2_tabwidget.currentWidget().addSubWindow(form)
-
-            self.set_tabbar_text(form.window_title)
-
-            if modal == "super":  # real modal dialog
-                self.disable_toolbar(True)
-                self.disable_menubar(True)
-                self.disable_tabbar(True)
-            # print("\t" * self.q2_tabwidget.currentWidget().form_level, form.title, "show")
-            self.q2_tabwidget.currentWidget().form_level += 1
-            form.exec()
-            self.q2_tabwidget.currentWidget().form_level -= 1
-            # print("\t" * self.q2_tabwidget.currentWidget().form_level, form.title, "close")
-            if modal == "super":  # real modal dialog
+            if obj.heap.prev_focus_widget is not None:
+                obj.heap.prev_focus_widget.setFocus()
+            self.set_tabbar_text(obj.heap.prev_tabbar_text)
+            if obj.heap.modal == "super":  # real modal dialog
                 self.disable_toolbar(False)
                 self.disable_menubar(False)
                 self.disable_tabbar(False)
 
-            if prev_mdi_window:
-                prev_mdi_window.setEnabled(True)
+        return super().eventFilter(obj, ev)
 
-            if prev_focus_widget is not None:
-                prev_focus_widget.setFocus()
-                # print(prev_focus_widget)
-            self.set_tabbar_text(prev_tabbar_text)
+    def show_form(self, form=None, modal="modal"):
+        form.heap = q2app.Q2Heap()
+        form.heap.modal = modal
+        form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
+        form.heap.prev_focus_widget = QApplication.focusWidget()
+        form.heap.prev_tabbar_text = self.get_tabbar_text()
+
+        self.q2_tabwidget.currentWidget().addSubWindow(form)
+        form.installEventFilter(self)
+
+        if modal != "" and form.heap.prev_mdi_window:  # mdiarea normal window
+            form.heap.prev_mdi_window.setDisabled(True)
+
+        self.set_tabbar_text(form.window_title)
+
+        if modal == "super":  # real modal dialog
+            self.disable_toolbar(True)
+            self.disable_menubar(True)
+            self.disable_tabbar(True)
+        form.show()
 
     def disable_current_form(self, mode=True):
         if self.q2_tabwidget.currentWidget().subWindowList():
