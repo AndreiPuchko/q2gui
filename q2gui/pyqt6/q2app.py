@@ -46,17 +46,23 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.addTabButton.clicked.connect(self.addTab)
             self.tabBar().setTabButton(0, QTabBar.ButtonPosition.RightSide, self.addTabButton)
             self.tabBar().setTabEnabled(0, False)
+            self.prev_index = None
+            self.tab_focus_widget = {}
 
             self.closeButton = QToolButton(self)
             self.closeButton.setText("x")
             self.closeButton.clicked.connect(self.closeSubWindow)
             self.setCornerWidget(self.closeButton)
-            self.currentChanged.connect(self._currentChanged)
+            self.currentChanged.connect(self.restore_tab_focus_widget)
 
-        def _currentChanged(self, index: int):
-            # bug path when subwindow in tab 0 lost focus if we close subwindow in other tab
-            if index == 0 and self.currentWidget().subWindowList():
-                self.currentWidget().subWindowList()[-1].setFocus()
+        def save_tab_focus_widget(self, widget):
+            self.tab_focus_widget[self.currentIndex()] = widget
+
+        def restore_tab_focus_widget(self):
+            self.tab_focus_widget.get(self.currentIndex(), self).setFocus()
+
+        # def _currentChanged(self, index: int):
+        #     self.restore_tab_focus_widget()
 
         def closeSubWindow(self):
             currentTabIndex = self.currentIndex()
@@ -102,11 +108,15 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         super().__init__(title)
         QApplication.instance().focusChanged.connect(self.focus_changed)
+        QApplication.instance().focusChanged.connect(self.save_tab_focus_widget)
 
         # replace static methods for instance
         self.get_open_file_dialoq = self._get_open_file_dialoq
         self.get_save_file_dialoq = self._get_save_file_dialoq
         self._last_get_file_path = None
+
+    def save_tab_focus_widget(self):
+        self.q2_tabwidget.save_tab_focus_widget(self.focus_widget())
 
     def get_self(self):
         if QApplication.activeWindow():
@@ -119,8 +129,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if obj.heap.prev_mdi_window:
                 obj.heap.prev_mdi_window.setEnabled(True)
 
-            if obj.heap.prev_focus_widget is not None:
-                obj.heap.prev_focus_widget.setFocus()
+            # if obj.heap.prev_focus_widget is not None and not isinstance(obj.heap.prev_focus_widget, QTabBar):
+            #     print(obj.heap.prev_focus_widget)
+            #     obj.heap.prev_focus_widget.setFocus()
             self.set_tabbar_text(obj.heap.prev_tabbar_text)
             if obj.heap.modal == "super":  # real modal dialog
                 self.disable_toolbar(False)
