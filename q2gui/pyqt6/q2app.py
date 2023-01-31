@@ -159,7 +159,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.disable_toolbar(True)
             self.disable_menubar(True)
             self.disable_tabbar(True)
-        form.show()
+        if modal == "":  # mdiarea normal window
+            form.show()
+        else:
+            form.exec()
 
     def disable_current_form(self, mode=True):
         if self.q2_tabwidget.currentWidget().subWindowList():
