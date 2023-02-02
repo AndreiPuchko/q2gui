@@ -59,7 +59,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.tab_focus_widget[self.currentIndex()] = widget
 
         def restore_tab_focus_widget(self):
-            self.tab_focus_widget.get(self.currentIndex(), self).setFocus()
+            focus_widget = self.tab_focus_widget.get(self.currentIndex(), self)
+            if focus_widget:
+                focus_widget.setFocus()
 
         # def _currentChanged(self, index: int):
         #     self.restore_tab_focus_widget()

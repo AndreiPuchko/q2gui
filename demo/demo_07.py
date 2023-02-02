@@ -153,10 +153,11 @@ class DemoApp(Q2App):
     def form_customers(self):
         form = Q2Form("Customers")
         form.no_view_action = 1
-        # form.add_control("/")
         form.add_control(column="customer_id", label="Customer Id", datatype="int", pk="*")
         form.add_control("name", "Name", datatype="char", datalen=100)
         form.add_control("address", "Address", datatype="char", datalen=100)
+        # form.add_control("/")
+        # form.add_control("/v", "333")
         form.add_control("comment", "Comment", datatype="text")
 
         cursor: Q2Cursor = self.db.table(table_name="customers")

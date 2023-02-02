@@ -21,7 +21,6 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPalette, QPainter
 
 from PyQt6.QtCore import Qt, QAbstractTableModel, QVariant
-from q2gui.pyqt6.q2widget import Q2Widget
 
 from q2gui.pyqt6.q2window import q2_align
 from q2gui.q2utils import int_
@@ -78,7 +77,6 @@ class q2Delegate(QStyledItemDelegate):
         QApplication.style().drawControl(QStyle.ControlElement.CE_CheckBox, cb_option, painter)
 
 
-# class q2grid(QTableView, Q2Widget):
 class q2grid(QTableView):
     class Q2TableModel(QAbstractTableModel):
         def __init__(self, q2_model):
