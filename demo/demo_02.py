@@ -41,6 +41,7 @@ class DemoApp(Q2App):
 
     def describe_form1(self):
         form = Q2Form("First form")
+        form.add_control("/")
         form.add_control(
             "some_image",
             "Image",
@@ -59,6 +60,7 @@ class DemoApp(Q2App):
                     53A6D6F6469667900323032322D30372D31375430383A34313A30382B30
                     303A303055072A050000000049454E44AE426082""",
         )
+        form.add_control("/f")
         form.add_control("uid", "Uid", control="line", data=2, datatype="num", datalen=15, datadec=2, pic="F")
         if form.add_control("/h", "Title"):
 

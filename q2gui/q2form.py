@@ -1233,16 +1233,16 @@ class Q2FormWindow:
         else:
             label2add = None
 
-        actions2add = None
-        if meta.get("actions") and meta.get("control") != "toolbar":
-            actions2add = self._get_widget("toolbar", "toolbar")(
-                {
-                    "control": "toolbar",
-                    "actions": meta["actions"],
-                    "form": self.q2_form,
-                    "stretch": 0,
-                }
-            )
+        # actions2add = None
+        # if meta.get("actions") and meta.get("control") != "toolbar":
+        #     actions2add = self._get_widget("toolbar", "toolbar")(
+        #         {
+        #             "control": "toolbar",
+        #             "actions": meta["actions"],
+        #             "form": self.q2_form,
+        #             "stretch": 0,
+        #         }
+        #     )
 
         # Form or widget
         if control == "widget":
@@ -1288,6 +1288,17 @@ class Q2FormWindow:
                 label2add.set_checked()
 
         self.widgets[meta.get("tag", "") if meta.get("tag", "") else column] = widget2add
+
+        actions2add = None
+        if meta.get("actions") and meta.get("control") != "toolbar":
+            actions2add = self._get_widget("toolbar", "toolbar")(
+                {
+                    "control": "toolbar",
+                    "actions": meta["actions"],
+                    "form": self.q2_form,
+                    "stretch": 0,
+                }
+            )
 
         return label2add, widget2add, actions2add
 
