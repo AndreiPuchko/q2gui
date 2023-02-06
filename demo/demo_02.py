@@ -42,8 +42,24 @@ class DemoApp(Q2App):
     def describe_form1(self):
         form = Q2Form("First form")
         form.add_control(
-            "uid", "Uid", control="line", data=2, datatype="num", datalen=15, datadec=2, pic="F"
+            "some_image",
+            "Image",
+            control="image",
+            data="""89504E470D0A1A0A0000000D4948445200000018000000180806000000E
+                    0773DF80000000467414D410000B18F0BFC6105000000206348524D0000
+                    7A26000080840000FA00000080E8000075300000EA6000003A980000177
+                    09CBA513C00000006624B4744000000000000F943BB7F00000009704859
+                    73000000600000006000F06B42CF000000784944415448C763601805040
+                    023116AFE53620613AD7DC042816F09F98C3E3E18B560705950CE004919
+                    E89810C0A6A71E97625C96FC27D260BC8663B3A483081F34906238A9969
+                    06538B196506438214BA8623836C31AB0F0A902B0A52E8A5D8ECF12A20D
+                    6726C182A30C9022FB2003034323B55D3F82010046E641BF6CBB302E000
+                    0002574455874646174653A63726561746500323032322D30372D313754
+                    30383A34313A30382B30303A3030245A92B900000025744558746461746
+                    53A6D6F6469667900323032322D30372D31375430383A34313A30382B30
+                    303A303055072A050000000049454E44AE426082""",
         )
+        form.add_control("uid", "Uid", control="line", data=2, datatype="num", datalen=15, datadec=2, pic="F")
         if form.add_control("/h", "Title"):
 
             def add_id():
@@ -63,7 +79,7 @@ class DemoApp(Q2App):
         form.add_control("birthdate", "Date of birth", control="date", data="2006-05-01")
         form.add_control("/")
 
-        form.add_control("/t", "tab 1", alignment=8)
+        form.add_control("/t", "tab 1", alignment=7)
 
         form.add_control("", "label 1")
         form.add_control("", "label 2")

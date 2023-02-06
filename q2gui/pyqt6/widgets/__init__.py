@@ -1,5 +1,6 @@
 from q2gui.pyqt6.widgets import (
     q2label,
+    q2image,
     q2line,
     q2frame,
     q2check,
@@ -27,6 +28,7 @@ from q2gui.pyqt6.widgets import (
 
 (
     q2label,
+    q2image,
     q2line,
     q2frame,
     q2check,
