@@ -321,6 +321,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     @staticmethod
     def get_open_file_dialoq(header="Open file", path="", filter=""):
+        if path == "":
+            path = os.path.expanduser("~/Desktop")
         rez = QFileDialog.getOpenFileName(None, header, path, filter)
         return rez
 
@@ -335,6 +337,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     @staticmethod
     def get_save_file_dialoq(header="Save file", path="", filter="", confirm_overwrite=True):
+        if path == "":
+            path = os.path.expanduser("~/Desktop")
         if confirm_overwrite:
             rez = QFileDialog.getSaveFileName(None, header, path, filter)
         else:

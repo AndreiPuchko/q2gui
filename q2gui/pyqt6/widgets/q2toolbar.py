@@ -27,7 +27,6 @@ from PyQt6.QtCore import Qt, QMargins
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.q2window import q2_align
-import os
 
 
 class q2toolbar(QFrame, Q2Widget):
@@ -124,13 +123,13 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button = QToolBar()
         self.main_button_action = QToolButton()
         self.main_button_action.setText(GRID_ACTION_TEXT)
-        
+
         icon = q2app.q2_app.get_icon(GRID_ACTION_ICON)
         if icon:
             self.main_button_action.setIcon(QIcon(icon))
         #     action["engineAction"].setIcon(QIcon(icon))
         # if os.path.isfile(GRID_ACTION_ICON):
-            
+
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
