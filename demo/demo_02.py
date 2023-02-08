@@ -41,7 +41,7 @@ class DemoApp(Q2App):
 
     def describe_form1(self):
         form = Q2Form("First form")
-        form.add_control("/")
+        # form.add_control("/")
         form.add_control(
             "some_image",
             "Image",

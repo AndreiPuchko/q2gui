@@ -324,6 +324,7 @@ class Q2Controls(list):
         if (
             re.match(".*text.*", meta.get("datatype", ""), re.RegexFlag.IGNORECASE)
             and "code" not in meta["control"]
+            and "image" not in meta["control"]
         ):
             meta["datalen"] = 0
             meta["control"] = "text"

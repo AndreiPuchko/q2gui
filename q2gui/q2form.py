@@ -1135,7 +1135,6 @@ class Q2FormWindow:
                 label2add, widget2add, action2add = self.widget(meta)
                 if current_frame.frame_mode == "f":  # form layout
                     if label2add:
-                        # label2add.setContentsMargins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                         label2add.set_content_margins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
@@ -1158,7 +1157,7 @@ class Q2FormWindow:
                             current_frame.add_widget(label2add)
                     if action2add is not None:
                         current_frame.add_widget(action2add)
-                        action2add.fix_default_height()
+                        # action2add.fix_default_height()
                     if widget2add is not None:
                         if meta.get("column", "") in ("/vr", "/hr"):  # scroller
                             scroller = self._get_widget("scroller")({"widget": widget2add})
@@ -1166,10 +1165,9 @@ class Q2FormWindow:
                         else:
                             current_frame.add_widget(widget2add)
                         if meta.get("control") == "toolbar":  # context menu for frame
-                            # widget2add.hide()
                             widget2add.set_context_menu(current_frame)
-                        if action2add is not None:  # context menu for widget
-                            action2add.set_context_menu(widget2add)
+                        # if action2add is not None:  # context menu for widget
+                        #     action2add.set_context_menu(widget2add)
             # Hotkeys
             if meta.get("hotkey") and meta.get("valid"):
                 if meta.get("hotkey") not in self.hotkey_widgets:
@@ -1299,6 +1297,8 @@ class Q2FormWindow:
                     "stretch": 0,
                 }
             )
+            actions2add.set_context_menu(widget2add)
+            actions2add.fix_default_height()
 
         return label2add, widget2add, actions2add
 
