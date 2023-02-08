@@ -251,8 +251,15 @@ class q2code(QsciScintilla, Q2Widget):
         self.create_context_menu()
         self.context_menu.exec(event.globalPos())
 
+    def showEvent(self, ev):
+        self.updateGeometry()
+        return super().showEvent(ev)
+
     def sizeHint(self):
-        return QSize(9999, 9999)
+        if self.isVisible():
+            return QSize(99999, 99999)
+        else:
+            return super().sizeHint()
 
 
 class q2editor_panel(QWidget):

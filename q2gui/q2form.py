@@ -1132,9 +1132,11 @@ class Q2FormWindow:
             current_frame = frame_stack[-1]
             # do not add widget if it is not first tabpage on the form
             if not (meta.get("column", "") == ("/t") and self.tab_widget is not None):
-                label2add, widget2add, action2add = self.widget(meta)
+                # get widgets to add
+                label2add, widget2add = self.widget(meta)
+
                 if current_frame.frame_mode == "f":  # form layout
-                    if label2add:
+                    if label2add is not None:
                         label2add.set_content_margins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
@@ -1150,14 +1152,14 @@ class Q2FormWindow:
                             and current_frame.label
                             and frame_stack[-2].frame_mode == "f"
                         ):
+                            # when frame prev frame is FORM and it is first widget
+                            # in the current frame - move widget label to frame label
+                            # which is prev FORM frame )
                             current_frame.label.set_text(label2add.get_text())
                             if widget2add:
                                 widget2add.label = current_frame.label
                         else:
                             current_frame.add_widget(label2add)
-                    if action2add is not None:
-                        current_frame.add_widget(action2add)
-                        # action2add.fix_default_height()
                     if widget2add is not None:
                         if meta.get("column", "") in ("/vr", "/hr"):  # scroller
                             scroller = self._get_widget("scroller")({"widget": widget2add})
@@ -1166,8 +1168,6 @@ class Q2FormWindow:
                             current_frame.add_widget(widget2add)
                         if meta.get("control") == "toolbar":  # context menu for frame
                             widget2add.set_context_menu(current_frame)
-                        # if action2add is not None:  # context menu for widget
-                        #     action2add.set_context_menu(widget2add)
             # Hotkeys
             if meta.get("hotkey") and meta.get("valid"):
                 if meta.get("hotkey") not in self.hotkey_widgets:
@@ -1231,17 +1231,6 @@ class Q2FormWindow:
         else:
             label2add = None
 
-        # actions2add = None
-        # if meta.get("actions") and meta.get("control") != "toolbar":
-        #     actions2add = self._get_widget("toolbar", "toolbar")(
-        #         {
-        #             "control": "toolbar",
-        #             "actions": meta["actions"],
-        #             "form": self.q2_form,
-        #             "stretch": 0,
-        #         }
-        #     )
-
         # Form or widget
         if control == "widget":
             if isinstance(meta.get("widget"), Q2Form):
@@ -1259,7 +1248,7 @@ class Q2FormWindow:
                 class_name = "frame"
                 label2add = None
             elif "/" == column:
-                return None, None, None
+                return None, None
             elif "/t" in column:  # Tabpage
                 label2add = None
                 control = "tab"
@@ -1287,9 +1276,9 @@ class Q2FormWindow:
 
         self.widgets[meta.get("tag", "") if meta.get("tag", "") else column] = widget2add
 
-        actions2add = None
+        action2add = None
         if meta.get("actions") and meta.get("control") != "toolbar":
-            actions2add = self._get_widget("toolbar", "toolbar")(
+            action2add = self._get_widget("toolbar", "toolbar")(
                 {
                     "control": "toolbar",
                     "actions": meta["actions"],
@@ -1297,10 +1286,23 @@ class Q2FormWindow:
                     "stretch": 0,
                 }
             )
-            actions2add.set_context_menu(widget2add)
-            actions2add.fix_default_height()
+            action2add.set_context_menu(widget2add)
+            action2add.fix_default_height()
+            # Actions!
+            if widget2add and action2add:
+                if control == "label" or (not action2add.show_main_button and not action2add.show_actions):
+                    action_frame = self._get_widget("frame")({"column": "/v"})
+                else:
+                    #  Splitter!
+                    action_frame = self._get_widget("frame")({"column": "/vs"})
+                    self.widgets[
+                        meta.get("tag", "") if meta.get("tag", "") else column + "_splitter"
+                    ] = action_frame
+                action_frame.add_widget(action2add)
+                action_frame.add_widget(widget2add)
+                widget2add = action_frame
 
-        return label2add, widget2add, actions2add
+        return label2add, widget2add
 
     def _get_widget(self, module_name, class_name=""):
         """For given name returns class from current GUI engine module"""
@@ -1338,7 +1340,6 @@ class Q2FormWindow:
         # search for the first enabled widget
         for x in self.q2_form.widgets():
             widget = self.q2_form.w.__getattr__(x)
-            # print(x, widget)
             if not x.startswith("/") and widget and widget.is_enabled():
                 widget.set_focus()
                 break

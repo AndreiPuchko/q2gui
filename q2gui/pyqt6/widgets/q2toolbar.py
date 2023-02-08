@@ -53,6 +53,8 @@ class q2toolbar(QFrame, Q2Widget):
         if action_list is []:
             return
 
+        self.show_main_button = actions.show_main_button
+        self.show_actions = actions.show_actions
         tool_bar_qt_actions = QMenu()
         cascade_action = {"": tool_bar_qt_actions}
 
@@ -136,7 +138,7 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button.addWidget(self.main_button_action)
 
         self.layout().addWidget(self.main_button)
-        if not actions.show_main_button:
+        if not self.show_main_button:
             self.main_button.setVisible(False)
 
         self.toolBarPanel.addSeparator()
@@ -147,7 +149,7 @@ class q2toolbar(QFrame, Q2Widget):
                     QToolButton.ToolButtonPopupMode.InstantPopup
                 )
 
-        if actions.show_actions:
+        if self.show_actions:
             self.layout().addWidget(self.toolBarPanel)
 
     def set_context_menu(self, widget):

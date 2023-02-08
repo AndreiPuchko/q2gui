@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
 from PyQt6.QtWidgets import QGroupBox, QSplitter, QSizePolicy
 from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QSize
 
 
 from q2gui.pyqt6.q2window import Q2Frame
@@ -59,7 +60,7 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
 class q2splitter(QSplitter):
     def __init__(self):
         super().__init__()
-        self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding))
+        # self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding))
 
     def get_sizes(self):
         return ",".join([f"{x}" for x in self.sizes()])
@@ -80,3 +81,13 @@ class q2splitter(QSplitter):
         if sizes:
             sizes = [int(x) for x in sizes.split(",")]
             self.setSizes(sizes)
+
+    def showEvent(self, ev):
+        self.updateGeometry()
+        return super().showEvent(ev)
+
+    def sizeHint(self):
+        if self.isVisible():
+            return QSize(99999, 99999)
+        else:
+            return super().sizeHint()

@@ -75,11 +75,10 @@ class DemoApp(Q2App):
             form.add_control("/")
         form.add_control("/")
 
-        form.add_control("/v", "Title")
-
-        form.add_control("name", "Name", control="line", data="First Name", datalen=100)
-        form.add_control("birthdate", "Date of birth", control="date", data="2006-05-01")
-        form.add_control("/")
+        if form.add_control("/h"):
+            form.add_control("name", "Name", control="line", data="First Name", datalen=100)
+            form.add_control("birthdate", "Date of birth", control="date", data="2006-05-01")
+            form.add_control("/")
 
         form.add_control("/t", "tab 1", alignment=7)
 
