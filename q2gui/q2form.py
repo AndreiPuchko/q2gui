@@ -1092,9 +1092,7 @@ class Q2FormWindow:
                     #  create child form!
                     action["child_form_object"] = action.get("child_form")()
                     action["child_form_object"].prev_form = self.q2_form
-                    action["child_form_object"].title = (
-                        self.q2_form.title + " / " + action["child_form_object"].title
-                    )
+                    action["child_form_object"].title = self.q2_form.title + " / " + action["text"]
                     action["child_form_object"].i_am_child = True
                     action["child_form_object"].max_child_level = self.q2_form.max_child_level - 1
                     self.q2_form.children_forms.append(action)

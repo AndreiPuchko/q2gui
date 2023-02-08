@@ -35,7 +35,7 @@ class q2image(QLabel, Q2Widget):
         super().__init__(meta)
         self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
 
-        self.image_base64 = None
+        self.image_base64 = ""
         self.image = None
 
         self.set_text(self.meta["data"])
@@ -46,7 +46,7 @@ class q2image(QLabel, Q2Widget):
 
     def clipboard_copy(self):
         clipboard = QApplication.clipboard()
-        clipboard.setPixmap(self.pixmap())
+        clipboard.setPixmap(QPixmap.fromImage(self.image))
 
     def clipboard_paste(self):
         clipboard = QApplication.clipboard()
@@ -68,7 +68,6 @@ class q2image(QLabel, Q2Widget):
         )
         if image_file:
             self.image.save(image_file)
-            # self.pixmap().toImage().save(image_file)
 
     def load_image_from_file(self):
         image_file = q2app.q2_app.get_open_file_dialoq(
@@ -82,8 +81,8 @@ class q2image(QLabel, Q2Widget):
         ba = QByteArray()
         buffer = QBuffer(ba)
         buffer.open(QIODevice.OpenModeFlag.WriteOnly)
-        self.pixmap().toImage().save(buffer, "PNG")
-        return ba.toBase64()
+        self.image.save(buffer, "PNG")
+        return bytes(ba.toBase64()).decode("utf-8")
 
     def ensure_base64(self, text):
         try:
@@ -94,9 +93,6 @@ class q2image(QLabel, Q2Widget):
             pass
         finally:
             return text
-
-    def set_text(self, text):
-        self.set_qimage(image_base64=self.ensure_base64(text))
 
     def resizeEvent(self, ev):
         rez = super().resizeEvent(ev)
@@ -114,8 +110,7 @@ class q2image(QLabel, Q2Widget):
             self.image = QImage()
             self.image_base64 = None
 
-        pixmap = QPixmap.fromImage(self.image)
-        self.setPixmap(pixmap)
+        self.setPixmap(QPixmap.fromImage(self.image))
         self.keep_size()
 
     def keep_size(self):
@@ -126,6 +121,9 @@ class q2image(QLabel, Q2Widget):
             self.setPixmap(
                 QPixmap.fromImage(self.image).scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio)
             )
+
+    def set_text(self, text):
+        self.set_qimage(image_base64=self.ensure_base64(text))
 
     def get_text(self):
         return self.image_base64
