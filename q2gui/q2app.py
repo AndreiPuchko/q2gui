@@ -363,6 +363,8 @@ class Q2Settings:
             self.config.read_file(self.filename)
         else:
             # self.config.read(self.filename)
+            if not os.path.isfile(self.filename):
+                self.write()
             self.config.readfp(codecs.open(self.filename, "r", "utf8"))
 
     def write(self):
