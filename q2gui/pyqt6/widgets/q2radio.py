@@ -73,3 +73,6 @@ class q2RadioButton(QRadioButton):
 
     def get_text(self):
         return self.text()
+
+    def set_focus(self):
+        self.setFocus()
