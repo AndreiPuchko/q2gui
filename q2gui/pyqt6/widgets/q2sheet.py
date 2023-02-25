@@ -352,14 +352,15 @@ class q2sheet(QTableWidget, Q2Widget):
         self.setCurrentCell(row, column)
 
     def insert_row(self, after_row=None):
-        self.setRowCount(self.rowCount() + 1)
-        for row in range(self.rowCount() - 1, after_row, -1):
-            for col in range(self.columnCount()):
-                self.set_cell_text(self.get_cell_text(row - 1, col), row, col)
-                self.set_cell_style_sheet(self.get_cell_style_sheet(row - 1, col), row, col)
-                if row == after_row + 1:
-                    self.set_cell_text("", row - 1, col)
-                    self.set_cell_style_sheet("", row - 1, col)
+        self.insertRow(after_row)
+        # self.setRowCount(self.rowCount() + 1)
+        # for row in range(self.rowCount() - 1, after_row, -1):
+        #     for col in range(self.columnCount()):
+        #         self.set_cell_text(self.get_cell_text(row - 1, col), row, col)
+        #         self.set_cell_style_sheet(self.get_cell_style_sheet(row - 1, col), row, col)
+        #         if row == after_row + 1:
+        #             self.set_cell_text("", row - 1, col)
+        #             self.set_cell_style_sheet("", row - 1, col)
 
     def move_row(self, after_row):
         for col in range(self.columnCount()):
@@ -371,28 +372,31 @@ class q2sheet(QTableWidget, Q2Widget):
             self.set_cell_style_sheet(style, after_row + 1, col)
 
     def remove_row(self, remove_row):
-        for row in range(remove_row, self.rowCount()):
-            for col in range(self.columnCount()):
-                self.set_cell_text(self.get_cell_text(row + 1, col), row, col)
-                self.set_cell_style_sheet(self.get_cell_style_sheet(row + 1, col), row, col)
-        self.setRowCount(self.rowCount() - 1)
+        self.removeRow(remove_row)
+        # for row in range(remove_row, self.rowCount()):
+        #     for col in range(self.columnCount()):
+        #         self.set_cell_text(self.get_cell_text(row + 1, col), row, col)
+        #         self.set_cell_style_sheet(self.get_cell_style_sheet(row + 1, col), row, col)
+        # self.setRowCount(self.rowCount() - 1)
 
     def insert_column(self, after_column=None):
-        self.setColumnCount(self.columnCount() + 1)
-        for col in range(self.columnCount() - 1, after_column, -1):
-            for row in range(self.rowCount()):
-                self.set_cell_text(self.get_cell_text(row, col - 1), row, col)
-                self.set_cell_style_sheet(self.get_cell_style_sheet(row, col - 1), row, col)
-                if col == after_column + 1:
-                    self.set_cell_text("", row, col - 1)
-                    self.set_cell_style_sheet("", row, col - 1)
+        self.insertColumn(after_column)
+        # self.setColumnCount(self.columnCount() + 1)
+        # for col in range(self.columnCount() - 1, after_column, -1):
+        #     for row in range(self.rowCount()):
+        #         self.set_cell_text(self.get_cell_text(row, col - 1), row, col)
+        #         self.set_cell_style_sheet(self.get_cell_style_sheet(row, col - 1), row, col)
+        #         if col == after_column + 1:
+        #             self.set_cell_text("", row, col - 1)
+        #             self.set_cell_style_sheet("", row, col - 1)
 
     def remove_column(self, remove_column):
-        for col in range(remove_column, self.columnCount()):
-            for row in range(self.rowCount()):
-                self.set_cell_text(self.get_cell_text(row, col + 1), row, col)
-                self.set_cell_style_sheet(self.get_cell_style_sheet(row, col + 1), row, col)
-        self.setColumnCount(self.columnCount() - 1)
+        self.removeColumn(remove_column)
+        # for col in range(remove_column, self.columnCount()):
+        #     for row in range(self.rowCount()):
+        #         self.set_cell_text(self.get_cell_text(row, col + 1), row, col)
+        #         self.set_cell_style_sheet(self.get_cell_style_sheet(row, col + 1), row, col)
+        # self.setColumnCount(self.columnCount() - 1)
 
     def move_column(self, after_column):
         for row in range(self.rowCount()):
