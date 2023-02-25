@@ -28,7 +28,7 @@ ASK_REMOVE_RECORD_TEXT = "You are about to remove current record! Are You Sure?"
 ASK_REMOVE_RECORDS_TEXT = "You are about to remove records<b>(%s)</b>! Are You Sure?"
 REMOVE_RECORD_ERROR_TEXT = "Remove record error"
 
-DATA_FORMAT_STRING = "%d.%m.%Y"
+DATE_FORMAT_STRING = "%d.%m.%Y"
 
 
 ACTION_VIEW_TEXT = "View"

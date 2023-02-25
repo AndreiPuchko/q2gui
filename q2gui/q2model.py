@@ -226,7 +226,7 @@ class Q2Model:
                     value = format_string.format(num(value))
             elif meta["datatype"] == "date":
                 try:
-                    value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATA_FORMAT_STRING)
+                    value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATE_FORMAT_STRING)
                 except Exception:
                     value = ""
             return value
