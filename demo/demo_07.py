@@ -84,6 +84,7 @@ class dataSchema(Q2DbSchema):
         )
         self.add(table="customers", column="name", datatype="varchar", datalen=100)
         self.add(table="customers", column="address", datatype="varchar", datalen=100)
+        self.add(table="customers", column="comment", datatype="text")
 
 
 def load_mock_data(db: Q2Db):

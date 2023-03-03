@@ -63,6 +63,10 @@ ACTION_REFRESH_TEXT = "Refresh"
 ACTION_REFRESH_ICON = "refresh.png"
 ACTION_REFRESH_HOTKEY = "F5"
 
+ACTION_RENUMBER_TEXT = "Renumber"
+ACTION_RENUMBER_ICON = ""
+ACTION_RENUMBER_HOTKEY = ""
+
 ACTION_NEXT_ROW_TEXT = "Next"
 ACTION_NEXT_ROW_ICON = "go-down.png"
 
@@ -101,7 +105,7 @@ CRUD_BUTTON_OK_TEXT = "OK"
 CRUD_BUTTON_OK_MESSAGE = "save data"
 
 CRUD_BUTTON_CANCEL_TEXT = "Cancel"
-CRUD_BUTTON_CANCEL_MESSAGE = "Do not save data"
+CRUD_BUTTON_CANCEL_MESSAGE = "Do not save changes"
 
 GRID_ACTION_TEXT = "☰"
 GRID_ACTION_ICON = "menu.png"
@@ -112,6 +116,46 @@ ARROW_DOWN_ICON = "arrow-down.png"
 FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 18
 
+MESSAGE_SORTING = "Sorting..."
+MESSAGE_ROWS_REMOVING = "Rows removing"
+
+MESSAGE_GRID_DATA_EXPORT_TITLE = "Export data"
+MESSAGE_GRID_DATA_EXPORT_WAIT = "Export data to: %s"
+MESSAGE_GRID_DATA_EXPORT_ERROR = "Export error: %s"
+MESSAGE_GRID_DATA_EXPORT_DONE = "Import done:<br>Rows: %s<br>Time: %.2f sec."
+
+MESSAGE_GRID_DATA_IMPORT_TITLE = "Import data"
+MESSAGE_GRID_DATA_IMPORT_WAIT = "Import data to: %s"
+MESSAGE_GRID_DATA_IMPORT_ERROR = "Import error: %s"
+MESSAGE_GRID_DATA_IMPORT_DONE = "Import done:<br>Rows: %s<br>Time: %.2f sec."
+
+GRID_DATA_INFO_TABLE = "Table"
+GRID_DATA_INFO_ROWS = "Rows"
+GRID_DATA_INFO_ORDER = "Order"
+GRID_DATA_INFO_FILTER = "Filter"
+GRID_DATA_INFO_COLUMNS = "Columns"
+
+PASTE_CLIPBOARD_WAIT = "Paste rows"
+PASTE_CLIPBOARD_TITLE = "Paste (Clipboard)"
+PASTE_CLIPBOARD_FIRST_ROW = "First row is a header"
+PASTE_CLIPBOARD_CLIPBOARD_DATA = "Clipboard data"
+PASTE_CLIPBOARD_TARGET = "Target"
+PASTE_CLIPBOARD_SOURCE = "Source"
+PASTE_CLIPBOARD_TARGET_COLUMNS = "Target columns"
+PASTE_CLIPBOARD_SOURCE_COLUMNS = "Source columns"
+
+BULK_DATA_ENTRY_TITLE = "Bulk data"
+BULK_DATA_MAIN_TITLE = "Bulk update selected rows"
+BULK_DATA_WAIT = "Bulk update rows"
+BULK_TARGET_TITLE = "Target"
+BULK_TARGET_COLUMNS = "Columns"
+BULK_TARGET_SELECTED = "Selected"
+
+ASK_ROWS_REMOVING_ERRORS_SUPRESS = "Do not show next errors"
+ASK_COPY_CHILD_DATA = "Copy %s?"
+
+DIALOG_OPEN_FILE_TITLE = "Open file"
+DIALOG_SAVE_FILE_TITLE = "Save file"
 
 def load_q2engine(glo, engine="PyQt6"):
     from q2gui.pyqt6.q2app import Q2App as Q2App
@@ -129,7 +173,7 @@ class Q2Actions(list):
     def __init__(self, action=None):
         self.show_main_button = True
         self.show_actions = True
-        self.main_button_text = "☰"
+        self.main_button_text = GRID_ACTION_TEXT
         if isinstance(action, list):
             # self.action_list = action[:]
             self.extend(action[:])

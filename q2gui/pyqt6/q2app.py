@@ -320,13 +320,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return QFontMetrics(self.font()).height()
 
     @staticmethod
-    def get_open_file_dialoq(header="Open file", path="", filter=""):
+    def get_open_file_dialoq(header=q2app.DIALOG_OPEN_FILE_TITLE, path="", filter=""):
         if path == "":
             path = os.path.expanduser("~/Desktop")
         rez = QFileDialog.getOpenFileName(None, header, path, filter)
         return rez
 
-    def _get_open_file_dialoq(self, header="Open file", path="", filter=""):
+    def _get_open_file_dialoq(self, header=q2app.DIALOG_OPEN_FILE_TITLE, path="", filter=""):
         if self._last_get_file_path and not path:
             path = self._last_get_file_path
         rez = Q2App.get_open_file_dialoq(header, path, filter)
@@ -336,7 +336,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return rez
 
     @staticmethod
-    def get_save_file_dialoq(header="Save file", path="", filter="", confirm_overwrite=True):
+    def get_save_file_dialoq(header=q2app.DIALOG_SAVE_FILE_TITLE, path="", filter="", confirm_overwrite=True):
         if path == "":
             path = os.path.expanduser("~/Desktop")
         if confirm_overwrite:
@@ -347,7 +347,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             )
         return rez
 
-    def _get_save_file_dialoq(self, header="Save file", path="", filter="", confirm_overwrite=True):
+    def _get_save_file_dialoq(self, header=q2app.DIALOG_SAVE_FILE_TITLE, path="", filter="", confirm_overwrite=True):
         if self._last_get_file_path and not path:
             path = self._last_get_file_path
         rez = Q2App.get_save_file_dialoq(header, path, filter, confirm_overwrite)
