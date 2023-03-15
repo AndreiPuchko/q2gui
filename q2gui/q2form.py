@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
 import q2gui.q2app as q2app
 from q2gui.q2model import Q2Model
-from q2gui.q2utils import int_
+from q2gui.q2utils import int_, num
 import re
 import json
 import gettext
@@ -51,6 +51,7 @@ class Q2Form:
         self.w = Q2FormWidget(self)  # widgets by name
         self.a = Q2FormAction(self)  # Actions by text
         self.r = Q2ModelData(self)  # Grid data by name
+        self.c = self.controls.c  # control dict
 
         self.prev_form = None
         self.children_forms = []  # forms inside this form
@@ -650,6 +651,14 @@ class Q2Form:
                 continue
             self._model_record[x] = self.s.__getattr__(x)
 
+            # if widget.meta.get("check") and not widget.check.get_text():
+            if widget.meta.get("check") and not widget.check.is_checked():
+                if widget.meta.get("num"):
+                    value = "0"
+                else:
+                    value = ""
+                self._model_record[x] = value
+
         return self._model_record
 
     def show_crud_form(self, mode, modal="modal"):
@@ -677,7 +686,14 @@ class Q2Form:
             for x in self._model_record:
                 if x not in self.crud_form.widgets:
                     continue
-
+                if self.c.__getattr__(x)["check"]:
+                    if self.c.__getattr__(x)["num"]:
+                        value = num(self._model_record[x])
+                    else:
+                        value = self._model_record[x]
+                    if value:
+                        self.crud_form.widgets[x].check.set_checked(True)
+                        # self.crud_form.widgets[x].check.set_text("*")
                 if mode == NEW:
                     if x not in where_dict:
                         self.crud_form.widgets[x].set_text("")
@@ -1430,17 +1446,23 @@ class Q2FormData:
 
     def __setattr__(self, name, value):
         if name != "q2_form":
-            if self.q2_form.form_stack:
+            if self.q2_form.crud_form:
+                widget = self.q2_form.crud_form.widgets.get(name)            
+            elif self.q2_form.form_stack:
                 widget = self.q2_form.form_stack[-1].widgets.get(name)
-                if hasattr(widget, "set_text"):
-                    widget.set_text(value)
-                else:  # no widget - put data to model's record
-                    self.q2_form._model_record[name] = value
+            else:
+                widget = None
+            if hasattr(widget, "set_text"):
+                widget.set_text(value)
+            else:  # no widget - put data to model's record
+                self.q2_form._model_record[name] = value
         else:
             self.__dict__[name] = value
 
     def __getattr__(self, name):
-        if self.q2_form.form_stack == []:
+        if self.q2_form.crud_form:
+            widget = self.q2_form.crud_form.widgets.get(name)
+        elif self.q2_form.form_stack == []:
             if self.q2_form.last_closed_form is None:
                 return None
             else:
@@ -1466,7 +1488,9 @@ class Q2FormWidget:
 
     def __getattr__(self, attrname):
         widget = None
-        if self.q2_form.form_stack == []:
+        if self.q2_form.crud_form:
+            widgets = self.q2_form.crud_form.widgets
+        elif self.q2_form.form_stack == []:
             if self.q2_form.last_closed_form is None:
                 return None
             else:
@@ -1661,7 +1685,9 @@ class Q2PasteClipboard:
 
         self.source_form.set_model(Q2Model())
         self.source_form.model.set_records(self.source_data)
-        self.source_form.add_control("column", q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS, control="line", datalen=100)
+        self.source_form.add_control(
+            "column", q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS, control="line", datalen=100
+        )
         self.source_form.grid_double_clicked = self.move_it
         self.source_form.i_am_child = 1
 

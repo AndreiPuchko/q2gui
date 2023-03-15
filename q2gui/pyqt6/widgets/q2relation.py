@@ -30,11 +30,18 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.meta = meta
 
         self.get = q2line(meta)
+        self.filter_string = ""
 
         self.get.textChanged.connect(self.get_text_changed)
         self.get.editingFinished.connect(self.edit_done)
         self.button = q2button(
-            {"label": "?", "datalen": 3, "valid": self.show_related_form, "form": self.meta["form"]}
+            {
+                "label": "?",
+                "datalen": 3,
+                "valid": self.show_related_form,
+                # "when": self.when,
+                "form": self.meta["form"],
+            }
         )
         self.say = q2line({"disabled": "*"})
         self.to_form = None
@@ -65,6 +72,10 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             )
 
             def seek():
+                if self.filter_string:
+                    self.to_form.model.cursor.set_where(self.filter_string)
+                    self.to_form.model.cursor.refresh()
+
                 row = self.to_form.model.cursor.seek_row({self.meta["to_column"]: self.get_text()})
                 self.to_form.set_grid_index(row)
 
