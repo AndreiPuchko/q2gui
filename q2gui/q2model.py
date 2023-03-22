@@ -217,6 +217,8 @@ class Q2Model:
             if meta.get("relation"):
                 value = self._get_related(value, meta)
             elif self.is_strign_for_num(meta):
+                if num(value) == 0:
+                    value = 1
                 value = meta.get("pic").split(";")[int(num(value)) - 1]
             elif meta.get("num"):  # Numeric value
                 if num(value) == 0:  # do not show zero

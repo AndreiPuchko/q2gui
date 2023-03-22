@@ -358,7 +358,7 @@ class Q2Controls(list):
             # meta["control"] = ""
 
         if num(meta.get("datalen", 0)) == 0 and meta.get("control", "") in ("line", "radio"):
-            if meta.get("datatype", "").lower() == "int":
+            if meta.get("datatype", "").lower()[:3] == "int":
                 meta["datalen"] = 9
             elif meta.get("datatype", "").lower() == "bigint":
                 meta["datalen"] = 17

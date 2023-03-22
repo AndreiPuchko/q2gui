@@ -35,8 +35,9 @@ class q2date(QComboBox, Q2Widget):
         self.lineedit.setStyleSheet("QLineEdit")
         self.set_text(self.meta.get("data"))
         # self.setMinimumWidth(QFontMetrics(self.font()).width("0") * 14)
-        self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("0") * 14))
-        self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("0") * 16))
+        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.MinimumExpanding)
 
         class q2DateValidator(QValidator):
             def validate(self, text, pos):

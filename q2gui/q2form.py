@@ -1102,13 +1102,13 @@ class Q2FormWindow:
             "form__grid",
             control="grid",
             actions=[self.q2_form.actions, self.q2_form.grid_navi_actions],
-            stretch=100,
+            # stretch=100,
         )
         # place child forms
         if self.q2_form.max_child_level:
             for action in self.q2_form.actions:
                 if action.get("child_form"):
-                    tmp_grid_form.add_control("/t", action.get("text", "="), stretch=100)
+                    tmp_grid_form.add_control("/t", action.get("text", "="), stretch=1)
                     #  create child form!
                     action["child_form_object"] = action.get("child_form")()
                     action["child_form_object"].prev_form = self.q2_form

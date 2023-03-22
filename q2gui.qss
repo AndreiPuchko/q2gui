@@ -61,3 +61,8 @@ QSplitter::handle:vertical   {height: 2px ; width: 2px;}
 
 
 QDialog,QFrame {border-radius:9px; }
+
+QComboBox {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
