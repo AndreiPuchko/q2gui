@@ -15,7 +15,7 @@ RE_QSS_CM = re.compile(r"\d*\.+\d*\.*cm")
 
 
 def re_qss_cm_replace(mo):
-    return str(int(mo.group(0).replace("cm", "").replace(".", ""))/2)
+    return str(int(mo.group(0).replace("cm", "").replace(".", "")) / 2)
 
 
 class Q2Widget:
@@ -94,6 +94,10 @@ class Q2Widget:
             return self.meta.get("when", lambda: True)()
         else:
             return True
+
+    def show_(self):
+        if self.meta.get("show"):
+            self.set_text(self.meta["show"](mode="form"))
 
     def set_maximum_len(self, length):
         pass

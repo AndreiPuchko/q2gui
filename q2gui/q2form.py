@@ -112,6 +112,13 @@ class Q2Form:
     def show_progressbar(self, title="", count=""):
         return self._q2dialogs.Q2WaitShow(title, count)
 
+    def show_(self):
+        for x in self.widgets():
+            self.widgets()[x].show_()
+        # for x in self.controls:
+        #     if x.get("show") and x.get("column") in self.widgets():
+        #         self.widgets()[x.get("column")].set_text(x["show"](mode="form"))
+
     def set_model(self, model):
         self.model: Q2Model = model
         self.model.q2_form = self
@@ -847,6 +854,7 @@ class Q2Form:
         mask="",
         opts="",
         when=None,
+        show=None,
         valid=None,
         dblclick=None,
         readonly=None,

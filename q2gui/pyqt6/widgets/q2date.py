@@ -31,6 +31,8 @@ class q2date(QComboBox, Q2Widget):
         super().__init__(meta)
         self.setEditable(True)
         self.lineedit = self.lineEdit()
+        if self.meta.get("readonly"):
+            self.lineedit.setReadOnly(True)
         self.lineedit.setInputMask("99.99.9999")
         self.lineedit.setStyleSheet("QLineEdit")
         self.set_text(self.meta.get("data"))
@@ -112,6 +114,9 @@ class q2date(QComboBox, Q2Widget):
             return super().keyPressEvent(event)
 
     def showPopup(self):
+        if self.meta.get("readonly"):
+            return
+
         class q2CalendarWidget(QWidget):
             def __init__(self, parent=self):
                 super().__init__(parent=parent, flags=Qt.WindowType.Popup)
@@ -152,6 +157,10 @@ class q2date(QComboBox, Q2Widget):
         clndr.setFont(self.font())
         clndr.move(self.mapToGlobal(self.rect().bottomLeft()))
         clndr.show()
+
+    # def set_readonly(self, arg):
+    #     self.lineEdit().setReadOnly(arg)
+    #     return super().set_readonly(arg)
 
     def set_text(self, text):
         if hasattr(self, "lineedit"):

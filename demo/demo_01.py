@@ -168,11 +168,18 @@ class DemoApp(Q2App):
         form.add_control("/")
 
         form.add_control(column="p1", label="just label", control="label")
+
+        def name_show(mode):
+            # form.s.name = "121"+mode
+            return "123 123" + mode
+
         form.add_control(
             column="name",
             label="Enter your name",
             control="line",
+            # readonly=1,
             data="FirstName LastName",
+            show=name_show,
             mess="You can do it!",
         )
 
@@ -182,7 +189,6 @@ class DemoApp(Q2App):
             form.add_control("", "Just label on Tab2")
             form.add_control("", "Just label on Tab2")
         form.add_control("/")
-
 
         if form.add_control("/t", "Tab1"):
             form.add_control("/hs")
@@ -256,6 +262,7 @@ class DemoApp(Q2App):
             column="text",
             label="Enter big text",
             control="text",
+            readonly=1,
             data="simple <b>text<br>line2",
             mess="Input for big amount of text<br>"
             "Like <b><font color=red>War</font> and"

@@ -101,8 +101,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             return True
         return self.set_related()
 
-    def set_related(self):
-
+    def get_related(self):
         rel = None
         if self.meta["form"].model:
             rel = self.meta["form"].model._get_related(
@@ -114,6 +113,10 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
                 f"{self.meta['to_column']}='{self.get.text()}'",
                 self.meta["related"],
             )
+        return rel
+
+    def set_related(self):
+        rel = self.get_related()
         if rel == "":
             rel = None
             self.say.set_text("")

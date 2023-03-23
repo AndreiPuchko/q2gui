@@ -216,6 +216,8 @@ class Q2Model:
             meta = self.meta[col]
             if meta.get("relation"):
                 value = self._get_related(value, meta)
+            elif meta.get("show"):
+                value = meta.get("show")(mode="grid", row=row)
             elif self.is_strign_for_num(meta):
                 if num(value) == 0:
                     value = 1

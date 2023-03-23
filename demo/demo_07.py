@@ -285,7 +285,7 @@ class DemoApp(Q2App):
             filter_list.append(f"date>='{form.s.date1}' and date<='{form.s.date2}'")
             for x in [form.w.customer_id]:
                 if x.check.is_checked():
-                    filter_list.append(f'{x.meta.get("name")} = {x.get_text()}')
+                    filter_list.append(f'{x.meta.get("column")} = {x.get_text()}')
             if form.w.product_id.check.is_checked():
                 filter_list.append(
                     f"order_id in (select order_id from order_lines where product_id = {form.s.product_id}) "

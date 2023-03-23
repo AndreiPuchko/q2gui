@@ -45,3 +45,7 @@ class q2combo(QComboBox, Q2Widget):
                 return self.currentText()
         else:
             return ""
+        
+    def set_readonly(self, arg):
+        self.setDisabled(arg)
+        return super().set_readonly(arg)

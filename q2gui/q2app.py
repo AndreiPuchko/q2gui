@@ -314,6 +314,7 @@ class Q2Controls(list):
         mask="",
         opts="",
         when=None,
+        show=None,
         valid=None,
         dblclick=None,
         readonly=None,

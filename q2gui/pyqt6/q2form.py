@@ -203,6 +203,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             self.showMaximized()
         if self.mode == "form":
             self.q2_form.after_form_show()
+            self.q2_form.show_()
         elif self.mode == "grid":
             self.q2_form.after_grid_show()
 
