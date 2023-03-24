@@ -20,7 +20,8 @@ class q2line(QLineEdit, Q2Widget):
         super().__init__(meta)
         self.last_text_len = 0
         self.last_cur_pos = 0
-        # if self.meta.get("pic"):
+        if self.meta.get("pic") == "*":
+            self.setEchoMode(self.EchoMode.Password)
         self.TS = " "  # thousands separator
         self.DS = "."  # decimal separator
 
