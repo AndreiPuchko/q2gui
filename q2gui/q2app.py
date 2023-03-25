@@ -157,6 +157,7 @@ ASK_COPY_CHILD_DATA = "Copy %s?"
 DIALOG_OPEN_FILE_TITLE = "Open file"
 DIALOG_SAVE_FILE_TITLE = "Save file"
 
+
 def load_q2engine(glo, engine="PyQt6"):
     from q2gui.pyqt6.q2app import Q2App as Q2App
     from q2gui.pyqt6.q2form import Q2Form as Q2Form
@@ -347,6 +348,10 @@ class Q2Controls(list):
                 q2app.q2_app.content_margin_bottom,
                 q2app.q2_app.content_margin_left,
             ]
+
+        if meta.get("datatype") == "char":
+            if re.match(".*code.*|.*text.*", meta.get("control", ""), re.RegexFlag.IGNORECASE):
+                meta["datatype"] = "text"
 
         if meta.get("datatype", "").lower() == "date":
             meta["control"] = "date"
