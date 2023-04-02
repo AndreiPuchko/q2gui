@@ -92,6 +92,7 @@ class Q2Thread(Thread):
         self.shadow_value = 0
         self.value = 0
         self._return = None
+        self._exc = None
         self.start_time = time.time()
 
     @staticmethod
@@ -125,7 +126,10 @@ class Q2Thread(Thread):
         return time.time() - self.start_time
 
     def run(self):
-        self._return = self._target(*self._args)
+        try:
+            self._return = self._target(*self._args)
+        except Exception as e:
+            self._exc = e
 
 
 class Q2WaitForm:
@@ -229,6 +233,8 @@ def q2Wait(worker, mess=""):
         last_focus_widget.set_focus()
 
     q2app.q2_app.show_statusbar_mess(f"{worker_thread.time():.2f}")
+    if worker_thread._exc:
+        raise worker_thread._exc
     return worker_thread._return
 
 

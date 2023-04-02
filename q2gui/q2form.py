@@ -150,6 +150,7 @@ class Q2Form:
             self.last_closed_form = self.form_stack[-1]
             self.save_closed_form_text()
             self.form_stack[-1].close()
+            # self.q2_app.process_events()
 
     def save_closed_form_text(self):
         self.last_closed_form_widgets_text = {

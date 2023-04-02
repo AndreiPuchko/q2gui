@@ -133,7 +133,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
             if obj.heap.prev_focus_widget is not None and not isinstance(obj.heap.prev_focus_widget, QTabBar):
                 # print(obj.heap.prev_focus_widget)
-                obj.heap.prev_focus_widget.setFocus()
+                try:
+                    obj.heap.prev_focus_widget.setFocus()
+                except Exception:
+                    pass
             self.set_tabbar_text(obj.heap.prev_tabbar_text)
             if obj.heap.modal == "super":  # real modal dialog
                 self.disable_toolbar(False)
