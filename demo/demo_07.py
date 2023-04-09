@@ -93,7 +93,15 @@ def load_mock_data(db: Q2Db):
     order_qt = 100
     order_lines_qt = 6
     for x in range(1, customer_qt):
-        db.insert("customers", {"customer_id": x, "name": f"Customer {x}{str(randint(0,600)*6)}"})
+        db.insert(
+            "customers",
+            {
+                "customer_id": x,
+                "name": f"Customer {x}{str(randint(0,600)*6)}",
+                "address": f"Address {x}{str(randint(0,600)*6)}",
+                "comment": f"Comment {x}{str(randint(0,600)*6)}",
+            },
+        )
     for x in range(1, product_qt):
         db.insert("products", {"product_id": x, "name": f"Product {x}"})
     for x in range(1, order_qt):
@@ -140,7 +148,7 @@ class DemoApp(Q2App):
         # def on_start(self):
         # self.form_order_lines().run()
         # self.orders()
-        # self.customers()
+        self.customers()
         # self.filter_orders()
         # self.products()
         # self.show_sales()

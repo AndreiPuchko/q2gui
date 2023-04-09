@@ -241,6 +241,9 @@ class q2code(QsciScintilla, Q2Widget):
     def perform_folding(self):
         self.foldLine(self.getCursorPosition()[0])
 
+    def current_line(self):
+        return self.getCursorPosition()[0]
+
     def goto_line(self, line=0):
         self.setCursorPosition(int_(line) - 1, 0)
         self.set_focus()

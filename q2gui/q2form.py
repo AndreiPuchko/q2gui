@@ -922,8 +922,8 @@ class Q2Form:
         )
         try:
             self.model.data_export(file, tick_callback=lambda: waitbar.step())
-        except Exception:
-            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_ERROR % file)
+        except Exception as e:
+            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_ERROR % (file + ": " + str(e)))
             waitbar.close()
         else:
             _count, _time = waitbar.close()
@@ -940,8 +940,10 @@ class Q2Form:
         waitbar = self._q2dialogs.Q2WaitShow(q2app.MESSAGE_GRID_DATA_IMPORT_WAIT % file)
         try:
             self.model.data_import(file, tick_callback=lambda: waitbar.step())
-        except Exception:
-            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_IMPORT_ERROR % self.db.last_sql_error)
+        except Exception as e:
+            self._q2dialogs.q2Mess(
+                q2app.MESSAGE_GRID_DATA_IMPORT_ERROR % (self.db.last_sql_error + ": " + str(e))
+            )
             waitbar.close()
         else:
             _count, _time = waitbar.close()
@@ -1456,7 +1458,7 @@ class Q2FormData:
     def __setattr__(self, name, value):
         if name != "q2_form":
             if self.q2_form.crud_form:
-                widget = self.q2_form.crud_form.widgets.get(name)            
+                widget = self.q2_form.crud_form.widgets.get(name)
             elif self.q2_form.form_stack:
                 widget = self.q2_form.form_stack[-1].widgets.get(name)
             else:

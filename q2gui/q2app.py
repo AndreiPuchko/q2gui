@@ -122,7 +122,7 @@ MESSAGE_ROWS_REMOVING = "Rows removing"
 MESSAGE_GRID_DATA_EXPORT_TITLE = "Export data"
 MESSAGE_GRID_DATA_EXPORT_WAIT = "Export data to: %s"
 MESSAGE_GRID_DATA_EXPORT_ERROR = "Export error: %s"
-MESSAGE_GRID_DATA_EXPORT_DONE = "Import done:<br>Rows: %s<br>Time: %.2f sec."
+MESSAGE_GRID_DATA_EXPORT_DONE = "Export done:<br>Rows: %s<br>Time: %.2f sec."
 
 MESSAGE_GRID_DATA_IMPORT_TITLE = "Import data"
 MESSAGE_GRID_DATA_IMPORT_WAIT = "Import data to: %s"
