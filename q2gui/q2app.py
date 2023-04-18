@@ -21,6 +21,7 @@ import time
 import os
 import codecs
 
+import darkdetect
 
 q2_app = None
 
@@ -465,6 +466,7 @@ class Q2App:
         self.style_file = self.get_argv("style")
         if self.style_file == "":
             self.style_file = "q2gui.qss"
+        self.color_mode = darkdetect.theme()
         self.set_style_sheet()
         self.menu_list = []
         self.content_margin_top = 3
@@ -473,7 +475,11 @@ class Q2App:
         self.content_margin_left = None
         self.assets_folder = "assets"
         self.set_icon("assets/q2gui.ico")
+
         self.on_init()
+
+    def set_font(self, font_name, font_size):
+        pass
 
     def set_style_sheet(self):
         pass
