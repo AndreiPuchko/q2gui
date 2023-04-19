@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
 
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QRadioButton, QSizePolicy
+from PyQt6.QtCore import Qt
 
 from q2gui.pyqt6.q2window import q2_align
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -25,7 +26,7 @@ class q2radio(QFrame, Q2Widget):
         # self.layout().setSpacing(0)
         # self.setContentsMargins(0, 0, 0, 0)
         self.layout().setContentsMargins(0, 0, 0, 0)
-
+        self.setObjectName("radio")
         self.button_list = []
         for item in meta.get("pic", "").split(";"):
             button = q2RadioButton(item, self)

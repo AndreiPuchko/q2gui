@@ -30,7 +30,8 @@ from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2window import layout
-from q2gui.q2colors import Q2Colors
+from q2gui.pyqt6.q2style import Q2Style
+
 import q2gui.q2app as q2app
 
 
@@ -96,7 +97,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.q2_tabwidget = self.Q2TabWidget(self)
         self.q2_toolbar = QToolBar(self)
         Q2QtWindow.__init__(self)
+
+        # self.set_style_sheet("")
+        self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
+        
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0
             QApplication._mw_list = []
@@ -119,132 +124,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.get_save_file_dialoq = self._get_save_file_dialoq
         self._last_get_file_path = None
 
-        self.colors = {
-            "color": "#fff",
-            "color_disabled": "#777",
-            "color_selection": "#000",
-            "color_selectted_item": "#111",
-
-            "background": "#282828",
-            "background_control": "#555",
-            "background_focus": "#005599",
-            "background_selection": "#fff",
-            "background_selected_item": "#CCC",
-
-            "border": "1px solid #666",
-            "border_focus": "2px solid yellow",
-        }
-
-        self.set_font(font_size=12)
-        self.set_style_sheet("")
-        style = """
-                * {{
-                    color: {color};
-                    background-color: {background};
-                    border: 1px solid {border};
-                }}
-
-                *:disabled {{color: {color_disabled};}}
-
-                QAbstractButton, QTabBar:tab, QLineEdit, QComboBox:!editable
-                    {{
-                        background-color: {background_control};
-                        selection-color: {color_selection};
-                        selection-background-color : {background_selection};
-                        padding-left: 6px;
-                        padding-right: 6px;
-
-                    }}
-
-                QMenu
-                    {{
-                        color: palette(text);
-                        background-color: palette(base);
-                        selection-color: palette(highlighttext);
-                        selection-background-color: #B0E2FF;
-                    }}
-
-                QMenuBar
-                    {{
-                        background-color: {background};
-                    }}
-
-                QMenuBar::item:selected
-                    {{
-                        color: {color_selection};
-                        background-color: {background_selection};
-                    }}
-
-                QListView:selected, QWidget:focus, QTabBar:focus
-                    {{
-                        background-color: {background_focus};
-                        border: {border_focus};
-                    }}
-
-                QTabWidget::pane
-                    {{
-                        border: 1px solid {background_selected_item};
-                    }}
-
-                QTabBar:tab::selected, QRadioButton:checked
-                    {{
-                        background-color: {background_selected_item};
-                        color: {color_selectted_item};
-                        padding-left: 6px;
-                        padding-right: 6px;
-                        border: none;
-                    }}
-                QLabel {{border:none;}}
-
-                QTableView
-                    {{
-                    alternate-background-color:{background};
-                    }}
-
-                QHeaderView::section, QTableView:focus
-                    {{
-                        background-color:{background_control};
-                    }}
-
-                QTableView:item::selected
-                    {{
-                        color: {color};
-                        background-color:{background_focus};
-                    }}
-
-                QTableView QTableCornerButton::section,
-                QTableWidget QTableCornerButton::section
-                    {{
-                        background-color:{background_control}; 
-                        border:none;
-                    }}
-
-                QSplitter::handle::vertical  {{
-                    background-color: 
-                    qlineargradient(x1: 0, y1:0, 
-                                    x2: 1, y2:0,
-                                    stop: 0 white, 
-                                    stop: 0.5 darkblue,
-                                    stop: 1 white);
-                                }}
-
-                QSplitter::handle::horizontal  {{
-                    background-color: 
-                    qlineargradient(x1: 0, y1:0,
-                                    x2: 0, y2:1,
-                                    stop: 0 white, 
-                                    stop: 0.5 darkblue, 
-                                    stop: 1 white);}}
-
-                QSplitter::handle:vertical   {{height: 4px ; width: 2px;}}
-
-                QWidget {{border-radius:5px; }}
-
-                /*QToolButton {{color:red}}*/
-                """.format(
-            **self.colors
-        )
-        self.add_style_sheet(style)
+        self.set_font(self.font_name, self.font_size)
 
     def set_font(self, font_name="", font_size=12):
         QApplication.setFont(QFont(font_name, font_size))
@@ -354,7 +234,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return QApplication.clipboard().text()
 
     def set_style_sheet(self, style=None):
-        file_name = self.style_file
+        # file_name = self.style_file
         if isinstance(style, str):
             if os.path.isfile(style):
                 file_name = style

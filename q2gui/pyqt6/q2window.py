@@ -42,7 +42,7 @@ def layout(arg="h"):
         layout = QHBoxLayout()
         layout.setAlignment(q2_align["7"])
     layout.layout().setContentsMargins(0, 0, 0, 0)
-    # layout.layout().setContentsMargins(10, 10, 10, 10)
+    # layout.layout().setContentsMargins(3, 3, 3, 3)
     return layout
 
 

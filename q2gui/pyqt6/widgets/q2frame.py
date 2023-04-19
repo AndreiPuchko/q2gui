@@ -31,6 +31,7 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
             self.layout().addWidget(self.splitter)
         if meta.get("label") not in ("", "-") and not meta.get("check"):
             self.set_title(meta.get("label"))
+            self.setObjectName("title")
         if meta.get("label", "") == "":
             self.hide_border()
 

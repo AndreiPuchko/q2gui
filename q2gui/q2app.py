@@ -158,13 +158,17 @@ ASK_COPY_CHILD_DATA = "Copy %s?"
 DIALOG_OPEN_FILE_TITLE = "Open file"
 DIALOG_SAVE_FILE_TITLE = "Save file"
 
+from q2gui.q2style import Q2Style
+
 
 def load_q2engine(glo, engine="PyQt6"):
     from q2gui.pyqt6.q2app import Q2App as Q2App
     from q2gui.pyqt6.q2form import Q2Form as Q2Form
+    from q2gui.pyqt6.q2style import Q2Style as Q2Style
 
     glo["Q2App"] = Q2App
     glo["Q2Form"] = Q2Form
+    glo["Q2Style"] = Q2Style
 
 
 class Q2Heap:
@@ -449,6 +453,8 @@ class Q2Settings:
 
 
 class Q2App:
+    Q2Style = None
+
     def __init__(self, title=""):
         q2app.q2_app = self
         self.window_title = title
@@ -463,11 +469,28 @@ class Q2App:
         self._main_menu = {}
 
         self.settings = Q2Settings(self.settings_file)
+
         self.style_file = self.get_argv("style")
         if self.style_file == "":
             self.style_file = "q2gui.qss"
-        self.color_mode = darkdetect.theme()
-        self.set_style_sheet()
+
+        self.q2style:Q2Style = self.Q2Style()
+        # self.set_font(font_size=12)
+        if self.Q2Style:
+            self.color_mode = self.q2style.get_system_mode()
+            self.default_style = self.q2style.get_stylesheet()
+            self.colors = self.q2style.get_style()
+            self.font_size = self.q2style.font_size
+            self.font_name = self.q2style.font_name
+            
+        else:
+            self.color_mode = ""
+            self.default_style = ""
+            self.font_size = 10
+            self.font_name = ""
+
+        self.set_style_sheet(self.default_style)
+
         self.menu_list = []
         self.content_margin_top = 3
         self.content_margin_right = None
