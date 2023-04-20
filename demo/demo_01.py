@@ -201,7 +201,7 @@ class DemoApp(Q2App):
             )
             form.add_control("spin1", "Spinbox", control="spin")
             # form.add_control("/s")
-            form.add_control(column="z1", label="Enter smths", control="line")
+            form.add_control(column="z1", label="Enter smths", control="line", data="I am disabled", disabled=1)
 
         if form.add_control("/t", "Tab2"):
             form.add_control("", "Just label on Tab2")

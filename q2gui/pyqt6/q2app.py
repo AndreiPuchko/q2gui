@@ -79,7 +79,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
-                widget.setBackground(QBrush(int(self.main_window.colors["background"].replace("#", "0x"), 16)))
+                # widget.setBackground(QBrush(int(self.main_window.colors["background"].replace("#", "0x"), 16)))
                 widget.form_level = 0
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

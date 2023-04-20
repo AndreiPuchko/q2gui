@@ -13,28 +13,35 @@ from q2gui import q2style
 
 
 class Q2Style(q2style.Q2Style):
-    def _dark_style(self):
-        return """
+    def _windows_style(self):
+        s1 = """
                 * {{
                     color: {color};
                     background-color: {background};
-                    border: 1px solid {border};
-
+                    margin: {margin};
                 }}
 
                 *:disabled {{color: {color_disabled};}}
-
-                QAbstractButton, QTabBar:tab, QLineEdit, QComboBox:!editable
+                /* focusable controls*/
+                QAbstractButton, QTabBar, QLineEdit, QComboBox:!editable, QListView, QTextEdit, QSpinBox
                     {{
                         background-color: {background_control};
                         selection-color: {color_selection};
                         selection-background-color : {background_selection};
                     }}
-                    
-                QTabBar:tab
+
+                q2tab::pane
                     {{
-                        padding-left: 0.4em;
-                        padding-right: 0.4em;
+                        margin: {margin};
+                        border: {border};
+                        border-radius: 0.3em;
+                    }}
+
+                QTabBar::tab
+                    {{
+                        margin: {margin};
+                        border: None;
+                        padding:0.1em 0.3em;
                     }}
 
                 QPushButton, q2date, q2line, QCheckBox, QRadioButton, QListView, QComboBox
@@ -75,10 +82,6 @@ class Q2Style(q2style.Q2Style):
 
                 q2relation:focus {{border:none;background-color: {background};}}
 
-                QTabWidget::pane
-                    {{
-                        border: 1px solid {background_selected_item};
-                    }}
 
                 QTabBar::tab:selected, QRadioButton:checked
                     {{
@@ -170,7 +173,107 @@ class Q2Style(q2style.Q2Style):
                         left: 1em;
                 }}
 
+                QLabel {{margin: 0px}}
+          
                 """
+        focusable_controls_list = [
+            "q2line",
+            "q2check",
+            "q2text",
+            "q2button",
+            "q2radio",
+            "q2lookup",
+            "q2combo",
+            "q2toolbutton",
+            "q2progressbar",
+            "q2grid",
+            "q2sheet",
+            "q2date",
+            "q2tab",
+            "q2list",
+            "q2spin",
+            "q2doublespin",
+            "QTabBar::tab",
+            "QRadioButton",
+            "#radio",
+        ]
+        focusable_controls = ", ".join(focusable_controls_list)
+        focusable_controls_with_focus = ", ".join(["%s:focus" % x for x in focusable_controls_list])
+        focusable_controls_with_disabled = ", ".join(["%s:disabled" % x for x in focusable_controls_list])
+        hoverable_controls = "QTabBar::tab:hover "
 
-    def _light_style(self):
-        return self._dark_style()
+        s2 = """
+                QFrame,q2frame {{
+                    background-color:{background};
+                }}
+
+                %(focusable_controls)s
+                    {{
+                        color:{color};
+                        background-color:{background_control};
+
+                    }}
+                %(focusable_controls_with_focus)s
+                    {{
+                        background-color:{background_focus};
+                        border: {border_focus};
+                    }}
+                %(focusable_controls_with_disabled)s
+                    {{
+                        color:{color_disabled};
+                    }}
+                QRadioButton:checked, QTabBar::tab:selected, QListView::item:selected
+                    {{
+                        color: {color_selected_item};
+                        background-color: {background_selected_item};
+                        border: none;
+                    }}
+
+                QTabBar::tab
+                    {{
+                        margin: {margin};
+                        padding:0.1em 0.3em;
+                    }}
+                
+                q2label{{
+                    color:{color};
+                }}
+                
+                QGroupBox#title
+                    {{
+                        border: {border};
+                        margin-top: 2ex;
+                        padding: 2ex;
+                    }}
+                QGroupBox::title {{
+                        subcontrol-origin: margin;
+                        color: {color};
+                        background-color:{background};
+                        font: bold;
+                        left: 1em;
+                }}
+                QMdiSubWindow, QMainWindow
+                    {{
+                        color: {color};
+                        background-color: {background};
+                    }}
+                QMenuBar, QToolButton
+                    {{
+                        color: {color};
+                        background-color: {background_control};
+                    }}
+
+                QMenuBar::item:selected, QToolButton:hover
+                    {{
+                        color: {color_selection};
+                        background-color: {background_selection};
+                    }}
+
+            """ % locals()
+        return s2
+
+    def _mac_style(self):
+        return self._windows_style()
+
+    def _linux_style(self):
+        return self._windows_style()
