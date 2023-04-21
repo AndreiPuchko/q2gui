@@ -474,15 +474,14 @@ class Q2App:
         if self.style_file == "":
             self.style_file = "q2gui.qss"
 
-        self.q2style:Q2Style = self.Q2Style()
-        # self.set_font(font_size=12)
+        self.q2style: Q2Style = self.Q2Style()
         if self.Q2Style:
             self.color_mode = self.q2style.get_system_mode()
             self.default_style = self.q2style.get_stylesheet()
             self.colors = self.q2style.get_style()
             self.font_size = self.q2style.font_size
             self.font_name = self.q2style.font_name
-            
+
         else:
             self.color_mode = ""
             self.default_style = ""

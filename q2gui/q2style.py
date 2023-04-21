@@ -18,24 +18,26 @@ class Q2Style:
         self.font_size = 12
         self.font_name = "Arial"
 
-        self.styles["dark"] = {
+        self.default_style = {
+            "font_size": "12",
+            "font_name": "Arial",
             # base colors
             "color": "#fff",
             "background": "#282828",
             # disabled color, background doesnt change
             "color_disabled": "#777",
             # selected text
-            "color_selection": "#000",
-            "background_selection": "#fff",
+            "color_selection": "#222",
+            "background_selection": "yellow",
             # selected item
             "color_selected_item": "#111",
             "background_selected_item": "#A1A1F6",
             # selected menu item
             "background_menu_selection": "#B0E2FF",
             # for focusable controls
-            "background_control": "#555",
+            "background_control": "rgb(48, 69, 92)",
             # for contol with focus
-            "background_focus": "#005599",
+            "background_focus": "#0077BB",
             "border_focus": "2px solid yellow",
             # general border
             "border": "1px solid #fff",
@@ -45,32 +47,37 @@ class Q2Style:
             "margin": "0.2em",
         }
 
-        self.styles["dark1"] = {
-            # base colors
-            "color": "#000",
-            "background": "palette(base)",
-            # disabled color, background doesnt change
-            "color_disabled": "#DDD",
-            # selected text
-            "color_selection": "#FFF",
-            "background_selection": "#B0E2FF",
-            # selected item
-            "color_selected_item": "#111",
-            "background_selected_item": "#A1A1F6",
-            # selected menu item
-            "background_menu_selection": "#B0E2FF",
-            # for focusable controls
-            "background_control": "rgb(173, 227, 245)",
-            # for contol with focus
-            "background_focus": "yellow",
-            "border_focus": "2px solid #005599",
-            # general border
-            "border": "2px solid #666",
-            # actice window border
-            "border_window": "1px solid #1E90FF",
-            "padding": "0.1em",
-            "margin": "0.1em",
-        }
+        self.styles["dark"] = dict(self.default_style)
+        self.styles["light"] = dict(self.default_style)
+
+        self.styles["light"].update(
+            {
+                # base colors
+                "color": "#000",
+                "background": "palette(base)",
+                # disabled color, background doesnt change
+                "color_disabled": "#DDD",
+                # selected text
+                "color_selection": "#222",
+                "background_selection": "#B0E2FF",
+                # selected item
+                "color_selected_item": "#111",
+                "background_selected_item": "#A1A1F6",
+                # selected menu item
+                "background_menu_selection": "#B0E2FF",
+                # for focusable controls
+                "background_control": "rgb(160, 188, 217)",
+                # for contol with focus
+                "background_focus": "yellow",
+                "border_focus": "2px solid #005599",
+                # general border
+                "border": "2px solid #666",
+                # actice window border
+                "border_window": "1px solid #1E90FF",
+                "padding": "0.1em",
+                "margin": "0.1em",
+            }
+        )
 
     def get_system_mode(self):
         return darkdetect.theme().lower()

@@ -23,8 +23,6 @@ class q2radio(QFrame, Q2Widget):
         self.setLayout(QVBoxLayout() if "v" in meta.get("control") else QHBoxLayout())
         self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
         self.layout().setAlignment(q2_align["7"])
-        # self.layout().setSpacing(0)
-        # self.setContentsMargins(0, 0, 0, 0)
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.setObjectName("radio")
         self.button_list = []

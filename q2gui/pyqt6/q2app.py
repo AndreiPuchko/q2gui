@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QWidget,
     QMainWindow,
     QToolButton,
+    QPushButton,
     QToolBar,
     QFileDialog,
     QTabWidget,
@@ -40,19 +41,25 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def __init__(self, parent):
             super().__init__(parent)
             self.main_window: Q2App = parent
-            self.addTab(QWidget(), "")
+            self.addTab(QWidget(), "+")
             self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-            self.addTabButton = QToolButton(self)
-            self.addTabButton.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            self.addTabButton.setText("+")
-            self.addTabButton.clicked.connect(self.addTab)
-            self.tabBar().setTabButton(0, QTabBar.ButtonPosition.RightSide, self.addTabButton)
-            self.tabBar().setTabEnabled(0, False)
+            # self.addTabButton = QToolButton(self)
+            # self.addTabButton.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+            # self.addTabButton.setText("⊕")
+            # self.addTabButton.setObjectName("tab_add_button")
+            # self.addTabButton.clicked.connect(self.addTab)
+            # self.tabBar().setTabButton(0, QTabBar.ButtonPosition.LeftSide, self.addTabButton)
+            # self.tabBar().setTabButton(0, QTabBar.ButtonPosition.LeftSide, self.addTabButton)
+            # self.tabBar().setTabEnabled(0, False)
+
+            self.setObjectName("main_tab_widget")
             self.prev_index = None
             self.tab_focus_widget = {}
+            self.tabBar().setObjectName("main_tab_bar")
 
             self.closeButton = QToolButton(self)
-            self.closeButton.setText("x")
+            self.closeButton.setText("❌")
+            # self.closeButton.setObjectName("tab_close_button")
             self.closeButton.clicked.connect(self.closeSubWindow)
             self.setCornerWidget(self.closeButton)
             self.currentChanged.connect(self.restore_tab_focus_widget)
@@ -61,9 +68,15 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.tab_focus_widget[self.currentIndex()] = widget
 
         def restore_tab_focus_widget(self):
+            if self.currentIndex() == self.count() - 1:
+                self.addTab()
+                return
             focus_widget = self.tab_focus_widget.get(self.currentIndex(), self)
             if focus_widget:
-                focus_widget.setFocus()
+                try:
+                    focus_widget.setFocus()
+                except Exception as e:
+                    pass
 
         # def _currentChanged(self, index: int):
         #     self.restore_tab_focus_widget()
@@ -98,10 +111,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.q2_toolbar = QToolBar(self)
         Q2QtWindow.__init__(self)
 
-        # self.set_style_sheet("")
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
-        
+        self.set_font(self.font_name, self.font_size)
+
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0
             QApplication._mw_list = []
@@ -109,6 +122,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         QApplication._mw_list.append(self)
         self.closing = False
         self.setCentralWidget(QWidget(self))
+        self.centralWidget().setObjectName("central_widget")
         self.centralWidget().setLayout(layout("v"))
         self.centralWidget().layout().addWidget(self.q2_toolbar)
         self.centralWidget().layout().addWidget(self.q2_tabwidget)
@@ -123,8 +137,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.get_open_file_dialoq = self._get_open_file_dialoq
         self.get_save_file_dialoq = self._get_save_file_dialoq
         self._last_get_file_path = None
-
-        self.set_font(self.font_name, self.font_size)
 
     def set_font(self, font_name="", font_size=12):
         QApplication.setFont(QFont(font_name, font_size))
@@ -234,20 +246,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return QApplication.clipboard().text()
 
     def set_style_sheet(self, style=None):
-        # file_name = self.style_file
-        if isinstance(style, str):
-            if os.path.isfile(style):
-                file_name = style
-            else:
-                file_name = ""
-        if os.path.isfile(file_name):
+        if os.path.isfile(self.style_file):
             try:
-                with open(file_name, "r") as style_data:
-                    self.setStyleSheet(style_data.read())
+                with open(self.style_file, "r") as style_data:
+                    local_style = style_data.read()
             except Exception:
-                print(f"File {file_name} reading error...")
-        elif isinstance(style, str):
-            self.setStyleSheet(style)
+                local_style = ""
+        self.setStyleSheet(style + local_style)
 
     def add_style_sheet(self, style):
         current_style = self.styleSheet() + f"{style}"
