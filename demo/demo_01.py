@@ -33,6 +33,9 @@ class DemoApp(Q2App):
         self.add_menu("File|Toogle tabbar", self.show_hide_tabbar, toolbar="*")
         self.add_menu("File|Toogle statusbar", self.show_hide_statusbar, toolbar="*")
         self.add_menu("File|-", None)
+        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"))
+        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"))
+        self.add_menu("File|-", None)
         self.add_menu("Documents|Personal", None)
         self.add_menu("Documents|Business", None)
         self.add_menu("Help|About", lambda: q2Mess("About q2gui"))
@@ -201,7 +204,9 @@ class DemoApp(Q2App):
             )
             form.add_control("spin1", "Spinbox", control="spin")
             # form.add_control("/s")
-            form.add_control(column="z1", label="Enter smths", control="line", data="I am disabled", disabled=1)
+            form.add_control(
+                column="z1", label="Enter smths", control="line", data="I am disabled", disabled=1
+            )
 
         if form.add_control("/t", "Tab2"):
             form.add_control("", "Just label on Tab2")

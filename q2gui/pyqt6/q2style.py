@@ -39,10 +39,9 @@ class Q2Style(q2style.Q2Style):
         focusable_controls_with_focus = ", ".join(["%s:focus" % x for x in focusable_controls_list])
 
         style = """
-                QFrame,q2frame {{
+                QFrame, q2frame {{
                     background-color:{background};
                 }}
-
                 %(focusable_controls)s
                     {{
                         color:{color};
@@ -51,6 +50,8 @@ class Q2Style(q2style.Q2Style):
                         padding:{padding};
                         selection-color: {color_selection};
                         selection-background-color : {background_selection};
+                        border: {border};
+                        {border_raduis}
                     }}
                 %(focusable_controls_with_focus)s
                     {{
@@ -63,6 +64,11 @@ class Q2Style(q2style.Q2Style):
                         background-color: {background_selected_item};
                         border: none;
                     }}
+                QRadioButton
+                    {{
+                        border: none;
+                    }}
+                    
                 QRadioButton:focus
                     {{
                         background-color: {background_focus};
@@ -109,9 +115,10 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color: {color};
                         background-color: {background_control};
+                        border: None;
                     }}
 
-                QMenuBar::item:selected
+                QMenuBar::item:selected, QMenu::item:selected
                     , QToolButton:hover
                     , QTabBar::tab:hover
                     , q2button:hover
@@ -141,6 +148,7 @@ class Q2Style(q2style.Q2Style):
                 q2button
                     {{
                         border:{border};
+                        padding: 0 0.5em;
                     }}
 
                 q2space
@@ -154,6 +162,11 @@ class Q2Style(q2style.Q2Style):
                 #main_tab_widget::tab-bar
                     {{
                         alignment: center;
+                    }}
+                
+                #main_tab_widget::pane
+                    {{
+                        border: none;
                     }}
 
                 #main_tab_bar::tab:last
@@ -177,7 +190,11 @@ class Q2Style(q2style.Q2Style):
                         border-left: 0.1em dotted {color};
                         border-top: 0.1em dotted {color};
                     }}
-                *:disabled {{color: {color_disabled};}}
+                *:disabled
+                    {{
+                        color: {color_disabled};
+                        background: {background_disabled};
+                    }}
 
                 q2combo QAbstractItemView
                     {{
@@ -217,6 +234,43 @@ class Q2Style(q2style.Q2Style):
                     {{
                         background:{background_focus};
                     }}
+
+                QHeaderView:section
+                    {{
+                        color: gray; 
+                        background-color: darkgray ;
+                        border: 1px solid gray;
+                    }}
+                QToolButton
+                    {{
+                        min-height: 1.2em;
+                        min-width: 1.2em;
+                    }}
+
+                #radio, q2check {{border:none;}}
+                #mdiarea {{border:none;}}
+
+                q2text
+                    {{
+                        margin:0.2em;
+                    }}
+                
+                QMenu{{
+                    border:1px solid palette(Mid);
+                }}
+                QMenu::separator {{
+                    height: 1px;
+                    background: palette(Mid);
+                }}
+                
+                QMenu::item
+                    {{
+                        color: palette(Text);
+                        background-color: palette(Midlight);
+                        selection-color: palette(highlighttext);
+                        selection-background-color: {background_selection};
+                    }}
+
             """ % locals()
         return style
 

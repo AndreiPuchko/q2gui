@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     demo()
 
-from PyQt6.QtWidgets import QTableWidget, QSizePolicy
+from PyQt6.QtWidgets import QTableWidget, QSizePolicy, QStyle
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPalette
 
@@ -89,15 +89,20 @@ class q2sheet(QTableWidget, Q2Widget):
     def expand(self):
         if self.auto_expand:
             self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum))
-            height = self.horizontalHeader().height() + 0
+            self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+            frame_delta = self.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth)*4
+
+            height = self.horizontalHeader().height()
             for x in range(self.rowCount()):
                 height += self.rowHeight(x)
-            self.setFixedHeight(height)
+            self.setFixedHeight(height + frame_delta)
 
-            width = self.verticalHeader().width() + 0
+            width = self.verticalHeader().width()
             for x in range(self.columnCount()):
                 width += self.columnWidth(x)
-            self.setFixedWidth(width)
+            self.setFixedWidth(width + frame_delta)
         else:
             self.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding))
             self.setMinimumWidth(0)

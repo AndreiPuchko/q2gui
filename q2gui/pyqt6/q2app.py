@@ -27,7 +27,7 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
-from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush
+from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2window import layout
@@ -43,15 +43,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.main_window: Q2App = parent
             self.addTab(QWidget(), "+")
             self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-            # self.addTabButton = QToolButton(self)
-            # self.addTabButton.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-            # self.addTabButton.setText("⊕")
-            # self.addTabButton.setObjectName("tab_add_button")
-            # self.addTabButton.clicked.connect(self.addTab)
-            # self.tabBar().setTabButton(0, QTabBar.ButtonPosition.LeftSide, self.addTabButton)
-            # self.tabBar().setTabButton(0, QTabBar.ButtonPosition.LeftSide, self.addTabButton)
-            # self.tabBar().setTabEnabled(0, False)
-
             self.setObjectName("main_tab_widget")
             self.prev_index = None
             self.tab_focus_widget = {}
@@ -59,7 +50,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
             self.closeButton = QToolButton(self)
             self.closeButton.setText("❌")
-            # self.closeButton.setObjectName("tab_close_button")
             self.closeButton.clicked.connect(self.closeSubWindow)
             self.setCornerWidget(self.closeButton)
             self.currentChanged.connect(self.restore_tab_focus_widget)
@@ -75,7 +65,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if focus_widget:
                 try:
                     focus_widget.setFocus()
-                except Exception as e:
+                except Exception:
                     pass
 
         # def _currentChanged(self, index: int):
@@ -92,7 +82,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
-                # widget.setBackground(QBrush(int(self.main_window.colors["background"].replace("#", "0x"), 16)))
+                widget.setBackground(QBrush(QColor(self.main_window.q2style.get_style("background_disabled"))))
                 widget.form_level = 0
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -113,7 +103,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
-        self.set_font(self.font_name, self.font_size)
 
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0
@@ -239,6 +228,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.addActions(self.menuBar().actions())
 
+    def set_color_mode(self, color_mode=None):
+        q2app.Q2App.set_color_mode(self, color_mode)
+        # self.q2style.set_color_mode(QMainWindow.menuBar(self))
+
     def focus_widget(self):
         return QApplication.focusWidget()
 
@@ -252,6 +245,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     local_style = style_data.read()
             except Exception:
                 local_style = ""
+        else:
+            local_style = ""
         self.setStyleSheet(style + local_style)
 
     def add_style_sheet(self, style):

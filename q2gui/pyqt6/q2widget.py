@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
 from decimal import Decimal
 from PyQt6.QtWidgets import QWidget, QSizePolicy
-from PyQt6.QtGui import QFontMetrics
+from PyQt6.QtGui import QFontMetrics, QFont
 
 from q2gui import q2widget
 from q2gui.pyqt6.q2window import q2_align
@@ -80,6 +80,9 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def is_readonly(self):
         if hasattr(self, "isReadOnly"):
             return self.isReadOnly()
+
+    def set_font(self, font_name="", font_size=12):
+        self.setFont(QFont(font_name, font_size))
 
     def set_focus(self):
         self.setFocus()

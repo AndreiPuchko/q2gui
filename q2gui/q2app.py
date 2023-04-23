@@ -21,7 +21,6 @@ import time
 import os
 import codecs
 
-import darkdetect
 
 q2_app = None
 
@@ -453,7 +452,7 @@ class Q2Settings:
 
 
 class Q2App:
-    Q2Style = None
+    Q2Style = Q2Style()
 
     def __init__(self, title=""):
         q2app.q2_app = self
@@ -474,21 +473,11 @@ class Q2App:
         if self.style_file == "":
             self.style_file = "q2gui.qss"
 
-        self.q2style: Q2Style = self.Q2Style()
-        if self.Q2Style:
-            self.color_mode = self.q2style.get_system_mode()
-            self.default_style = self.q2style.get_stylesheet()
-            self.colors = self.q2style.get_style()
-            self.font_size = self.q2style.font_size
-            self.font_name = self.q2style.font_name
-
-        else:
-            self.color_mode = ""
-            self.default_style = ""
-            self.font_size = 10
-            self.font_name = ""
-
-        self.set_style_sheet(self.default_style)
+        self.q2style: Q2Style = self.Q2Style(self)
+        # self.q2style._font_size = 25
+        # self.q2style._font_name = "Arial"
+        # self.q2style.set_style_sheet(self, "light")
+        # self.set_color_mode("light")
 
         self.menu_list = []
         self.content_margin_top = 3
@@ -499,6 +488,9 @@ class Q2App:
         self.set_icon("assets/q2gui.ico")
 
         self.on_init()
+
+    def set_color_mode(self, color_mode=None):
+        self.q2style.set_color_mode(self, color_mode)
 
     def set_font(self, font_name, font_size):
         pass

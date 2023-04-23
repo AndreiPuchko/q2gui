@@ -63,6 +63,9 @@ class Q2Widget:
     def set_focus(self):
         pass
 
+    def set_font(self, font_name, font_size):
+        pass
+
     def has_focus(self):
         pass
 

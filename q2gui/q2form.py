@@ -44,6 +44,7 @@ class Q2Form:
         self.system_controls = q2app.Q2Controls()
         self.model = None
         self.db = q2app.q2_app.db
+        self.q2_app = q2app.q2_app
         self._model_record = {}  # contains the data of the currently edited record
 
         # Shortcuts to elements
@@ -1154,6 +1155,7 @@ class Q2FormWindow:
         # Create widgets
         for meta in controls:
             meta["form"] = self.q2_form
+            meta["q2_app"] = q2app.q2_app
             meta["form_window"] = self
             if meta.get("noform", ""):
                 continue
