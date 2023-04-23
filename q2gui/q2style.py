@@ -28,29 +28,28 @@ class Q2Style:
             "color": "#fff",
             "background": "#282828",
             # disabled color
-            "color_disabled": "#777",
+            "color_disabled": "#CCC",
             "background_disabled": "#444",
             # selected text
             "color_selection": "#222",
-            "background_selection": "yellow",
+            "background_selection": "#B0E2FF",
             # selected item
             "color_selected_item": "#111",
             "background_selected_item": "#A1A1F6",
             # selected menu item
             "background_menu_selection": "#B0E2FF",
             # for focusable controls
-            # "background_control": "rgb(48, 69, 92)",
-            "background_control": "#43455C",
+            "background_control": "#53556C",
             # for contol with focus
             "background_focus": "#0077BB",
+            "color_focus": "#FFF",
             "border_focus": "1px solid yellow",
             # general border
             "border": "1px solid #fff",
             # actice window border
-            "border_window": "0px solid #1E90FF",
+            "border_raduis": "border-radius: 0.3em;",
             "padding": "1px",
             "margin": "1px",
-            "border_raduis": "border-radius: 0.3em;",
         }
 
         self.styles["dark"] = dict(self.default_style)
@@ -60,25 +59,22 @@ class Q2Style:
             {
                 # base colors
                 "color": "#000",
-                "background": "palette(base)",
+                "background": "#EEE",
                 # disabled color, background doesnt change
-                "color_disabled": "#DDD",
-                "background_disabled": "#AAA",
-                # selected text
-                "color_selection": "#222",
-                "background_selection": "#B0E2FF",
+                "color_disabled": "#333",
+                "background_disabled": "#cccccc",
                 # selected item
                 "color_selected_item": "#111",
                 "background_selected_item": "#A1A1F6",
                 # selected menu item
                 "background_menu_selection": "#B0E2FF",
                 # for focusable controls
-                "background_control": "rgb(160, 188, 217)",
+                "background_control": "rgb(200, 228, 247)",
                 # for contol with focus
-                "background_focus": "yellow",
-                "border_focus": "2px solid #005599",
+                # "background_focus": "yellow",
+                # "border_focus": "2px solid #005599",
                 # general border
-                "border": "2px solid #666",
+                "border": "1px solid palette(Mid)",
             }
         )
         if q2widget:

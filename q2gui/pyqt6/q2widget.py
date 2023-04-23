@@ -137,7 +137,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         self.setStyleSheet(self.style_sheet)
 
     def add_style_sheet(self, css: str):
-        last_style = self.styleSheet() + f"; {css}"
+        last_style = " ".join([self.styleSheet(), f"; {css}"])
         super().set_style_sheet(last_style)
         self.setStyleSheet(last_style)
 

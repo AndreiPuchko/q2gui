@@ -118,7 +118,7 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
     def hide_border(self):
         super().hide_border()
         self.setObjectName("grb")
-        self.setStyleSheet("QGroupBox#grb {border:0}")
+        # self.setStyleSheet("QGroupBox#grb {border:0}")
         self.parent().setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.FramelessWindowHint)
 
     def is_maximized(self):

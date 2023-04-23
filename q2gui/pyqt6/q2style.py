@@ -37,6 +37,7 @@ class Q2Style(q2style.Q2Style):
         ]
         focusable_controls = ", ".join(focusable_controls_list)
         focusable_controls_with_focus = ", ".join(["%s:focus" % x for x in focusable_controls_list])
+        focusable_controls_with_readonly = ", ".join(['%s[readOnly="true"]' % x for x in focusable_controls_list])
 
         style = """
                 QFrame, q2frame {{
@@ -53,8 +54,14 @@ class Q2Style(q2style.Q2Style):
                         border: {border};
                         {border_raduis}
                     }}
+                %(focusable_controls_with_readonly)s
+                    {{
+                        color:{color_disabled};
+                    }}
+
                 %(focusable_controls_with_focus)s
                     {{
+                        color:{color_focus};
                         background-color:{background_focus};
                         border: {border_focus};
                     }}
@@ -63,6 +70,7 @@ class Q2Style(q2style.Q2Style):
                         color: {color_selected_item};
                         background-color: {background_selected_item};
                         border: none;
+                        min-height:1.2em;
                     }}
                 QRadioButton
                     {{
@@ -148,7 +156,7 @@ class Q2Style(q2style.Q2Style):
                 q2button
                     {{
                         border:{border};
-                        padding: 0 0.5em;
+                        padding: 0.3em 0.5em;
                     }}
 
                 q2space
@@ -163,7 +171,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                         alignment: center;
                     }}
-                
+
                 #main_tab_widget::pane
                     {{
                         border: none;
@@ -254,7 +262,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                         margin:0.2em;
                     }}
-                
+
                 QMenu{{
                     border:1px solid palette(Mid);
                 }}
@@ -262,7 +270,7 @@ class Q2Style(q2style.Q2Style):
                     height: 1px;
                     background: palette(Mid);
                 }}
-                
+
                 QMenu::item
                     {{
                         color: palette(Text);
@@ -271,6 +279,18 @@ class Q2Style(q2style.Q2Style):
                         selection-background-color: {background_selection};
                     }}
 
+                QProgressBar
+                    {{
+                        text-align: center;
+                        {border_raduis}
+                    }}
+                QProgressBar::chunk {{
+                    background-color: {background_selected_item};
+                }}
+                QCalendarWidget QAbstractItemView
+                    {{
+                        color:{color};
+                    }}
             """ % locals()
         return style
 

@@ -37,12 +37,13 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
 
     def hide_border(self):
         self.setObjectName("grb")
-        no_border_style = "QGroupBox#grb {border:0}"
-        # last_style = self.styleSheet()
-        # self.set_title("")
-        # if no_border_style not in last_style:
-        #     self.setStyleSheet(last_style + " " + no_border_style)
-        self.add_style_sheet(no_border_style)
+        # self.add_style_sheet("{border:0}")
+        # self.add_style_sheet("QGroupBox#grb {border:0}")
+        no_border_style = " QGroupBox#grb {border:0} "
+        last_style = self.styleSheet()
+        self.set_title("")
+        if no_border_style not in last_style:
+            self.setStyleSheet(last_style + " " + no_border_style)
 
     def set_title(self, title):
         self.setTitle(title)

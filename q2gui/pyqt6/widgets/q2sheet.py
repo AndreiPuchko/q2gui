@@ -92,7 +92,7 @@ class q2sheet(QTableWidget, Q2Widget):
             self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-            frame_delta = self.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth)*4
+            frame_delta = self.style().pixelMetric(QStyle.PixelMetric.PM_DefaultFrameWidth)*6
 
             height = self.horizontalHeader().height()
             for x in range(self.rowCount()):
