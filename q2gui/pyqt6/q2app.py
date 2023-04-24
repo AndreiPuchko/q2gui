@@ -93,16 +93,21 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if self.count() > 1:
                 self.main_window.on_new_tab()
 
+        def set_tabs_backround_color(self):
+            for x in range(self.count()):
+                if isinstance(self.widget(x), QMdiArea):
+                    self.widget(x).setBackground(QBrush(QColor(self.main_window.q2style.get_style("background_disabled"))))
+
     def __init__(self, title=""):
         if QCoreApplication.startingUp():  # one and only QApplication allowed
             self.QApplication = QApplication([])
         QMainWindow.__init__(self)
-        self.q2_tabwidget = self.Q2TabWidget(self)
-        self.q2_toolbar = QToolBar(self)
         Q2QtWindow.__init__(self)
 
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
+        self.q2_tabwidget = self.Q2TabWidget(self)
+        self.q2_toolbar = QToolBar(self)
 
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0
@@ -230,7 +235,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def set_color_mode(self, color_mode=None):
         q2app.Q2App.set_color_mode(self, color_mode)
-        # self.q2style.set_color_mode(QMainWindow.menuBar(self))
+        self.q2_tabwidget.set_tabs_backround_color()
 
     def focus_widget(self):
         return QApplication.focusWidget()

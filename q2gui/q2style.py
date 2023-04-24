@@ -83,9 +83,10 @@ class Q2Style:
     def set_color_mode(self, q2widget=None, color_mode=None):
         if q2widget is None:
             return
-        if color_mode:
-            self.color_mode = color_mode
-            self.set_style_sheet(q2widget, self.color_mode)
+        if not color_mode:
+            color_mode = self.get_system_color_mode()
+        self.color_mode = color_mode
+        self.set_style_sheet(q2widget, self.color_mode)
 
     @property
     def font_size(self):
