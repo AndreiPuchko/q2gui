@@ -10,6 +10,9 @@ if __name__ == "__main__":
 
 
 import darkdetect
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class Q2Style:
@@ -18,8 +21,8 @@ class Q2Style:
         self._font_size = 12
         self._font_name = "Arial"
         self.color_mode = color_mode
-        if color_mode is None:
-            self.color_mode = self.get_system_color_mode()
+        # if color_mode is None:
+        #     self.color_mode = self.get_system_color_mode()
 
         self.default_style = {
             "font_size": f"{self._font_size}",
@@ -83,9 +86,9 @@ class Q2Style:
     def set_color_mode(self, q2widget=None, color_mode=None):
         if q2widget is None:
             return
-        if not color_mode:
-            color_mode = self.get_system_color_mode()
         self.color_mode = color_mode
+        if not color_mode is [None, ""]:
+            color_mode = self.get_system_color_mode()
         self.set_style_sheet(q2widget, self.color_mode)
 
     @property
@@ -116,12 +119,13 @@ class Q2Style:
         return self._style().format(**self.get_styles(color_mode))
 
     def get_color_mode(self, color_mode):
-        if color_mode is None:
+        if color_mode in [None, ""]:
+            # color_mode = self.get_system_color_mode()
             color_mode = self.color_mode
         return color_mode
 
     def get_style(self, name, color_mode=None):
-        return self.styles.get(self.get_color_mode(color_mode),{}).get(name, "")
+        return self.styles.get(self.get_color_mode(color_mode), {}).get(name, "")
 
     def get_styles(self, mode="dark"):
         return self.styles.get(mode, self.styles["dark"])
@@ -144,7 +148,7 @@ class Q2Style:
         pass
 
     def set_style_sheet(self, q2widget=None, color_mode=None):
-        self.color_mode = color_mode
+        # self.color_mode = color_mode
         if hasattr(q2widget, "set_style_sheet"):
             q2widget.set_style_sheet(self.get_stylesheet(color_mode))
             q2widget.set_font(self._font_name, self._font_size)

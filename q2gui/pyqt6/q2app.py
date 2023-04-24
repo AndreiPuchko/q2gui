@@ -105,9 +105,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         Q2QtWindow.__init__(self)
 
         self.Q2Style = Q2Style
-        q2app.Q2App.__init__(self)
         self.q2_tabwidget = self.Q2TabWidget(self)
         self.q2_toolbar = QToolBar(self)
+        q2app.Q2App.__init__(self)
 
         if not hasattr(QApplication, "_mw_count"):
             QApplication._mw_count = 0

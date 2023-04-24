@@ -214,20 +214,22 @@ class Q2Style(q2style.Q2Style):
                         color: {color_selected_item};
                     }}
 
+
                 QTableView
                     {{
-                    alternate-background-color:{background};
+                    alternate-background-color:{background_control};
+                    background-color:{background};
                     }}
 
                 QHeaderView::section, QTableView:focus
                     {{
                         color:{color};
-                        background-color:{background_control};
+                        background-color:{background};
                     }}
 
                 QTableView:item::selected
                     {{
-                        color: {color};
+                        color: {color_focus};
                         background-color:{background_focus};
                     }}
 
