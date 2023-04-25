@@ -87,9 +87,9 @@ class Q2Style:
         if q2widget is None:
             return
         self.color_mode = color_mode
-        if not color_mode is [None, ""]:
+        if color_mode is [None, "", "None"]:
             color_mode = self.get_system_color_mode()
-        self.set_style_sheet(q2widget, self.color_mode)
+        self.set_style_sheet(q2widget, color_mode)
 
     @property
     def font_size(self):
@@ -119,13 +119,17 @@ class Q2Style:
         return self._style().format(**self.get_styles(color_mode))
 
     def get_color_mode(self, color_mode):
-        if color_mode in [None, ""]:
+        if color_mode in [None, "", "None"]:
             # color_mode = self.get_system_color_mode()
             color_mode = self.color_mode
         return color_mode
 
     def get_style(self, name, color_mode=None):
-        return self.styles.get(self.get_color_mode(color_mode), {}).get(name, "")
+        if color_mode in [None, "", "None"]:
+            color_mode = self.color_mode
+        if color_mode in [None, "", "None"]:
+            color_mode = self.get_system_color_mode()
+        return self.styles.get(color_mode, {}).get(name, "")
 
     def get_styles(self, mode="dark"):
         return self.styles.get(mode, self.styles["dark"])

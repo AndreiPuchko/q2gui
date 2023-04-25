@@ -134,7 +134,7 @@ def load_mock_data(db: Q2Db):
 class DemoApp(Q2App):
     def on_init(self):
         # super().on_init()
-        self.set_color_mode("light")
+        # self.set_color_mode("light")
         self.create_database()
 
         self.add_menu("File|About", lambda: q2Mess("First application!"))

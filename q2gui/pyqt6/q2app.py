@@ -82,7 +82,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
-                widget.setBackground(QBrush(QColor(self.main_window.q2style.get_style("background_disabled"))))
+                widget.setBackground(
+                    QBrush(QColor(self.main_window.q2style.get_style("background_disabled")))
+                )
                 widget.form_level = 0
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -96,17 +98,19 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def set_tabs_backround_color(self):
             for x in range(self.count()):
                 if isinstance(self.widget(x), QMdiArea):
-                    self.widget(x).setBackground(QBrush(QColor(self.main_window.q2style.get_style("background_disabled"))))
+                    self.widget(x).setBackground(
+                        QBrush(QColor(self.main_window.q2style.get_style("background_disabled")))
+                    )
 
     def __init__(self, title=""):
         if QCoreApplication.startingUp():  # one and only QApplication allowed
             self.QApplication = QApplication([])
         QMainWindow.__init__(self)
         Q2QtWindow.__init__(self)
-
-        self.Q2Style = Q2Style
         self.q2_tabwidget = self.Q2TabWidget(self)
         self.q2_toolbar = QToolBar(self)
+
+        self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
 
         if not hasattr(QApplication, "_mw_count"):
