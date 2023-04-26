@@ -13,12 +13,9 @@ from PyQt6.QtWidgets import (
     QTableView,
     QStyledItemDelegate,
     QAbstractItemView,
-    QStyle,
     QSizePolicy,
-    QStyleOptionButton,
-    QApplication,
 )
-from PyQt6.QtGui import QPalette, QPainter
+from PyQt6.QtGui import QPalette, QPainter, QBrush
 
 from PyQt6.QtCore import Qt, QAbstractTableModel, QVariant
 
@@ -34,47 +31,7 @@ class q2Delegate(QStyledItemDelegate):
             color = option.palette.color(QPalette.ColorRole.AlternateBase).darker(900)
             color.setAlpha(int(color.alpha() / 10))
             painter.fillRect(option.rect, color)
-        meta = self.parent().model().q2_model.meta[index.column()]
-        if meta.get("control") == "check":
-            self.paint_checkbox(painter, option, index, meta)
-            return
-        # elif meta.get("relation"):
-        #     super().paint(painter, option, index)
-        #     self.paint_relation_button(painter, option, index, meta)
-        #     return
         super().paint(painter, option, index)
-
-    # def paint_relation_button(self, painter: QPainter, option, index, meta):
-    #     pb_option = QStyleOptionButton()
-    #     pb_option.text = "?"
-    #     checkBoxRect = QApplication.style().subElementRect(QStyle.SE_PushButtonBevel, pb_option, None)
-    #     sz = 30
-    #     pb_option.rect = option.rect
-    #     pb_option.rect.setX(pb_option.rect.x() - sz + option.rect.width())
-    #     print(checkBoxRect.height())
-    #     pb_option.rect.setHeight(sz)
-    #     pb_option.rect.setWidth(sz)
-    #     QApplication.style().drawControl(QStyle.CE_PushButton, pb_option, painter)
-
-    def paint_checkbox(self, painter: QPainter, option, index, meta):
-        """paint checkbox - left - with top+left alignment"""
-        if meta.get("num"):
-            checked = True if int_(index.data()) else False
-        else:
-            checked = True if index.data() else False
-        cb_option = QStyleOptionButton()
-        if checked:
-            cb_option.state |= QStyle.StateFlag.State_On
-        else:
-            cb_option.state |= QStyle.StateFlag.State_Off
-        checkBoxRect = QApplication.style().subElementRect(
-            QStyle.SubElement.SE_CheckBoxIndicator, cb_option, None
-        )
-        cb_option.rect = option.rect
-        cb_option.rect.setX(cb_option.rect.x() + int(checkBoxRect.width() / 2))
-        if cb_option.rect.height() > checkBoxRect.height() * 2 + 3:
-            cb_option.rect.setHeight(checkBoxRect.height() * 2)
-        QApplication.style().drawControl(QStyle.ControlElement.CE_CheckBox, cb_option, painter)
 
 
 class q2grid(QTableView):
@@ -100,10 +57,20 @@ class q2grid(QTableView):
             self._q2_model_refresh()
 
         def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+            control = self.q2_model.meta[index.column()].get("control")
             if role == Qt.ItemDataRole.DisplayRole:
-                return QVariant(self.q2_model.data(index.row(), index.column()))
+                if control == "check":
+                    return QVariant()
+                else:
+                    return QVariant(self.q2_model.data(index.row(), index.column()))
             elif role == Qt.ItemDataRole.TextAlignmentRole:
                 return QVariant(q2_align[str(self.q2_model.alignment(index.column()))])
+            elif role == Qt.ItemDataRole.CheckStateRole:
+                if control == "check":
+                    if self.q2_model.data(index.row(), index.column()):
+                        return Qt.CheckState.Checked
+                    else:
+                        return Qt.CheckState.Unchecked
             else:
                 return QVariant()
 
@@ -115,7 +82,12 @@ class q2grid(QTableView):
             else:
                 return QVariant()
 
-    # currentCellChangedSignal = pyqtSignal(int, int)
+        def flags(self, index):
+            control = self.q2_model.meta[index.column()].get("control")
+            flags = super().flags(index)
+            if control == "check":
+                flags |= Qt.ItemFlag.ItemIsUserCheckable
+            return flags
 
     def __init__(self, meta):
         super().__init__()
@@ -124,7 +96,6 @@ class q2grid(QTableView):
         self.q2_form = self.meta.get("form")
         self.q2_model = self.q2_form.model
 
-        # self.setModel(self.Q2TableModel(self.q2_form.model))
         self.setItemDelegate(q2Delegate(self))
         self.setTabKeyNavigation(False)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -140,9 +111,9 @@ class q2grid(QTableView):
         self.setModel(self.Q2TableModel(self.q2_form.model))
 
     def currentChanged(self, current, previous):
-        # self.currentCellChangedSignal.emit(current.row(), current.column())
         super().currentChanged(current, previous)
         self.model().dataChanged.emit(current, previous)
+        self.model().dataChanged.emit(previous, current)
         self.q2_form._grid_index_changed(self.currentIndex().row(), self.currentIndex().column())
 
     def current_index(self):

@@ -273,7 +273,7 @@ class Q2Style(q2style.Q2Style):
                     background: palette(Mid);
                 }}
 
-                QMenu::item
+                QMenu::item, QMenu:disabled
                     {{
                         color: palette(Text);
                         background-color: palette(Midlight);

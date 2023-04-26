@@ -112,11 +112,16 @@ class Q2Style:
             self.styles[style]["font_name"] = name
 
     def get_system_color_mode(self):
-        return darkdetect.theme().lower()
+        mode = darkdetect.theme()
+        mode = mode.lower() if mode else "light"
+        return mode
 
     def get_stylesheet(self, color_mode=None):
-        color_mode = self.get_color_mode(color_mode)
-        return self._style().format(**self.get_styles(color_mode))
+        if color_mode == "clean":
+            return ""
+        else:
+            color_mode = self.get_color_mode(color_mode)
+            return self._style().format(**self.get_styles(color_mode))
 
     def get_color_mode(self, color_mode):
         if color_mode in [None, "", "None"]:

@@ -82,9 +82,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
-                widget.setBackground(
-                    QBrush(QColor(self.main_window.q2style.get_style("background_disabled")))
-                )
+                self.set_tab_background(widget)
                 widget.form_level = 0
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -95,12 +93,20 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if self.count() > 1:
                 self.main_window.on_new_tab()
 
-        def set_tabs_backround_color(self):
-            for x in range(self.count()):
-                if isinstance(self.widget(x), QMdiArea):
-                    self.widget(x).setBackground(
+        def set_tab_background(self, widget):
+            if isinstance(widget, QMdiArea):
+                if self.main_window.q2style.color_mode == "clean":
+                    widget.setBackground(
+                        QBrush(QApplication.palette().dark())
+                    )
+                else:
+                    widget.setBackground(
                         QBrush(QColor(self.main_window.q2style.get_style("background_disabled")))
                     )
+
+        def set_tabs_backround(self):
+            for x in range(self.count()):
+                self.set_tab_background(self.widget(x))
 
     def __init__(self, title=""):
         if QCoreApplication.startingUp():  # one and only QApplication allowed
@@ -235,11 +241,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self._main_menu[_path] = node.addMenu(topic)
         # Show as context menu
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
+        for a in self.actions():
+            self.removeAction(a)
         self.addActions(self.menuBar().actions())
 
     def set_color_mode(self, color_mode=None):
         q2app.Q2App.set_color_mode(self, color_mode)
-        self.q2_tabwidget.set_tabs_backround_color()
+        self.q2_tabwidget.set_tabs_backround()
 
     def focus_widget(self):
         return QApplication.focusWidget()

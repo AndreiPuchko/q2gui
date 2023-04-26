@@ -4,6 +4,6 @@ if __name__ == "__main__":
     sys.path.insert(0, ".")
 
 
-from demo.demo_07 import demo
+from demo.demo_08 import demo
 
 demo()

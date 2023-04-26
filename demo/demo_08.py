@@ -40,6 +40,7 @@ def mock_data_load(db: Q2Db):
 class DemoApp(Q2App):
     def on_start(self):
         mock_data_load(self.db)
+        self.set_color_mode("clean")
         self.customers()
 
     def create_database(self):
@@ -59,6 +60,10 @@ class DemoApp(Q2App):
         self.create_database()
 
         self.add_menu("File|About", lambda: q2Mess("First application!"))
+        self.add_menu("File|-", None)
+        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"))
+        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"))
+        self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"))
         self.add_menu("File|-")
         self.add_menu("File|Exit", self.close, toolbar=1)
         self.add_menu("Catalogs|Customers", self.customers, toolbar=1)
