@@ -43,6 +43,9 @@ def q2Mess(mess="", title="Message"):
     form.show_app_modal_form()
 
 
+q2_mess = q2mess = q2Mess
+
+
 def q2AskYN(mess, title="Ask"):
     form = Q2Form(title)
     form.do_not_save_geometry = True
@@ -80,6 +83,9 @@ def q2AskYN(mess, title="Ask"):
 
     form.show_app_modal_form()
     return form.choice
+
+
+q2_ask = q2ask = q2_ask_yn = q2askyn = q2AskYN
 
 
 class Q2Thread(Thread):
@@ -348,3 +354,6 @@ class Q2WaitShow:
 
         q2app.q2_app.process_events()
         return self.value, time.time() - self.start_time
+
+
+q2_wait_show = q2waitshow = q2wait = q2_wait = Q2WaitShow
