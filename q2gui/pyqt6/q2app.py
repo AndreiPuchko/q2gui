@@ -392,7 +392,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def _wait_for_show(self):
         while QApplication.activeWindow() is None:
-            pass
+            QTimer.singleShot(100, self._wait_for_show)
+            return
         self.process_events()
         self.add_new_tab()
         self.process_events()
@@ -417,7 +418,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         Q2QtWindow.restore_geometry(self, self.settings)
         self.show()
         super().run()
-        QTimer.singleShot(111, self._wait_for_show)
+        self._wait_for_show()
         if len(QApplication.allWindows()) == 1:
             QApplication.instance().exec()
 
