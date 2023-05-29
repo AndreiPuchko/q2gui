@@ -30,7 +30,10 @@ class Q2Form(q2form.Q2Form):
         super().__init__(title=title)
         self._Q2FormWindow_class = Q2FormWindow
         self._q2dialogs = q2gui.q2dialogs
-        self.q2_app = QApplication.activeWindow()
+        if QApplication.activeWindow():
+            self.q2_app = QApplication.activeWindow()
+        else:
+            self.q2_app = q2app.q2_app
         self.on_init()
 
 
