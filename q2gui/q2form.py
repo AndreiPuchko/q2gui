@@ -404,7 +404,7 @@ class Q2Form:
                         self.model.set_where(filter_string)
 
                     filter_form.before_form_show = before_form_show
-                    filter_form.valid = lambda: self._q2dialogs.q2Wait(valid, q2app.MESSAGE_SORTING)
+                    filter_form.valid = lambda: self._q2dialogs.q2working(valid, q2app.MESSAGE_SORTING)
                     filter_form.add_ok_cancel_buttons()
                     filter_form.show_mdi_modal_form()
 
@@ -782,7 +782,7 @@ class Q2Form:
 
     def grid_header_clicked(self, column):
         if self.model is not None:
-            self._q2dialogs.q2Wait(lambda: self.model.set_order(column), q2app.MESSAGE_SORTING)
+            self._q2dialogs.q2working(lambda: self.model.set_order(column), q2app.MESSAGE_SORTING)
             self.refresh()
 
     def grid_double_clicked(self):

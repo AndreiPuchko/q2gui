@@ -41,6 +41,7 @@ def q2Mess(mess="", title="Message"):
 
     form.after_form_show = lambda: center_window(form)
     form.show_app_modal_form()
+    q2app.q2_app.process_events()
 
 
 q2_mess = q2mess = q2Mess
@@ -82,6 +83,7 @@ def q2AskYN(mess, title="Ask"):
     form.after_form_show = lambda: center_window(form)
 
     form.show_app_modal_form()
+    q2app.q2_app.process_events()
     return form.choice
 
 
@@ -209,7 +211,7 @@ def q2WaitMax(max_value=0):
     Q2Thread.set_max(max_value)
 
 
-def q2Wait(worker, mess=""):
+def q2working(worker, mess=""):
     wait_window = None
     wait_window_on = False
     last_focus_widget = q2app.q2_app.focus_widget()
@@ -242,6 +244,9 @@ def q2Wait(worker, mess=""):
     if worker_thread._exc:
         raise worker_thread._exc
     return worker_thread._return
+
+
+q2Wait = q2working
 
 
 class Q2WaitShow:
@@ -324,6 +329,7 @@ class Q2WaitShow:
 
             q2app.q2_app.process_events()
         else:
+            q2app.q2_app.process_events()
             return True
 
     def show(self):

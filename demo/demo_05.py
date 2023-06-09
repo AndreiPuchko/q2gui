@@ -47,7 +47,7 @@ class DemoApp(Q2App):
 
             return real_worker
 
-        q2Wait(worker(), "W o r k i n g")
+        q2working(worker(), "W o r k i n g")
 
     def on_init(self):
         self.add_menu("File|Grid", self.show_grid_form, toolbar="*")
@@ -95,7 +95,7 @@ class DemoApp(Q2App):
 
             return real_do
 
-        q2Wait(w1(), "Loading")
+        q2working(w1(), "Loading")
 
         form.add_control("/f")
         for x in csv_dict.fieldnames:

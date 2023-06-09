@@ -37,7 +37,7 @@ class DemoApp(Q2App):
 
         req = request.Request(url, headers={"User-Agent": "Safari"})
 
-        data: str = q2Wait(lambda: str(request.urlopen(req).read()), "Loading webpage...")
+        data: str = q2working(lambda: str(request.urlopen(req).read()), "Loading webpage...")
 
         links = []
         for x in data.split('<a href="'):
@@ -56,7 +56,7 @@ class DemoApp(Q2App):
         url = form.r.link  # get current row column data
         req = request.Request(url, headers={"User-Agent": "Safari"})
 
-        data = q2Wait(lambda: request.urlopen(req).read(), "Loading file from web...")
+        data = q2working(lambda: request.urlopen(req).read(), "Loading file from web...")
 
         mem_zip_file_data = BytesIO()
         mem_zip_file_data.write(data)
@@ -64,7 +64,7 @@ class DemoApp(Q2App):
         csv_file_object = TextIOWrapper(zip_file.open(zip_file.namelist()[0]))
 
         form = Q2Form("CSV")
-        model = q2Wait(lambda: Q2CsvModel(csv_file_object=csv_file_object), "Loading CSV data")
+        model = q2working(lambda: Q2CsvModel(csv_file_object=csv_file_object), "Loading CSV data")
         form.set_model(model)
         form.build_grid_view_auto_form()
         form.show_mdi_modal_grid()
