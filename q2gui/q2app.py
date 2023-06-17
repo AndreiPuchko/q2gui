@@ -451,8 +451,22 @@ class Q2Settings:
         self.config.set(section, key, value)
 
 
+class Q2Stdout:
+    def __init__(self, q2_app):
+        self.q2_app = q2_app
+
+    def write(self, output):
+        if self.q2_app.dev_mode and hasattr(self.q2_app.stdout_widget, "write"):
+            self.q2_app.stdout_widget.write(output)
+        else:
+            sys.__stdout__.write(output)
+            
+    def flush(self):
+        sys.__stdout__.flush()
+
+
 class Q2App:
-    Q2Style = Q2Style()
+    Q2Style = Q2Style
 
     def __init__(self, title=""):
         q2app.q2_app = self
@@ -461,8 +475,10 @@ class Q2App:
         self.db = None
         self.style_file = ""
         self.settings_file = ""
+        self.dev_mode = None
         self.settings_file = self.get_argv("ini")
         self.icon = None
+        sys.stdout = Q2Stdout(self)
 
         self.menu_list = []
         self._main_menu = {}
@@ -474,6 +490,7 @@ class Q2App:
             self.style_file = "q2gui.qss"
 
         self.q2style: Q2Style = self.Q2Style(self)
+        # print(self.q2style)
         # self.q2style._font_size = 25
         # self.q2style._font_name = "Arial"
         # self.q2style.set_style_sheet(self, "light")

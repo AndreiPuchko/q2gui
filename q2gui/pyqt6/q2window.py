@@ -7,6 +7,7 @@ if __name__ == "__main__":
 
     demo()
 
+
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFormLayout, QGridLayout, QApplication
 from PyQt6.QtCore import Qt
 from q2gui import q2window
@@ -50,6 +51,7 @@ class Q2Frame(q2window.Q2Frame, QWidget):
     def set_mode(self, mode="v"):
         self.splitter = None
         super().set_mode(mode=mode)
+        self.set_title("Output")
         if self.layout() is not None:
             return
         self.setLayout(layout(mode))

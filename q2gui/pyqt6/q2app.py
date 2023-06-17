@@ -17,23 +17,46 @@ from PyQt6.QtWidgets import (
     QWidget,
     QMainWindow,
     QToolButton,
-    QPushButton,
+    QTextEdit,
     QToolBar,
     QFileDialog,
     QTabWidget,
     QTabBar,
+    QSplitter,
     QMdiArea,
-    QSizePolicy,
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
 from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor
 
-from q2gui.pyqt6.q2window import Q2QtWindow
+from q2gui.pyqt6.q2window import Q2QtWindow, Q2Frame
 from q2gui.pyqt6.q2window import layout
 from q2gui.pyqt6.q2style import Q2Style
+from q2gui.pyqt6.widgets.q2frame import q2frame
+
 
 import q2gui.q2app as q2app
+
+
+class stdout_widget(q2frame):
+    def __init__(self, mode="h"):
+        super().__init__({"column": "/h", "label": "Output"})
+        self.stdout_widget = QTextEdit(self)
+        self.closeButton = QToolButton(self)
+        self.closeButton.setText("❌")
+        self.closeButton.setFixedSize(1, 1)
+        self.closeButton.clicked.connect(lambda: self.hide())
+        self.insert_widget(widget=self.stdout_widget)
+        self.insert_widget(widget=self.closeButton)
+        self.setVisible(False)
+
+    def write(self, text):
+        if not self.isVisible():
+            self.setVisible(True)
+        from PyQt6.QtGui import QTextCursor
+
+        self.stdout_widget.moveCursor(QTextCursor.MoveOperation.End)
+        self.stdout_widget.insertPlainText(text)
 
 
 class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
@@ -54,6 +77,16 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.setCornerWidget(self.closeButton)
             self.currentChanged.connect(self.restore_tab_focus_widget)
 
+        def hide(self) -> None:
+            self.tabBar().hide()
+            self.closeButton.hide()
+            # return super().hide()
+
+        def show(self) -> None:
+            self.tabBar().show()
+            self.closeButton.show()
+            # return super().show()
+
         def save_tab_focus_widget(self, widget):
             self.tab_focus_widget[self.currentIndex()] = widget
 
@@ -67,9 +100,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     focus_widget.setFocus()
                 except Exception:
                     pass
-
-        # def _currentChanged(self, index: int):
-        #     self.restore_tab_focus_widget()
 
         def closeSubWindow(self):
             currentTabIndex = self.currentIndex()
@@ -96,9 +126,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def set_tab_background(self, widget):
             if isinstance(widget, QMdiArea):
                 if self.main_window.q2style.color_mode == "clean":
-                    widget.setBackground(
-                        QBrush(QApplication.palette().dark())
-                    )
+                    widget.setBackground(QBrush(QApplication.palette().dark()))
                 else:
                     widget.setBackground(
                         QBrush(QColor(self.main_window.q2style.get_style("background_disabled")))
@@ -115,6 +143,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         Q2QtWindow.__init__(self)
         self.q2_tabwidget = self.Q2TabWidget(self)
         self.q2_toolbar = QToolBar(self)
+        self.stdout_widget = stdout_widget()
 
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
@@ -125,15 +154,24 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         QApplication._mw_count += 1
         QApplication._mw_list.append(self)
         self.closing = False
-        self.setCentralWidget(QWidget(self))
+
+        self.central_widget = QSplitter(Qt.Orientation.Vertical)
+        self.setCentralWidget(self.central_widget)
         self.centralWidget().setObjectName("central_widget")
-        self.centralWidget().setLayout(layout("v"))
-        self.centralWidget().layout().addWidget(self.q2_toolbar)
-        self.centralWidget().layout().addWidget(self.q2_tabwidget)
+
+        self.addToolBar(self.q2_toolbar)
+
+        self.central_widget.addWidget(self.q2_tabwidget)
+        self.central_widget.addWidget(self.stdout_widget)
+        self.central_widget.setSizes(
+            [
+                10,
+            ]
+        )
+
         self.statusBar().setVisible(True)
         self.set_title(title)
 
-        # super().__init__(title)
         QApplication.instance().focusChanged.connect(self.focus_changed)
         QApplication.instance().focusChanged.connect(self.save_tab_focus_widget)
 
@@ -319,9 +357,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def show_tabbar(self, mode=True):
         q2app.Q2App.show_tabbar(self)
         if mode:
-            self.q2_tabwidget.tabBar().show()
+            self.q2_tabwidget.show()
         else:
-            self.q2_tabwidget.tabBar().hide()
+            self.q2_tabwidget.hide()
 
     def is_tabbar_visible(self):
         return self.q2_tabwidget.tabBar().isVisible()

@@ -25,6 +25,7 @@ class DemoApp(Q2App):
         self.first_form()
 
     def on_init(self):
+        self.dev_mode = True
         self.add_menu("File|First", self.first_form, toolbar="*")
         self.add_menu("File|Sheet", self.sheet_form, toolbar="*")
         self.add_menu("File|-", None)
@@ -110,6 +111,7 @@ class DemoApp(Q2App):
         form.run()
 
     def first_form(self):
+        print(123)
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
         form.add_control("/")
