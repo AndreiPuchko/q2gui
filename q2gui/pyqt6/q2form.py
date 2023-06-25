@@ -1,3 +1,17 @@
+#    Copyright © 2021 Andrei Puchko
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 if __name__ == "__main__":
     import sys
 
@@ -30,10 +44,11 @@ class Q2Form(q2form.Q2Form):
         super().__init__(title=title)
         self._Q2FormWindow_class = Q2FormWindow
         self._q2dialogs = q2gui.q2dialogs
-        if QApplication.activeWindow():
-            self.q2_app = QApplication.activeWindow()
-        else:
-            self.q2_app = q2app.q2_app
+        # if QApplication.activeWindow():
+        #     self.q2_app = QApplication.activeWindow()
+        # else:
+        #     self.q2_app = q2app.q2_app
+        self.q2_app = q2app.q2_app
         self.on_init()
 
 

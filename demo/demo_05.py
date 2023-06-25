@@ -13,7 +13,7 @@ import os
 
 
 from q2gui.q2model import Q2Model
-from q2gui.q2dialogs import q2Mess, q2Wait, q2WaitMax, q2WaitStep, Q2WaitShow
+from q2gui.q2dialogs import q2Mess, q2Wait, q2WaitMax, q2WaitStep, Q2WaitShow, q2working
 
 from q2gui.q2app import Q2App
 from q2gui.q2form import Q2Form

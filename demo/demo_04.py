@@ -14,7 +14,7 @@ from q2gui.q2form import Q2Form
 load_q2engine(globals(), "PyQt6")
 
 from q2gui.q2model import Q2CsvModel, Q2Model
-from q2gui.q2dialogs import q2Mess, q2Wait
+from q2gui.q2dialogs import q2Mess, q2Wait, q2working
 
 about = """Parses webpage and shows list of downloadable files (ZIP with CSV inside)
 Uses build_grid_view_auto_form method to create UI

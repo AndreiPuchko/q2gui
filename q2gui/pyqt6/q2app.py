@@ -1,3 +1,17 @@
+#    Copyright © 2021 Andrei Puchko
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 if __name__ == "__main__":
     import sys
 
@@ -27,10 +41,9 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
-from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor
+from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, QKeySequence
 
-from q2gui.pyqt6.q2window import Q2QtWindow, Q2Frame
-from q2gui.pyqt6.q2window import layout
+from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
 from q2gui.pyqt6.widgets.q2frame import q2frame
 
@@ -174,6 +187,19 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         QApplication.instance().focusChanged.connect(self.focus_changed)
         QApplication.instance().focusChanged.connect(self.save_tab_focus_widget)
+
+        self.next_tab_shortcut = QShortcut(QKeySequence("Ctrl+Tab"), self)
+        self.prev_tab_shortcut = QShortcut(QKeySequence("Ctrl+Shift+Tab"), self)
+        self.next_tab_shortcut.activated.connect(
+            lambda: self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() + 1)
+            if self.q2_tabwidget.tabBar().isVisible()
+            else None
+        )
+        self.prev_tab_shortcut.activated.connect(
+            lambda: self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() - 1)
+            if self.q2_tabwidget.tabBar().isVisible()
+            else None
+        )
 
         # replace static methods for instance
         self.get_open_file_dialoq = self._get_open_file_dialoq

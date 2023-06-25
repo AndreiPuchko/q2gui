@@ -111,7 +111,6 @@ class DemoApp(Q2App):
         form.run()
 
     def first_form(self):
-        print(123)
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
         form.add_control("/")

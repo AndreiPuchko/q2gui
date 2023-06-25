@@ -26,6 +26,7 @@ def int_(toInt):
     except Exception:
         return int(num(toInt))
 
+
 def float_(toFloat):
     try:
         return float(f"{toFloat}")
@@ -54,6 +55,6 @@ class dotdict(dict):
 
 def set_dict_default(_dict, _key, _value):
     """set only key does not exist"""
-    
+
     if not _dict.get(_key):
         _dict[_key] = _value

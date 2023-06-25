@@ -1,3 +1,17 @@
+#    Copyright © 2021 Andrei Puchko
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
 if __name__ == "__main__":
     import sys
 
@@ -172,29 +186,37 @@ class Q2Form:
 
     def show_form(self, title="", modal="modal"):
         self.get_form_widget(title).show_form(modal)
+        self.after_form_closed()
 
     def show_mdi_form(self, title=""):
-        z = self.get_form_widget(title)
-        z.show_form(modal="")
+        form_widget = self.get_form_widget(title)
+        form_widget.show_form(modal="")
+        self.after_form_closed()
 
     def show_mdi_modal_form(self, title=""):
         form_widget = self.get_form_widget(title)
         form_widget.show_form("modal")
+        self.after_form_closed()
 
     def show_app_modal_form(self, title=""):
         self.get_form_widget(title).show_form(modal="super")
+        self.after_form_closed()
 
     def show_grid(self, title="", modal=""):
         self.get_grid_widget(title).show_form(modal)
+        self.after_form_closed()
 
     def show_mdi_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="")
+        self.after_form_closed()
 
     def show_mdi_modal_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="modal")
+        self.after_form_closed()
 
     def show_app_modal_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="super")
+        self.after_form_closed()
 
     def get_form_widget(self, title=""):
         form_widget = self._Q2FormWindow_class(self, title)
@@ -678,6 +700,7 @@ class Q2Form:
         self.crud_form.build_form()
         self.set_crud_form_data(mode)
         self.crud_form.show_form(modal=modal)
+        self.after_form_closed()
 
     def set_crud_form_data(self, mode=EDIT):
         """set current record's value in crud_form"""
@@ -824,6 +847,9 @@ class Q2Form:
         pass
 
     def after_form_show(self):
+        pass
+
+    def after_form_closed(self):
         pass
 
     def before_crud_save(self):
