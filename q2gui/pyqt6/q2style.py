@@ -55,6 +55,7 @@ class Q2Style(q2style.Q2Style):
 
         style = """
                 QFrame, q2frame {{
+                    color:{color};
                     background-color:{background};
                 }}
                 %(focusable_controls)s
@@ -90,7 +91,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                         border: none;
                     }}
-                    
+
                 QRadioButton:focus
                     {{
                         background-color: {background_focus};

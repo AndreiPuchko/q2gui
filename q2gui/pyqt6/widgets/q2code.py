@@ -29,7 +29,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from PyQt6.Qsci import QsciScintilla, QsciLexerPython, QsciLexerSQL, QsciLexerJSON, QsciAPIs
+from PyQt6.Qsci import QsciScintilla, QsciLexerPython, QsciLexerSQL, QsciLexerJSON, QsciAPIs, QsciLexer
 from PyQt6.QtGui import QColor
 
 # from PyQt6.QtWidgets import QMenu
@@ -48,7 +48,7 @@ class q2code(QsciScintilla, Q2Widget):
         self.setUtf8(True)
         self.setFolding(QsciScintilla.FoldStyle.BoxedTreeFoldStyle)
 
-        self.lexer = None
+        self.lexer: QsciLexer = None
         self.set_lexer()
         self.set_background_color()
 
@@ -106,9 +106,19 @@ class q2code(QsciScintilla, Q2Widget):
         self.__api.prepare()
 
     def set_background_color(self, red=150, green=200, blue=230):
-        self.lexer.setDefaultPaper(QColor(red, green, blue))
+        # color_mode = self.meta.get("q2_app").q2style.get_system_color_mode()
+        # print(color_mode, self.meta.get("q2_app").q2style.color_mode)
+        # b_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("background"))
+        # f_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("color"))
+
         # self.setMatchedBraceForegroundColor(QColor("lightgreen"))
+        self.lexer.setDefaultPaper(QColor(red, green, blue))
         self.lexer.setPaper(QColor(red, green, blue))
+        # self.lexer.setDefaultPaper(b_color)
+        # self.lexer.setPaper(b_color)
+        # self.lexer.setColor(f_color, 5)
+        self.setMarginsForegroundColor(QColor("black"))
+        self.setMarginsBackgroundColor(QColor("gray"))
 
     def __cursorPositionChanged(self, line, index):
         self.__markOccurrencesTimer.stop()
