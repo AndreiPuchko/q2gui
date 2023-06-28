@@ -115,13 +115,14 @@ class q2grid(QTableView):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.horizontalHeader().setSectionsMovable(True)
+        self.horizontalHeader().setDefaultAlignment(q2_align["7"])
+        self.horizontalHeader().sectionClicked.connect(self.q2_form.grid_header_clicked)
+        self.verticalHeader().setDefaultSectionSize(self.fontMetrics().height())
         self.setAlternatingRowColors(True)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        self.horizontalHeader().setDefaultAlignment(q2_align["7"])
         self.doubleClicked.connect(self.q2_form.grid_double_clicked)
-        self.horizontalHeader().sectionClicked.connect(self.q2_form.grid_header_clicked)
         self.setModel(self.Q2TableModel(self.q2_form.model))
 
     def currentChanged(self, current, previous):

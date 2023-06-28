@@ -250,7 +250,7 @@ class Q2Style(q2style.Q2Style):
                 QTableView QTableCornerButton::section,
                 QTableWidget QTableCornerButton::section
                     {{
-                        background-color:{background_control}; 
+                        background-color:{background_control};
                         border:none;
                     }}
 
@@ -259,12 +259,17 @@ class Q2Style(q2style.Q2Style):
                         background:{background_focus};
                     }}
 
-                QHeaderView:section
+                QHeaderView::section
                     {{
-                        color: gray; 
-                        background-color: darkgray ;
+                        color:{color};
+                        background-color:{background_disabled};
                         border: 1px solid gray;
                     }}
+
+                QHeaderView:selected {{
+                  color: red;
+                }}
+
                 QToolButton
                     {{
                         min-height: 1.2em;
