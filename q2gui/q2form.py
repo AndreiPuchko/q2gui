@@ -1760,7 +1760,7 @@ class Q2BulkUpdate:
             self.bulk_data_enter()
 
     def bulk_data_enter(self):
-        bulk_data_form = self.q2_form.__class__(q2app.BULK_DATA_ENTRY_TITLE)
+        bulk_data_form = self.q2_form.q2_app.Q2Form(q2app.BULK_DATA_ENTRY_TITLE)
         bulk_data_form.model = self.q2_form.model
         bulk_columns = []
         current_record = self.q2_form.get_current_record()
@@ -1796,7 +1796,7 @@ class Q2BulkUpdate:
         waitbar.close()
 
     def show_main_form(self):
-        self.main_form = self.q2_form.__class__(q2app.BULK_DATA_MAIN_TITLE)
+        self.main_form = self.q2_form.q2_app.Q2Form(q2app.BULK_DATA_MAIN_TITLE)
         self.main_form.add_control("/v")
         self.main_form.add_control("target_form", widget=self.target_form)
         self.main_form.cancel_button = True
@@ -1813,13 +1813,13 @@ class Q2BulkUpdate:
         self.target_form.set_grid_index(target_row)
 
     def load_target(self):
-        self.target_form = self.q2_form.__class__(q2app.BULK_TARGET_TITLE)
+        self.target_form = self.q2_form.q2_app.Q2Form(q2app.BULK_TARGET_TITLE)
         self.target_data = []
         for x in self.q2_form.controls:
-            if not x["pk"] and not x["noform"]:
+            if not x["pk"] and not x["noform"] and not x["column"].startswith("/"):
                 x["target_column"] = (
                     f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
-                    f'\n({self.q2_form.model.get_table_name()}.{x.get("column")})'
+                    f'({self.q2_form.model.get_table_name()}.{x.get("column")})'
                 )
                 x["_target_column"] = x.get("column")
                 x["_selected"] = ""

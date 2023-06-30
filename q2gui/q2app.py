@@ -37,6 +37,8 @@ import codecs
 
 
 q2_app = None
+engine = ""
+Q2Form = None
 
 ASK_REMOVE_RECORD_TEXT = "You are about to remove current record! Are You Sure?"
 ASK_REMOVE_RECORDS_TEXT = "You are about to remove records<b>(%s)</b>! Are You Sure?"
@@ -178,6 +180,8 @@ def load_q2engine(glo, engine="PyQt6"):
     from q2gui.pyqt6.q2app import Q2App as Q2App
     from q2gui.pyqt6.q2form import Q2Form as Q2Form
     from q2gui.pyqt6.q2style import Q2Style as Q2Style
+    q2app.engine = engine
+    Q2App.Q2Form = Q2Form
 
     glo["Q2App"] = Q2App
     glo["Q2Form"] = Q2Form
@@ -481,6 +485,7 @@ class Q2Stdout:
 
 class Q2App:
     Q2Style = Q2Style
+    Q2Form = None
 
     def __init__(self, title=""):
         q2app.q2_app = self
