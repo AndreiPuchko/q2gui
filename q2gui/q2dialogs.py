@@ -161,11 +161,11 @@ class Q2WaitForm:
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
         # self.wait_window.add_control("/s")
-        self.wait_window.add_control("/h")
-        self.wait_window.add_control("/s")
+        # self.wait_window.add_control("/h")
+        # self.wait_window.add_control("/s")
         self.wait_window.add_control("", label=mess, control="label")
-        self.wait_window.add_control("/s")
-        self.wait_window.add_control("/")
+        # self.wait_window.add_control("/s")
+        # self.wait_window.add_control("/")
         steps_count_separator = ""
         if Q2Thread.get_max() != 0:
             steps_count_separator = "/"

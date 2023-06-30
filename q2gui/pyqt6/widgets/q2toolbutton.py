@@ -30,7 +30,7 @@ from q2gui.pyqt6.q2widget import Q2Widget
 class q2toolbutton(QToolButton, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
-        self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
         self.set_text(meta.get("label"))
         if self.meta.get("valid"):
             self.clicked.connect(self.valid)

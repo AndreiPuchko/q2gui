@@ -553,6 +553,8 @@ class Q2Form:
             # valid=self.crud_close,
             valid=self.close,
         )
+        buttons.add_control("/")
+        buttons.add_control("/s")
         self.system_controls = buttons
 
     def crud_view_to_edit(self):

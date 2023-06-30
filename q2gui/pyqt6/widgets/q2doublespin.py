@@ -37,12 +37,10 @@ class q2doublespin(QDoubleSpinBox, Q2Widget):
         self.setSingleStep(0.05)
         if self.meta.get("valid"):
             self.valueChanged.connect(self.meta.get("valid"))
+        self.set_fixed_height()
 
     def set_text(self, text):
         self.setValue(float_(text))
 
     def get_text(self):
         return self.text().replace(",", ".")
-
-    def set_maximum_width(self, width, char="O"):
-        return super().set_maximum_width(width, "W")
