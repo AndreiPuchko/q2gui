@@ -22,6 +22,7 @@ load_q2engine(globals(), "PyQt6")
 class DemoApp(Q2App):
     def on_start(self):
         # self.sheet_form()
+        print(12)
         self.first_form()
 
     def on_init(self):

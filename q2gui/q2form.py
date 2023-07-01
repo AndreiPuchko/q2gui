@@ -140,8 +140,7 @@ class Q2Form:
         return self.model
 
     def refresh(self):
-        self.model.refresh()
-        self.refresh_children()
+        self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
         self.set_grid_index()
 
     def widget(self):

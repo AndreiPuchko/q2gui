@@ -28,7 +28,7 @@ from PyQt6.QtCore import Qt
 
 from q2gui.pyqt6.q2window import Q2Frame
 from q2gui.pyqt6.q2widget import Q2Widget
-
+from q2gui.q2utils import int_
 
 class Q2TabBar(QTabBar, Q2Widget):
     def get_text(self):
@@ -89,6 +89,21 @@ class q2tab(QTabWidget, Q2Widget, Q2Frame):
 
     def prev_tab(self):
         self.setCurrentIndex(self.currentIndex() - 1)
+
+    def set_tab(self, index=0):
+        if isinstance(index, str):
+            for x in range(self.tabBar().count()):
+                print(self.tabBar().tabText(x))
+                if self.tabBar().tabText(x) == index:
+                    index = x
+                    break
+        else:
+            index = int_(index)
+            if index >= self.count():
+                index = self.count() - 1
+            elif index < 0:
+                index = 0
+        self.setCurrentIndex(index)
 
     def minimumSizeHint(self):
         self.setMinimumHeight(super().minimumSizeHint().height())

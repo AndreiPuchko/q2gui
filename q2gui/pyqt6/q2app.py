@@ -46,6 +46,8 @@ from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, Q
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
 from q2gui.pyqt6.widgets.q2frame import q2frame
+from q2gui.pyqt6.widgets.q2space import q2space
+from q2gui.pyqt6.widgets.q2toolbutton import q2toolbutton
 
 
 import q2gui.q2app as q2app
@@ -55,12 +57,20 @@ class stdout_widget(q2frame):
     def __init__(self, mode="h"):
         super().__init__({"column": "/h", "label": "Output"})
         self.stdout_widget = QTextEdit(self)
-        self.closeButton = QToolButton(self)
-        self.closeButton.setText("❌")
-        self.closeButton.setFixedSize(1, 1)
+
+        self.toolbar_frame = q2frame({"column": "/v"})
+        self.closeButton = q2toolbutton(self.make_meta(column="hide", label="❌", mess="Hide output"))
         self.closeButton.clicked.connect(lambda: self.hide())
+
+        self.cleanButton = q2toolbutton(self.make_meta(label="🧹", mess="Clean output"))
+        self.cleanButton.clicked.connect(self.stdout_widget.clear)
+
+        self.toolbar_frame.insert_widget(widget=self.closeButton)
+        # self.toolbar_frame.insert_widget(widget=q2space())
+        self.toolbar_frame.insert_widget(widget=self.cleanButton)
+
         self.insert_widget(widget=self.stdout_widget)
-        self.insert_widget(widget=self.closeButton)
+        self.insert_widget(widget=self.toolbar_frame)
         self.setVisible(False)
 
     def write(self, text):
@@ -69,6 +79,7 @@ class stdout_widget(q2frame):
         from PyQt6.QtGui import QTextCursor
 
         self.stdout_widget.moveCursor(QTextCursor.MoveOperation.End)
+        q2app.q2_app.process_events()
         self.stdout_widget.insertPlainText(text)
 
 

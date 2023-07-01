@@ -204,3 +204,47 @@ class Q2Widget:
 
     def action_set_enabled(self, text, mode):
         pass
+
+    @staticmethod
+    def make_meta(
+        column="",
+        label="",
+        gridlabel="",
+        control="",
+        pic="",
+        data="",
+        datatype="char",
+        datalen=0,
+        datadec=0,
+        pk="",
+        ai="",
+        migrate="*",
+        actions=[],
+        alignment=-1,
+        to_table="",
+        to_column="",
+        to_form=None,
+        related="",
+        db=None,
+        mask="",
+        opts="",
+        when=None,
+        show=None,
+        valid=None,
+        dblclick=None,
+        readonly=None,
+        disabled=None,
+        check=None,
+        noform=None,
+        nogrid=None,
+        widget=None,
+        margins=None,
+        stretch=0,
+        mess="",
+        tag="",
+        eat_enter=None,
+        hotkey="",
+    ):
+        meta = locals().copy()
+        return meta
+
