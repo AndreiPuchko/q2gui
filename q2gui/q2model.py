@@ -158,6 +158,9 @@ class Q2Model:
             self.proxy_records = tmp_proxy_records
             self.use_proxy = True
 
+    def get_order(self):
+        return self.order_text
+
     def refresh(self):
         self.relation_cache = {}
 
@@ -365,6 +368,8 @@ class Q2CursorModel(Q2Model):
         self.delete_enabled = False
         self.insert_enabled = False
         self.update_enabled = False
+        self.set_where(self.cursor.where)
+        self.set_order(self.cursor.order)
 
     def get_table_name(self):
         return self.cursor.table_name

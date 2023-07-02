@@ -12,8 +12,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import sys
+
 if __name__ == "__main__":
-    import sys
 
     sys.path.insert(0, ".")
 
@@ -81,6 +82,89 @@ class stdout_widget(q2frame):
         self.stdout_widget.moveCursor(QTextCursor.MoveOperation.End)
         q2app.q2_app.process_events()
         self.stdout_widget.insertPlainText(text)
+
+
+class Q2Toolbars:
+    def __init__(self, q2_app):
+        self.toolbars = {}
+        self.q2_app: Q2App = q2_app
+        self.visible = True
+
+    def clear(self):
+        for toolbar in self.toolbars:
+            x, y = self.toolbars[toolbar].pos().x(), self.toolbars[toolbar].pos().y()
+            floating = self.toolbars[toolbar].isFloating()
+            area = self.q2_app.toolBarArea(self.toolbars[toolbar]).value
+            # orientation = self.toolbars[toolbar].orientation().value
+            self.q2_app.settings.set(f"toolbar-{toolbar}", "x", f"{x}")
+            self.q2_app.settings.set(f"toolbar-{toolbar}", "y", f"{y}")
+            self.q2_app.settings.set(f"toolbar-{toolbar}", "floating", f"{floating}")
+            self.q2_app.settings.set(f"toolbar-{toolbar}", "area", f"{area}")
+            # self.q2_app.settings.set(f"toolbar-{toolbar}", "orientation", f"{orientation}")
+            self.toolbars[toolbar].clear()
+            self.q2_app.removeToolBar(self.toolbars[toolbar])
+        self.toolbars = {}
+
+    def addAction(self, action, toolbar=""):
+        if toolbar not in self.toolbars:
+            self.toolbars[toolbar] = QToolBar()
+            x = self.q2_app.settings.get(f"toolbar-{toolbar}", "x", None)
+            y = self.q2_app.settings.get(f"toolbar-{toolbar}", "y", None)
+            floating = self.q2_app.settings.get(f"toolbar-{toolbar}", "floating", None)
+            area = self.q2_app.settings.get(f"toolbar-{toolbar}", "area", None)
+            # print(toolbar, x, y)
+            # orientation = self.q2_app.settings.get(f"toolbar-{toolbar}", "orientation", None)
+            # print(orientation)
+            if area:
+                if area == "ToolBarArea.TopToolBarArea":
+                    area = Qt.ToolBarArea.TopToolBarArea
+                elif area == "ToolBarArea.BottomToolBarAre":
+                    area = Qt.ToolBarArea.BottomToolBarArea
+                elif area == "ToolBarArea.LeftToolBarArea":
+                    area = Qt.ToolBarArea.LeftToolBarArea
+                elif area == "ToolBarArea.RightToolBarArea":
+                    area = Qt.ToolBarArea.RightToolBarArea
+                elif area.isdigit():
+                    area = int(area)
+                    if area == Qt.ToolBarArea.TopToolBarArea.value:
+                        area = Qt.ToolBarArea.TopToolBarArea
+                    elif area == Qt.ToolBarArea.BottomToolBarArea.value:
+                        area = Qt.ToolBarArea.BottomToolBarArea
+                    elif area == Qt.ToolBarArea.LeftToolBarArea.value:
+                        area = Qt.ToolBarArea.LeftToolBarArea
+                    elif area == Qt.ToolBarArea.RightToolBarArea.value:
+                        area = Qt.ToolBarArea.RightToolBarArea
+                    else:
+                        area = Qt.ToolBarArea.TopToolBarArea
+            if area is not None:
+                self.q2_app.addToolBar(area, self.toolbars[toolbar])
+            else:
+                self.q2_app.addToolBar(self.toolbars[toolbar])
+            if floating == "True":
+                self.toolbars[toolbar].setWindowFlags(
+                    Qt.WindowType.Tool
+                    | Qt.WindowType.FramelessWindowHint
+                    | Qt.WindowType.X11BypassWindowManagerHint
+                )
+                self.toolbars[toolbar].move(int(x), int(y))
+        self.toolbars[toolbar].addAction(action)
+
+    def isVisible(self):
+        return self.visible
+
+    def hide(self):
+        for x in self.toolbars:
+            self.toolbars[x].hide()
+        self.visible = False
+
+    def show(self):
+        for x in self.toolbars:
+            self.toolbars[x].show()
+        self.visible = True
+
+    def setDisabled(self, mode):
+        for x in self.toolbars:
+            self.toolbars[x].setDisabled(mode)
 
 
 class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
@@ -166,7 +250,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         QMainWindow.__init__(self)
         Q2QtWindow.__init__(self)
         self.q2_tabwidget = self.Q2TabWidget(self)
-        self.q2_toolbar = QToolBar(self)
+        # self.q2_toolbar = QToolBar(self)
+        self.q2_toolbar = Q2Toolbars(self)
         self.stdout_widget = stdout_widget()
 
         self.Q2Style = Q2Style
@@ -183,7 +268,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.setCentralWidget(self.central_widget)
         self.centralWidget().setObjectName("central_widget")
 
-        self.addToolBar(self.q2_toolbar)
+        # self.addToolBar(self.q2_toolbar)
 
         self.central_widget.addWidget(self.q2_tabwidget)
         self.central_widget.addWidget(self.stdout_widget)
@@ -311,7 +396,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     button = QToolButton(self)
                     button.setText(topic)
                     button.setDefaultAction(self._main_menu[_path])
-                    self.q2_toolbar.addAction(self._main_menu[_path])
+                    self.q2_toolbar.addAction(self._main_menu[_path], _path.split("|")[0])
             else:
                 self._main_menu[_path] = node.addMenu(topic)
         # Show as context menu
@@ -517,6 +602,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def close(self):
         self.closing = True
+        self.q2_toolbar.clear()
         super().close()
         QApplication._mw_count -= 1
         QMainWindow.close(self)

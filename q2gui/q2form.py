@@ -25,6 +25,7 @@ import q2gui.q2app as q2app
 from q2gui.q2model import Q2Model
 from q2gui.q2utils import int_, num
 import re
+import html
 import json
 import gettext
 
@@ -499,7 +500,7 @@ class Q2Form:
     def add_crud_buttons(self, mode):
         buttons = q2app.Q2Controls()
         buttons.add_control("/")
-        buttons.add_control("/h", "-")
+        buttons.add_control("/h", "-", tag="crud_buttons")
         if not self.no_view_action:
             buttons.add_control(
                 column="_prev_button",
@@ -988,8 +989,8 @@ class Q2Form:
         self._q2dialogs.q2Mess(
             f"{q2app.GRID_DATA_INFO_TABLE}: {self.model.get_table_name()}"
             f"<br>{q2app.GRID_DATA_INFO_ROWS}: {self.model.row_count()}"
-            f"<br>{q2app.GRID_DATA_INFO_ORDER}: {self.model.order_text}"
-            f"<br>{q2app.GRID_DATA_INFO_FILTER}: {self.model.where_text}"
+            f"<br>{q2app.GRID_DATA_INFO_ORDER}: {self.model.get_order()}"
+            f"<br>{q2app.GRID_DATA_INFO_FILTER}: {html.escape(self.model.get_where())}"
             f"<br>{q2app.GRID_DATA_INFO_COLUMNS}: {columns}"
         )
 
