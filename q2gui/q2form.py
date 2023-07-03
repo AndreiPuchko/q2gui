@@ -707,11 +707,15 @@ class Q2Form:
     def set_crud_form_data(self, mode=EDIT):
         """set current record's value in crud_form"""
         where_string = self.model.get_where()
+        where_dict = {}
         if "=" in where_string:
-            where_dict = {
-                x.split("=")[0].strip(): x.split("=")[1].strip()
-                for x in self.model.get_where().split(" and ")
-            }
+            for part in self.model.get_where().split(" and "):
+                eq = part.split("=")
+                if len(eq) == 2:
+                    if self.controls.get(eq[0].strip()):
+                        where_dict[eq[0].strip()] = eq[1].strip()
+                else:
+                    continue
         else:
             where_dict = {}
 
@@ -999,6 +1003,52 @@ class Q2Form:
         for x in self.form_stack:
             x.set_style_sheet(self.style_sheet)
 
+    def prepare_where(self, column=None, control1=None, control2=None):
+        mem_widgets = self.widgets().keys()
+        if control1 is None:
+            if column in mem_widgets:
+                control1 = column
+            elif column + "1" in mem_widgets:
+                control1 = column + "1"
+        if control1 not in mem_widgets:
+            return ""
+
+        if not self.w.__getattr__(control1).is_checked():
+            return ""
+
+        # control_datatype = self.controls.c.__getattr__(control1)["datatype"]
+        date_control = self.controls.c.__getattr__(control1)["datatype"] == "date"
+        num_control = self.controls.c.__getattr__(control1).get("num")
+        control1_value = self.s.__getattr__(control1)
+        if control2 is None:
+            if control1.endswith("1"):
+                control2 = control1[:-1] + "2"
+                control2_value = self.s.__getattr__(control2)
+            else:
+                control2_value = None
+        if date_control:
+            if control1_value == "0000-00-00":
+                control1_value = ""
+            if control2_value == "0000-00-00":
+                control2_value = ""
+        elif num_control:
+            control1_value = num(control1_value)
+            if control2_value:
+                control2_value = num(control2_value)
+
+        if (control1_value and control2_value is None) or control1_value == control2_value:
+            if date_control or num_control:
+                return f"{column} = '{control1_value}'"
+            else:
+                return f"{column} like '%{control1_value}%'"
+        elif control1_value and not control2_value:
+            return f"{column} >= '{control1_value}'"
+        elif not control1_value and control2_value:
+            return f"{column} <= '{control2_value}'"
+        elif control1_value and control2_value:
+            return f"{column} >= '{control1_value}' and {column}<='{control2_value}'"
+        return ""
+
 
 class Q2FormWindow:
     def __init__(self, q2_form: Q2Form, title=""):
@@ -1199,9 +1249,10 @@ class Q2FormWindow:
                         label2add.set_content_margins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
-                        label2add = self._get_widget("label")({"label": meta.get("label", "")})
+                        if label2add is None:
+                            label2add = self._get_widget("label")({"label": meta.get("label", "")})
+                            widget2add.label = label2add
                         widget2add.hide_border()
-                        widget2add.label = label2add
                     current_frame.add_row(label2add, widget2add)
                 else:  # v- h- box layout
                     if label2add is not None:

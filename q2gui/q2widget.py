@@ -38,6 +38,7 @@ class Q2Widget:
         self.form = None
         self.label = None
         self.check = None
+        self.frame = None
         self.style_sheet = ""
         if self.meta.get("readonly"):
             self.set_readonly(True)
@@ -70,6 +71,22 @@ class Q2Widget:
 
     def is_visible(self):
         pass
+
+    def is_checked(self):
+        if self.check:
+            return self.check.is_checked()
+        elif self.frame:
+            return self.frame.is_checked()
+        else:
+            return True
+
+    def set_checked(self, mode=True):
+        if self.check:
+            return self.check.set_checked(mode)
+        elif self.frame:
+            return self.frame.set_checked(mode)
+        else:
+            return True
 
     def set_tooltip(self, mess):
         pass

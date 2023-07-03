@@ -47,7 +47,7 @@ from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, Q
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
 from q2gui.pyqt6.widgets.q2frame import q2frame
-from q2gui.pyqt6.widgets.q2space import q2space
+from q2gui.q2utils import int_
 from q2gui.pyqt6.widgets.q2toolbutton import q2toolbutton
 
 
@@ -105,16 +105,24 @@ class Q2Toolbars:
             self.q2_app.removeToolBar(self.toolbars[toolbar])
         self.toolbars = {}
 
+    def move(self, pos, old_pos):
+        delta_x = pos.x() - old_pos.x()
+        delta_y = pos.y() - old_pos.y()
+
+        for toolbar in self.toolbars:
+            if self.toolbars[toolbar].isFloating():
+                pos_x = self.toolbars[toolbar].pos().x()
+                pos_y = self.toolbars[toolbar].pos().y()
+                self.toolbars[toolbar].move(pos_x + delta_x, pos_y + delta_y)
+
     def addAction(self, action, toolbar=""):
         if toolbar not in self.toolbars:
             self.toolbars[toolbar] = QToolBar()
-            x = self.q2_app.settings.get(f"toolbar-{toolbar}", "x", None)
-            y = self.q2_app.settings.get(f"toolbar-{toolbar}", "y", None)
+            x = int_(self.q2_app.settings.get(f"toolbar-{toolbar}", "x", None))
+            y = int_(self.q2_app.settings.get(f"toolbar-{toolbar}", "y", None))
             floating = self.q2_app.settings.get(f"toolbar-{toolbar}", "floating", None)
             area = self.q2_app.settings.get(f"toolbar-{toolbar}", "area", None)
-            # print(toolbar, x, y)
             # orientation = self.q2_app.settings.get(f"toolbar-{toolbar}", "orientation", None)
-            # print(orientation)
             if area:
                 if area == "ToolBarArea.TopToolBarArea":
                     area = Qt.ToolBarArea.TopToolBarArea
@@ -147,6 +155,7 @@ class Q2Toolbars:
                     | Qt.WindowType.X11BypassWindowManagerHint
                 )
                 self.toolbars[toolbar].move(int(x), int(y))
+                self.toolbars[toolbar].setOrientation(Qt.Orientation.Horizontal)
         self.toolbars[toolbar].addAction(action)
 
     def isVisible(self):
@@ -330,8 +339,15 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_toolbar(False)
                 self.disable_menubar(False)
                 self.disable_tabbar(False)
+        elif ev.type() == QEvent.Type.Show:
+            obj.activateWindow()
 
         return super().eventFilter(obj, ev)
+
+    def moveEvent(self, ev):
+        self.q2_toolbar.move(ev.pos(), ev.oldPos())
+        # ev.accept()
+        return super().moveEvent(ev)
 
     def show_form(self, form=None, modal="modal"):
         form.heap = q2app.Q2Heap()

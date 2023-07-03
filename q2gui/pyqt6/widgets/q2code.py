@@ -81,7 +81,7 @@ class q2code(QsciScintilla, Q2Widget):
         self.textChanged.connect(self.valid)
         # self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.editor_panel = q2editor_panel(self)
-        self.create_context_menu()
+        # self.create_context_menu()
         self.set_custom_autocompletition_list()
 
     def set_lexer(self, lexer=""):
@@ -184,13 +184,29 @@ class q2code(QsciScintilla, Q2Widget):
     def mouseDoubleClickEvent(self, event):
         return super().mouseDoubleClickEvent(event)
 
+    def focusInEvent(self, ev):
+        super().focusInEvent(ev)
+        self.create_context_menu()
+
+    def focusOutEvent(self, ev):
+        self.clear_actions()
+        super().focusInEvent(ev)
+
+    def clear_actions(self):
+        for x in self.actions():
+            self.removeAction(x)
+
     def create_context_menu(self):
         self.context_menu = self.createStandardContextMenu()
         self.context_menu.addSeparator()
 
-        find_action = self.context_menu.addAction("Find")
-        find_action.triggered.connect(self.editor_panel.show_find)
+        find_action = self.context_menu.addAction("Find next")
+        find_action.triggered.connect(self.editor_panel.show_find_next)
         find_action.setShortcuts(["Ctrl+F", "F3"])
+
+        find_action = self.context_menu.addAction("Find prev")
+        find_action.triggered.connect(self.editor_panel.show_find_prev)
+        find_action.setShortcuts(["Shift+F3"])
 
         replace_action = self.context_menu.addAction("Replace")
         replace_action.triggered.connect(self.editor_panel.show_replace)
@@ -292,6 +308,7 @@ class q2editor_panel(QWidget):
         super().__init__(parent, Qt.WindowType.Popup)
         # super().__init__(parent)
         self.setLayout(QVBoxLayout())
+        self.setObjectName("editor_panel")
 
         self.layout().setContentsMargins(0, 0, 0, 0)
         # self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -360,9 +377,9 @@ class q2editor_panel(QWidget):
         self.replace_frame.layout().addWidget(q2label({"label": "replace:"}))
         self.replace_frame.layout().addWidget(self.replace_text)
 
-        self.replace_button = q2button({"label": "Ok"})
+        self.replace_button = q2button({"label": "Ok", "datalen": 4})
         self.replace_button.pressed.connect(self.perform_replace)
-        self.replace_button.set_fixed_width(3, "w")
+        # self.replace_button.set_fixed_width(3, "w")
         self.replace_frame.layout().addWidget(self.replace_button)
 
     def perform_replace(self):
@@ -399,6 +416,14 @@ class q2editor_panel(QWidget):
         self.find_text.set_focus()
         self.show()
 
+    def show_find_prev(self):
+        self.show_find()
+        self.perform_find_prev()
+
+    def show_find_next(self):
+        self.show_find()
+        self.perform_find_next()
+
     def show_replace(self):
         self.find_frame.show()
         self.replace_frame.show()
@@ -418,7 +443,7 @@ class q2editor_panel(QWidget):
         self.find_text.set_text(text)
         self.find_text.set_focus()
 
-    def show(self) -> None:
+    def show(self):
         self.set_geometry()
         return super().show()
 
