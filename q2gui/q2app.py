@@ -301,6 +301,10 @@ class Q2Controls(list):
     def get(self, name):
         return self.c.__getattr__(name)
 
+    def delete(self, name):
+        c = self.get(name)
+        self.pop(self.index(c))
+
     def get_names(self):
         return [line["column"] for line in self]
 

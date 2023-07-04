@@ -141,8 +141,10 @@ class Q2Form:
         return self.model
 
     def refresh(self):
+        row = self.current_row
+        col = self.current_column
         self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
-        self.set_grid_index()
+        self.set_grid_index(row, col)
 
     def widget(self):
         if self.form_stack:
@@ -554,7 +556,6 @@ class Q2Form:
             valid=self.close,
         )
         buttons.add_control("/")
-        buttons.add_control("/s")
         self.system_controls = buttons
 
     def crud_view_to_edit(self):
