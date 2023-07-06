@@ -177,16 +177,16 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         if self not in self.q2_form.form_stack:
             self.q2_form.form_stack.append(self)
 
-        if not self.q2_form.i_am_child:
-            for widget_name in self.widgets:
-                widget = self.widgets[widget_name]
-                if widget.focusPolicy() == Qt.FocusPolicy.NoFocus:
-                    continue
-                if hasattr(widget, "isReadOnly") and widget.isReadOnly():
-                    continue
-                if widget.isEnabled():
-                    widget.setFocus()
-                    break
+        # if not self.q2_form.i_am_child:
+        #     for widget_name in self.widgets:
+        #         widget = self.widgets[widget_name]
+        #         if widget.focusPolicy() == Qt.FocusPolicy.NoFocus:
+        #             continue
+        #         if hasattr(widget, "isReadOnly") and widget.isReadOnly():
+        #             continue
+        #         if widget.isEnabled():
+        #             widget.setFocus()
+        #             break
 
         if event:
             event.accept()

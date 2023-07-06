@@ -130,7 +130,8 @@ class Q2Form:
 
     def show_(self):
         for x in self.widgets():
-            self.widgets()[x].show_()
+            if hasattr(self.widgets()[x], "show_"):
+                self.widgets()[x].show_()
         # for x in self.controls:
         #     if x.get("show") and x.get("column") in self.widgets():
         #         self.widgets()[x.get("column")].set_text(x["show"](mode="form"))
@@ -1451,9 +1452,16 @@ class Q2FormWindow:
         # search for the first enabled widget
         for x in self.q2_form.widgets():
             widget = self.q2_form.w.__getattr__(x)
-            if not x.startswith("/") and widget and widget.is_enabled():
-                widget.set_focus()
-                break
+            if not x.startswith("/") and widget:
+                if not widget.can_get_focus():
+                    continue
+                elif widget.is_enabled():
+                    widget.set_focus()
+                    break
+                elif hasattr(widget, "get_check") and widget.get_check():
+                    if widget.get_check().is_enabled():
+                        widget.get_check().set_focus()
+                    break
         self.q2_form.q2_app.show_form(self, modal)
 
     def get_controls_list(self, name: str):

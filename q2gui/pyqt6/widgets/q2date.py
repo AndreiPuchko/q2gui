@@ -90,6 +90,8 @@ class q2date(QComboBox, Q2Widget):
         if old in [3, 4] and (new < 3 or new > 4):
             self.lineedit.setText(self.fixupDay(self.lineedit.text()))
             self.lineedit.setCursorPosition(new)
+        elif new == 10:
+            self.lineedit.setCursorPosition(9)
 
     def fixupDay(self, text):
         if text != "..":
@@ -109,6 +111,8 @@ class q2date(QComboBox, Q2Widget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Space:
             self.lineedit.setText("  .  .    ")
+        elif event.key() == Qt.Key.Key_End:
+            self.lineedit.setCursorPosition(9)
         elif event.key() == Qt.Key.Key_Insert:
             self.showPopup()
             self.lineedit.setCursorPosition(0)

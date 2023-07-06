@@ -25,6 +25,7 @@ if __name__ == "__main__":
 from decimal import Decimal
 from PyQt6.QtWidgets import QWidget, QSizePolicy
 from PyQt6.QtGui import QFontMetrics, QFont
+from PyQt6.QtCore import Qt
 
 from q2gui import q2widget
 from q2gui.pyqt6.q2window import q2_align
@@ -187,6 +188,12 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         self.setSizePolicy(
             sp.get(horizontal, QSizePolicy.Policy.Minimum), sp.get(vertical, QSizePolicy.Policy.Minimum)
         )
+
+    def can_get_focus(self):
+        if self.focusPolicy() == Qt.FocusPolicy.NoFocus:
+            return False
+        else:
+            return True
 
     def set_content_margins(self, top=0, right=None, bottom=None, left=None):
         if right is None:

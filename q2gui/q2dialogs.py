@@ -29,6 +29,8 @@ import q2gui.q2app as q2app
 
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
+    h -= q2app.q2_app.get_stdout_height()
+
     form.form_stack[0].set_size(int(w * 0.5), int(h * 0.5))
     form.form_stack[0].set_position(int(w * 0.25), int(h * 0.15))
 

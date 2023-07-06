@@ -80,6 +80,17 @@ class Q2Widget:
         else:
             return True
 
+    def can_get_focus(self):
+        return True
+
+    def get_check(self):
+        if self.check:
+            return self.check
+        elif self.frame:
+            return self.frame.get_check()
+        else:
+            return None
+
     def set_checked(self, mode=True):
         if self.check:
             return self.check.set_checked(mode)

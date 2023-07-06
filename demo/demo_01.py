@@ -151,6 +151,7 @@ class DemoApp(Q2App):
         )
         if form.add_control("/h", "main window control"):
             form.add_control(
+                "t1",
                 label="Main menu on/off",
                 control="toolbutton",
                 valid=lambda: self.show_menubar(not self.is_menubar_visible()),

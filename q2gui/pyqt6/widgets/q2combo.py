@@ -33,11 +33,19 @@ class q2combo(QComboBox, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
         self.meta = meta
-        for item in meta.get("pic", "").split(";"):
-            self.addItem(item)
-        self.currentIndexChanged.connect(self.valid)
+        self.set_data(meta.get("pic", ""))
         if self.meta.get("data"):
             self.set_text(self.meta.get("data"))
+        else:
+            self.setCurrentIndex(0)
+        self.currentIndexChanged.connect(self.valid)
+
+    def set_data(self, data):
+        self.clear()
+        if isinstance(data, str):
+            data = data.split(";")
+        for item in data:
+            self.addItem(item)
 
     def set_text(self, text):
         if self.meta.get("num") or isinstance(text, int):

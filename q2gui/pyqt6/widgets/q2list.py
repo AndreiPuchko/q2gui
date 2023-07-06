@@ -32,10 +32,19 @@ from q2gui.q2utils import int_
 class q2list(QListWidget, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
-        # self.meta = meta
-        for item in meta.get("pic", "").split(";"):
-            self.addItem(QListWidgetItem(item))
+        self.set_data(self.meta.get("pic", ""))
+        if self.meta.get("data"):
+            self.set_text(self.meta.get("data"))
+        else:
+            self.setCurrentRow(0)
         self.currentRowChanged.connect(self.valid)
+
+    def set_data(self, data):
+        self.clear()
+        if isinstance(data, str):
+            data = data.split(";")
+        for item in data:
+            self.addItem(QListWidgetItem(item))
 
     def set_text(self, text):
         if self.meta.get("num"):

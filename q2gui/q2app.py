@@ -529,6 +529,9 @@ class Q2App:
 
         self.on_init()
 
+    def get_stdout_height(self):
+        pass
+
     def set_color_mode(self, color_mode=None):
         self.q2style.set_color_mode(self, color_mode)
 

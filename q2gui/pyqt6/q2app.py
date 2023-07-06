@@ -311,6 +311,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.get_save_file_dialoq = self._get_save_file_dialoq
         self._last_get_file_path = None
 
+    def get_stdout_height(self):
+        return self.stdout_widget.height()
+
     def set_font(self, font_name="", font_size=12):
         QApplication.setFont(QFont(font_name, font_size))
 
@@ -341,6 +344,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_tabbar(False)
         elif ev.type() == QEvent.Type.Show:
             obj.activateWindow()
+            # if hasattr(obj, "on_activate"):
+            #     print("acti")
+            #     obj.on_activate()
 
         return super().eventFilter(obj, ev)
 
