@@ -30,6 +30,7 @@ from q2gui.pyqt6.q2window import Q2Frame
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_
 
+
 class Q2TabBar(QTabBar, Q2Widget):
     def get_text(self):
         return self.tabText(self.currentIndex())
@@ -89,6 +90,12 @@ class q2tab(QTabWidget, Q2Widget, Q2Frame):
 
     def prev_tab(self):
         self.setCurrentIndex(self.currentIndex() - 1)
+
+    def set_enabled(self, mode=True):
+        self.tabBar().setEnabled(mode)
+
+    def set_disabled(self, mode=True):
+        self.tabBar().setDisabled(mode)
 
     def set_tab(self, index=0):
         if isinstance(index, str):

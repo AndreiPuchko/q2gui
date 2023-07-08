@@ -44,8 +44,11 @@ class q2combo(QComboBox, Q2Widget):
         self.clear()
         if isinstance(data, str):
             data = data.split(";")
+        width = 0
         for item in data:
             self.addItem(item)
+            width = max(len(item), width)
+        self.set_minimum_width(width)
 
     def set_text(self, text):
         if self.meta.get("num") or isinstance(text, int):

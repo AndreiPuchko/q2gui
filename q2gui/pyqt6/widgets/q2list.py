@@ -43,8 +43,11 @@ class q2list(QListWidget, Q2Widget):
         self.clear()
         if isinstance(data, str):
             data = data.split(";")
+        width = 0
         for item in data:
             self.addItem(QListWidgetItem(item))
+            width = max(len(item), width)
+        self.set_minimum_width(width)
 
     def set_text(self, text):
         if self.meta.get("num"):

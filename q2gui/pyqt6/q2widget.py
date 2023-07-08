@@ -113,6 +113,13 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             else:
                 self.setMaximumWidth(int(width))
 
+    def set_minimum_width(self, width, char="O"):
+        if self.meta.get("control", "") not in ("radio", "check"):
+            if char != "":
+                self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
+            else:
+                self.setMinimumWidth(int(width))
+
     def set_fixed_width(self, width, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":

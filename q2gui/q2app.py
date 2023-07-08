@@ -145,7 +145,8 @@ MESSAGE_GRID_DATA_IMPORT_WAIT = "Import data to: %s"
 MESSAGE_GRID_DATA_IMPORT_ERROR = "Import error: %s"
 MESSAGE_GRID_DATA_IMPORT_DONE = "Import done:<br>Rows: %s<br>Time: %.2f sec."
 
-GRID_DATA_INFO_TABLE = "Table"
+GRID_DATA_INFO_TABLE = "Table/Query"
+GRID_DATA_INFO_SQL = "Query"
 GRID_DATA_INFO_ROWS = "Rows"
 GRID_DATA_INFO_ORDER = "Order"
 GRID_DATA_INFO_FILTER = "Filter"
@@ -180,6 +181,7 @@ def load_q2engine(glo, engine="PyQt6"):
     from q2gui.pyqt6.q2app import Q2App as Q2App
     from q2gui.pyqt6.q2form import Q2Form as Q2Form
     from q2gui.pyqt6.q2style import Q2Style as Q2Style
+
     q2app.engine = engine
     Q2App.Q2Form = Q2Form
 
@@ -607,6 +609,12 @@ class Q2App:
         pass
 
     def show_statusbar_mess(self, text=""):
+        pass
+
+    def clear_statusbar(self):
+        pass
+
+    def get_statusbar_mess(self):
         pass
 
     def show_form(self, form=None, modal="modal"):

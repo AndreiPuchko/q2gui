@@ -344,9 +344,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_tabbar(False)
         elif ev.type() == QEvent.Type.Show:
             obj.activateWindow()
-            # if hasattr(obj, "on_activate"):
-            #     print("acti")
-            #     obj.on_activate()
+            if hasattr(obj, "on_activate"):
+                obj.on_activate()
 
         return super().eventFilter(obj, ev)
 
@@ -513,6 +512,12 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def show_statusbar_mess(self, text=""):
         self.statusBar().showMessage(f"{text}")
+
+    def clear_statusbar(self):
+        self.statusBar().clearMessage()
+
+    def get_statusbar_mess(self):
+        return self.statusBar().currentMessage()
 
     def set_tabbar_text(self, text=""):
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)

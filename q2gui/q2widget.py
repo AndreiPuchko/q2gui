@@ -150,6 +150,9 @@ class Q2Widget:
     def set_maximum_width(self, width, char="O"):
         pass
 
+    def set_minimum_width(self, width, char="O"):
+        pass
+
     def set_fixed_width(self, width, char="O"):
         pass
 

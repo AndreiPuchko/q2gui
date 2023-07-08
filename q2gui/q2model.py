@@ -47,6 +47,7 @@ class Q2Model:
         self.use_proxy = False
         self.relation_cache = {}
         self.lastdata_error_text = ""
+        self.refreshed = False
 
         self.meta = []
         self.cursor = None
@@ -64,11 +65,12 @@ class Q2Model:
         self.order_text = ""
         self.where_text = ""
 
+    def get_records(self):
+        for x in range(self.row_count):
+            yield self.records(x)
+
     def get_row(self, row_number):
-        if row_number < len(self.records):
-            return self.records[row_number]
-        else:
-            return None
+        return self.get_record(row_number)
 
     def get_table_name(self):
         return ""
@@ -128,7 +130,7 @@ class Q2Model:
         elif isinstance(order_data, list):
             self.order_text = ",".join(order_data)
         else:
-            self.order_text = order_data
+            self.order_text = order_data.strip()
         if self.records:
             colname = self.order_text
 
@@ -163,6 +165,7 @@ class Q2Model:
 
     def refresh(self):
         self.relation_cache = {}
+        self.refreshed = True
 
     def reset(self):
         self.records = []
@@ -228,8 +231,8 @@ class Q2Model:
 
     def data(self, row, col, role="display"):
         if role == "display":
-            colName = self.columns[col]
-            value = self.get_record(row).get(colName, "")
+            col_name = self.columns[col]
+            value = self.get_record(row).get(col_name, "")
             meta = self.meta[col]
             if meta.get("relation"):
                 value = self._get_related(value, meta)
@@ -346,6 +349,15 @@ class Q2Model:
     def get_next_sequence(self, column, start_value=0):
         pass
 
+    def info(self):
+        info = {}
+        info["table"] = self.get_table_name()
+        info["row_count"] = self.row_count()
+        info["order"] = self.get_order()
+        info["where"] = self.get_where()
+        info["columns"] = self.columns
+        return info
+
 
 class Q2CsvModel(Q2Model):
     def __init__(self, csv_file_object=None):
@@ -362,7 +374,8 @@ class Q2CsvModel(Q2Model):
 class Q2CursorModel(Q2Model):
     def __init__(self, cursor: Q2Cursor = None):
         super().__init__()
-        self.cursor = cursor
+        self.last_order_text = ""
+        self.set_cursor(cursor)
 
         self.readonly = False
         self.delete_enabled = False
@@ -371,8 +384,18 @@ class Q2CursorModel(Q2Model):
         self.set_where(self.cursor.where)
         self.set_order(self.cursor.order)
 
+    def set_cursor(self, cursor):
+        self.cursor = cursor
+        self.original_sql = self.cursor.sql
+        last_order_text, last_order_text = self.last_order_text, ""
+        if self.last_order_text:
+            self.set_order(last_order_text)
+
     def get_table_name(self):
-        return self.cursor.table_name
+        if self.cursor.table_name:
+            return self.cursor.table_name
+        else:
+            return self.cursor.sql
 
     def row_count(self):
         return self.cursor.row_count()
@@ -426,9 +449,18 @@ class Q2CursorModel(Q2Model):
         return db.get(to_table, filter, related)
 
     def set_order(self, order_data):
+        super().set_order(order_data=order_data)
+        if self.order_text == "":
+            return self
+        if self.order_text in self.last_order_text and "desc" not in self.last_order_text:
+            self.order_text += " desc"
+
         if self.cursor.table_name:
-            super().set_order(order_data=order_data)
             self.cursor.set_order(self.order_text)
+        else:
+            self.cursor.sql = f"select * from ({self.original_sql}) qq order by {self.order_text}"
+            self.last_order_text = order_data
+        self.last_order_text = self.order_text
         return self
 
     def set_where(self, where_text=""):
@@ -461,3 +493,6 @@ class Q2CursorModel(Q2Model):
             rez = self.cursor.import_json(file, tick_callback=tick_callback)
         self.refresh()
         return rez
+
+    def get_records(self):
+        return self.cursor.records()

@@ -132,6 +132,7 @@ class Q2Form:
         for x in self.widgets():
             if hasattr(self.widgets()[x], "show_"):
                 self.widgets()[x].show_()
+        self.form_refresh()
         # for x in self.controls:
         #     if x.get("show") and x.get("column") in self.widgets():
         #         self.widgets()[x.get("column")].set_text(x["show"](mode="form"))
@@ -139,13 +140,21 @@ class Q2Form:
     def set_model(self, model):
         self.model: Q2Model = model
         self.model.q2_form = self
+        self.model.build()
         return self.model
 
     def refresh(self):
         row = self.current_row
         col = self.current_column
         self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
+        self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
+        if self.model.refreshed:
+            self.form_refresh()
+            self.model.refreshed = False
+
+    def form_refresh(self):
+        pass
 
     def widget(self):
         if self.form_stack:
@@ -1071,6 +1080,10 @@ class Q2FormWindow:
         self.grid_actions = q2app.Q2Actions()
         self._in_close_flag = None
 
+    def on_activate(self):
+        if self.mode == "grid":
+            self.q2_form.q2_app.show_statusbar_mess(self.q2_form.model.row_count())
+
     def create_grid_navigation_actions(self):
         """returns standard actions for the grid"""
         actions = q2app.Q2Actions()
@@ -1453,9 +1466,9 @@ class Q2FormWindow:
         for x in self.q2_form.widgets():
             widget = self.q2_form.w.__getattr__(x)
             if not x.startswith("/") and widget:
-                if not widget.can_get_focus():
+                if hasattr(widget, "can_get_focus") and not widget.can_get_focus():
                     continue
-                elif widget.is_enabled():
+                elif hasattr(widget, "is_enabled") and widget.is_enabled():
                     widget.set_focus()
                     break
                 elif hasattr(widget, "get_check") and widget.get_check():
@@ -1761,7 +1774,7 @@ class Q2PasteClipboard:
                 self.target_data.append(
                     {
                         "target_column": f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
-                        f'\n({self.q2_form.model.get_table_name()}.{x.get("column")})',
+                        + f'({self.q2_form.model.get_table_name()}.{x.get("column")})',
                         "_target_column": x.get("column"),
                         "source_column": "",
                     },
@@ -1879,7 +1892,7 @@ class Q2BulkUpdate:
             if not x["pk"] and not x["noform"] and not x["column"].startswith("/"):
                 x["target_column"] = (
                     f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
-                    f'({self.q2_form.model.get_table_name()}.{x.get("column")})'
+                    + f'({self.q2_form.model.get_table_name()}.{x.get("column")})'
                 )
                 x["_target_column"] = x.get("column")
                 x["_selected"] = ""
