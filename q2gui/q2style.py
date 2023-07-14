@@ -139,8 +139,8 @@ class Q2Style:
 
     def get_color_mode(self, color_mode):
         if color_mode in [None, "", "None"]:
-            # color_mode = self.get_system_color_mode()
-            color_mode = self.color_mode
+            color_mode = self.get_system_color_mode()
+            # color_mode = self.color_mode
         return color_mode
 
     def get_style(self, name, color_mode=None):
