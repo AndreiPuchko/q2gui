@@ -130,7 +130,7 @@ ARROW_UP_ICON = "arrow-up.png"
 ARROW_DOWN_ICON = "arrow-down.png"
 
 FINANCIAL_FORMAT = r"{:,.%sf}"
-GRID_COLUMN_WIDTH = 18
+GRID_COLUMN_WIDTH = 25
 
 MESSAGE_SORTING = "Sorting..."
 MESSAGE_ROWS_REMOVING = "Rows removing"

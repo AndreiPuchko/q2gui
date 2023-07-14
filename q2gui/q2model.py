@@ -472,7 +472,7 @@ class Q2CursorModel(Q2Model):
         """update metadata from db"""
         db: Q2Db = self.cursor.q2_db
         db_meta = db.db_schema.get_schema_table_attr(self.cursor.table_name, meta["column"])
-        meta["pk"] = db_meta.get("pk", "")
+        # meta["pk"] = db_meta.get("pk", "")
         meta["datatype"] = db_meta.get("datatype", meta["datatype"])
         if num(meta["datalen"]) < num(db_meta.get("datalen", 10)):
             meta["datalen"] = int(num(db_meta.get("datalen", 10)))

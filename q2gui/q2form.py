@@ -433,12 +433,14 @@ class Q2Form:
                         filter_list = []
                         for x in filter_form.widgets_list():
                             if x.check and x.check.is_checked():
-                                filter_list.append(f"'{x.get_text()}' in {x.meta['name']}")
+                                filter_list.append(f"'{x.get_text()}' in {x.meta['column']}")
                         filter_string = " and ".join(filter_list)
                         self.model.set_where(filter_string)
 
                     filter_form.before_form_show = before_form_show
                     filter_form.valid = lambda: self._q2dialogs.q2working(valid, q2app.MESSAGE_SORTING)
+                    filter_form.ok_button = 1
+                    filter_form.cancel_button = 1
                     filter_form.add_ok_cancel_buttons()
                     filter_form.show_mdi_modal_form()
 

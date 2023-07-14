@@ -39,11 +39,15 @@ from q2gui.q2model import Q2Model
 from q2gui.pyqt6.widgets.q2lookup import q2lookup
 
 
+sort_ascend_char = "▲"
+sort_decend_char = "▼"
+
+
 class q2Delegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option, index):
         if self.parent().currentIndex().column() == index.column():
             color = option.palette.color(QPalette.ColorRole.AlternateBase).darker(900)
-            color.setAlpha(int(color.alpha() / 10))
+            color.setAlpha(int(color.alpha() / 5))
             painter.fillRect(option.rect, color)
         super().paint(painter, option, index)
 
@@ -90,7 +94,13 @@ class q2grid(QTableView):
 
         def headerData(self, col, orientation, role=Qt.ItemDataRole.DisplayRole):
             if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
-                return self.q2_model.headers[col]
+                sort_char = ""
+                if self.q2_model.columns[col] in self.q2_model.order_text:
+                    if "desc" in self.q2_model.order_text:
+                        sort_char = sort_decend_char
+                    else:
+                        sort_char = sort_ascend_char
+                return sort_char + self.q2_model.headers[col]
             elif orientation == Qt.Orientation.Vertical and role == Qt.ItemDataRole.DisplayRole:
                 return QVariant("")
             else:
@@ -117,7 +127,10 @@ class q2grid(QTableView):
         self.horizontalHeader().setSectionsMovable(True)
         self.horizontalHeader().setDefaultAlignment(q2_align["7"])
         self.horizontalHeader().sectionClicked.connect(self.q2_form.grid_header_clicked)
+        h = self.fontMetrics().height()
+        self.verticalHeader().setMinimumSectionSize(h + h//4)
         self.verticalHeader().setDefaultSectionSize(self.fontMetrics().height())
+
         self.setAlternatingRowColors(True)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
@@ -186,14 +199,17 @@ class q2grid(QTableView):
         rez = {}
         hohe = self.horizontalHeader()
         for x in range(0, hohe.count()):
-            rez[hohe.model().headerData(x, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)] = x
+            # col_header = hohe.model().headerData(x, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
+            col_header = self.q2_model.headers[x]
+            rez[col_header] = x
         return rez
 
     def get_columns_settings(self):
         rez = []
         hohe = self.horizontalHeader()
         for x in range(0, hohe.count()):
-            header = hohe.model().headerData(x, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
+            # header = hohe.model().headerData(x, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
+            header = self.q2_model.headers[x]
             width = self.columnWidth(x)
             pos = hohe.visualIndex(x)
             rez.append({"name": header, "data": f"{pos}, {width}"})

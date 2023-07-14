@@ -34,7 +34,6 @@ def mock_data_load(db: Q2Db):
                 "radio_status": x % 3 + 1,
             },
         )
-        # print(db.last_sql_error, db.last_sql)
 
 
 class DemoApp(Q2App):
@@ -46,15 +45,14 @@ class DemoApp(Q2App):
     def create_database(self):
         self.db = Q2Db("sqlite3", database_name=":memory:")
         # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
-        for x in [
-            "PRAGMA journal_mode = WAL",
-            "PRAGMA synchronous = EXTRA",
-            "PRAGMA cache_size = 1000000",
-            "PRAGMA locking_mode = EXCLUSIVE",
-            "PRAGMA temp_store = MEMORY",
-        ]:
-            self.db.cursor(x)
-        # self.db.connection.setAutoCommit(False)
+        # for x in [
+        #     "PRAGMA journal_mode = WAL",
+        #     "PRAGMA synchronous = EXTRA",
+        #     "PRAGMA cache_size = 1000000",
+        #     "PRAGMA locking_mode = EXCLUSIVE",
+        #     "PRAGMA temp_store = MEMORY",
+        # ]:
+        #     self.db.cursor(x)
 
     def on_init(self):
         self.create_database()
@@ -74,7 +72,8 @@ class DemoApp(Q2App):
             data_schema.add(**x)
 
         self.db.set_schema(data_schema)
-        # mock_data_load(self.db)
+        print(self.db.migrate_error_list)
+        mock_data_load(self.db)
         # self.customers()
 
     def form_customers(self):
