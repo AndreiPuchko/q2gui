@@ -153,6 +153,9 @@ class q2grid(QTableView):
     def has_focus(self):
         return self.hasFocus()
 
+    def is_enabled(self):
+        return self.isEnabled()
+
     def row_count(self):
         return self.model().rowCount()
 

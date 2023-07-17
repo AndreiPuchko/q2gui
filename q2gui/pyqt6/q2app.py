@@ -330,13 +330,12 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         if ev.type() == QEvent.Type.Close:
             if obj.heap.prev_mdi_window:
                 obj.heap.prev_mdi_window.setEnabled(True)
-
             if obj.heap.prev_focus_widget is not None and not isinstance(obj.heap.prev_focus_widget, QTabBar):
                 try:
                     obj.heap.prev_focus_widget.setFocus()
                 except Exception:
                     pass
-            else:
+            elif obj.heap.prev_mdi_window and hasattr(obj.heap.prev_mdi_window, "setFocus"):
                 obj.heap.prev_mdi_window.setFocus()
             self.set_tabbar_text(obj.heap.prev_tabbar_text)
             if obj.heap.modal == "super":  # real modal dialog
@@ -359,7 +358,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         form.heap.modal = modal
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         form.heap.prev_focus_widget = QApplication.focusWidget()
-        print(form.heap.prev_mdi_window, form.heap.prev_focus_widget)
         form.heap.prev_tabbar_text = self.get_tabbar_text()
 
         self.q2_tabwidget.currentWidget().addSubWindow(form)

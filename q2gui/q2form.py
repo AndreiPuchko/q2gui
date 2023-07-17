@@ -1467,6 +1467,8 @@ class Q2FormWindow:
         # search for the first enabled widget
         for x in self.q2_form.widgets():
             widget = self.q2_form.w.__getattr__(x)
+            if "q2grid" in str(widget.__class__):
+                print(x, widget)
             if not x.startswith("/") and widget:
                 if hasattr(widget, "can_get_focus") and not widget.can_get_focus():
                     continue
@@ -1508,6 +1510,8 @@ class Q2FormWindow:
                         c_w = int_(self.q2_form.model.meta[count].get("datalen"))
                     c_w = int(q2app.q2_app.get_char_width() * (min(c_w, q2app.GRID_COLUMN_WIDTH)))
                     data = f"{count}, {c_w}"
+                if len(self.q2_form.model.headers) == 1:
+                    data = "0, 3000"
                 col_settings[x] = data
             grid.set_column_settings(col_settings)
         for x in self.get_controls_list("Q2FormWindow"):
