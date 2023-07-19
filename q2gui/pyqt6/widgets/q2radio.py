@@ -23,7 +23,9 @@ if __name__ == "__main__":
     demo()
 
 
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QRadioButton, QSizePolicy
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QRadioButton, QSizePolicy, QApplication
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtGui import QKeyEvent
 
 from q2gui.pyqt6.q2window import q2_align
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -45,6 +47,36 @@ class q2radio(QFrame, Q2Widget):
             self.layout().addWidget(button)
 
         self.button_list[0].setChecked(True)
+        if meta.get("data") is not None:
+            self.set_text(meta.get("data"))
+
+    def keyPressEvent(self, ev):
+        if ev.key() in [
+            Qt.Key.Key_Down,
+            Qt.Key.Key_Up,
+            Qt.Key.Key_PageDown,
+            Qt.Key.Key_PageUp,
+        ]:
+            ev.ignore()
+        elif ev.key() == Qt.Key.Key_Right:
+            QApplication.sendEvent(self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, ev.modifiers()))
+        elif ev.key() == Qt.Key.Key_Left:
+            QApplication.sendEvent(
+                self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, Qt.KeyboardModifier.ShiftModifier)
+            )
+        else:
+            super().keyPressEvent(ev)
+
+
+    def can_get_focus(self):
+        return True
+
+    def focusInEvent(self, ev):
+        self._focus_in()
+        # return super().focusInEvent(ev)
+
+    def _focus_in(self):
+        self.button_list[self.get_current_index()].set_focus()
 
     def set_text(self, text):
         if hasattr(self, "button_list"):
@@ -60,6 +92,13 @@ class q2radio(QFrame, Q2Widget):
                 else:
                     index = 0
             self.button_list[index].setChecked(True)
+
+    def get_current_index(self):
+        index_list = [x for x in range(len(self.button_list)) if self.button_list[x].isChecked()]
+        if index_list:
+            return index_list[0]
+        else:
+            return None
 
     def get_text(self):
         index_list = [x for x in range(len(self.button_list)) if self.button_list[x].isChecked()]
@@ -79,6 +118,10 @@ class q2RadioButton(QRadioButton):
         self.radio = radio
         self.toggled.connect(self.value_changed)
         self.setContentsMargins(0, 0, 0, 0)
+
+    def focusInEvent(self, ev):
+        self.radio._focus_in()
+        return super().focusInEvent(ev)
 
     def value_changed(self, value):
         return self.radio.valid()

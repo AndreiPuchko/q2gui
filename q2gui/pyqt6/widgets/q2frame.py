@@ -62,7 +62,7 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
     def set_title(self, title):
         self.setTitle(title)
 
-    def  can_get_focus(self):
+    def can_get_focus(self):
         return False
 
     def get_widget_count(self):

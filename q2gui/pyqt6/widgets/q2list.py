@@ -23,7 +23,10 @@ if __name__ == "__main__":
     demo()
 
 
-from PyQt6.QtWidgets import QListWidget, QListWidgetItem
+from PyQt6.QtWidgets import QListWidget, QListWidgetItem, QApplication
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtGui import QKeyEvent
+
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_
@@ -69,3 +72,18 @@ class q2list(QListWidget, Q2Widget):
                 return self.currentItem().text()
         else:
             return ""
+
+    def keyPressEvent(self, ev):
+        if ev.key() in [
+            Qt.Key.Key_PageDown,
+            Qt.Key.Key_PageUp,
+        ]:
+            ev.ignore()
+        elif ev.key() == Qt.Key.Key_Right:
+            QApplication.sendEvent(self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, ev.modifiers()))
+        elif ev.key() == Qt.Key.Key_Left:
+            QApplication.sendEvent(
+                self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, Qt.KeyboardModifier.ShiftModifier)
+            )
+        else:
+            super().keyPressEvent(ev)

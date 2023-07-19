@@ -51,9 +51,12 @@ class Q2Style(q2style.Q2Style):
         ]
         focusable_controls = ", ".join(focusable_controls_list)
         focusable_controls_with_focus = ", ".join(["%s:focus" % x for x in focusable_controls_list])
-        focusable_controls_with_readonly = ", ".join(['%s[readOnly="true"]' % x for x in focusable_controls_list])
+        focusable_controls_with_readonly = ", ".join(
+            ['%s[readOnly="true"]' % x for x in focusable_controls_list]
+        )
 
-        style = """
+        style = (
+            """
                 QFrame, q2frame {{
                     color:{color};
                     background-color:{background};
@@ -315,13 +318,12 @@ class Q2Style(q2style.Q2Style):
                     }}
 
 
-                q2button#_ok_button {{background-color:lightgreen;font-weight:bold}}
+                q2button#_ok_button {{background-color:lightgreen}}
                 q2button#_ok_button:hover {{background-color:green}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
-                q2button#_cancel_button {{background-color:salmon;font-weight:bold}}
-                q2button#_cancel_button:hover {{background-color:red}}
-                q2button#_cancel_button:disabled {{background-color:{background_disabled}}}
-            """ % locals()
+            """
+            % locals()
+        )
         return style
 
     def _mac_style(self):

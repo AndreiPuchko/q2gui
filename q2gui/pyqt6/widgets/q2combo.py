@@ -23,8 +23,9 @@ if __name__ == "__main__":
     demo()
 
 
-from PyQt6.QtWidgets import QComboBox
-
+from PyQt6.QtWidgets import QComboBox, QApplication
+from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtGui import QKeyEvent
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_
 
@@ -49,6 +50,23 @@ class q2combo(QComboBox, Q2Widget):
             self.addItem(item)
             width = max(len(item), width)
         self.set_minimum_width(width)
+
+    def keyPressEvent(self, ev):
+        if ev.key() in [
+            Qt.Key.Key_Down,
+            Qt.Key.Key_Up,
+            Qt.Key.Key_PageDown,
+            Qt.Key.Key_PageUp,
+        ]:
+            ev.ignore()
+        elif ev.key() == Qt.Key.Key_Right:
+            QApplication.sendEvent(self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, ev.modifiers()))
+        elif ev.key() == Qt.Key.Key_Left:
+            QApplication.sendEvent(
+                self, QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_Tab, Qt.KeyboardModifier.ShiftModifier)
+            )
+        else:
+            super().keyPressEvent(ev)
 
     def set_text(self, text):
         if self.meta.get("num") or isinstance(text, int):
