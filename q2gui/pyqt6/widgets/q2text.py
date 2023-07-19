@@ -13,6 +13,7 @@
 #    limitations under the License.
 
 import sys
+from PyQt6 import QtGui
 
 if __name__ == "__main__":
 
@@ -42,6 +43,12 @@ class q2text(QTextEdit, Q2Widget):
 
     def set_size_policy(self, horizontal, vertical):
         return super().set_size_policy(horizontal, vertical)
+
+    def keyPressEvent(self, ev):
+        if self.is_readonly():
+            ev.ignore()
+        else:
+            return super().keyPressEvent(ev)
 
     def showEvent(self, ev):
         self.updateGeometry()

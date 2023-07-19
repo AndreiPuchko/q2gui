@@ -1467,8 +1467,6 @@ class Q2FormWindow:
         # search for the first enabled widget
         for x in self.q2_form.widgets():
             widget = self.q2_form.w.__getattr__(x)
-            if "q2grid" in str(widget.__class__):
-                print(x, widget)
             if not x.startswith("/") and widget:
                 if hasattr(widget, "can_get_focus") and not widget.can_get_focus():
                     continue

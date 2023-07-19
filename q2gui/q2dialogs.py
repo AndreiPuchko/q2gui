@@ -55,7 +55,12 @@ def q2Mess(mess="", title="Message"):
         form.add_control("/s")
         form.add_control("/")
 
-    form.after_form_show = lambda: center_window(form)
+    def after_form_show(form=form):
+        center_window(form)
+        form.w.close.set_focus()
+
+    form.after_form_show = after_form_show
+
     form.show_app_modal_form()
     q2app.q2_app.process_events()
 
@@ -69,7 +74,7 @@ def q2AskYN(mess, title="Ask"):
     form.choice = 0
     form.add_control("/")
 
-    form.controls.add_control("mess", control="text", data=f"{mess}", readonly="*", disabled="*")
+    form.controls.add_control("mess", control="text", data=f"{mess}", readonly="*", disabled="")
 
     if form.add_control("/h"):
         form.add_control("/s")
@@ -92,12 +97,16 @@ def q2AskYN(mess, title="Ask"):
             valid=lambda: buttonPressed(form, 2),
             eat_enter="*",
             tag="ok",
-            hotkey="PgDown",
+            # hotkey="PgDown",
         )
         form.add_control("/s")
         form.add_control("/")
-    form.after_form_show = lambda: center_window(form)
 
+    def after_form_show(form=form):
+        center_window(form)
+        form.w.cancel.set_focus()
+
+    form.after_form_show = after_form_show
     form.show_app_modal_form()
     q2app.q2_app.process_events()
     return form.choice
