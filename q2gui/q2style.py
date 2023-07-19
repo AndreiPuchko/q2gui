@@ -86,7 +86,7 @@ class Q2Style:
                 # selected menu item
                 "background_menu_selection": "#B0E2FF",
                 # for focusable controls
-                "background_control": "rgb(200, 228, 247)",
+                "background_control": "#c8e4f7",
                 # for contol with focus
                 # "background_focus": "yellow",
                 # "border_focus": "2px solid #005599",
@@ -137,21 +137,28 @@ class Q2Style:
             color_mode = self.get_color_mode(color_mode)
             return self._style().format(**self.get_styles(color_mode))
 
-    def get_color_mode(self, color_mode):
-        if color_mode in [None, "", "None"]:
-            color_mode = self.get_system_color_mode()
-            # color_mode = self.color_mode
-        return color_mode
-
-    def get_style(self, name, color_mode=None):
+    def get_color_mode(self, color_mode=None):
         if color_mode in [None, "", "None"]:
             color_mode = self.color_mode
         if color_mode in [None, "", "None"]:
             color_mode = self.get_system_color_mode()
+        return color_mode
+
+    def get_style(self, name, color_mode=None):
+        # if color_mode in [None, "", "None"]:
+        #     color_mode = self.color_mode
+        # if color_mode in [None, "", "None"]:
+        #     color_mode = self.get_system_color_mode()
+        color_mode = self.get_color_mode()
         return self.styles.get(color_mode, {}).get(name, "")
 
-    def get_styles(self, mode="dark"):
-        return self.styles.get(mode, self.styles["dark"])
+    def get_styles(self, color_mode=None):
+        # if color_mode in [None, "", "None"]:
+        #     color_mode = self.color_mode
+        # if color_mode in [None, "", "None"]:
+        #     color_mode = self.get_system_color_mode()
+        color_mode = self.get_color_mode()
+        return self.styles.get(color_mode, self.styles["dark"])
 
     def _style(self):
         if sys.platform == "darwin":

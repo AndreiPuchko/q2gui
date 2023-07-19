@@ -39,7 +39,7 @@ def mock_data_load(db: Q2Db):
 class DemoApp(Q2App):
     def on_start(self):
         mock_data_load(self.db)
-        self.set_color_mode("clean")
+        self.set_color_mode("light")
         self.customers()
 
     def create_database(self):

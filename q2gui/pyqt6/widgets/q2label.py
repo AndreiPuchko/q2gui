@@ -46,7 +46,7 @@ class q2label(QLabel, Q2Widget):
         super().__init__({"label": meta.get("label", ""), "dblclick": meta.get("dblclick")})
         # super().__init__(meta)
         self.set_text(self.meta["label"])
-        self.setWordWrap(True)
+        # self.setWordWrap(True)
         # self.set_maximum_height(int(self.get_default_height() * 1.5))
 
     def set_style_sheet(self, style_text):

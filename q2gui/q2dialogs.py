@@ -44,12 +44,13 @@ def q2Mess(mess="", title="Message"):
         form.add_control("/s")
 
         form.add_control(
-            "close",
+            "_ok_button",
             "Ok",
             control="button",
             eat_enter=True,
             hotkey="PgDown",
             valid=form.close,
+            tag="_ok_button"
         )
 
         form.add_control("/s")
@@ -57,7 +58,7 @@ def q2Mess(mess="", title="Message"):
 
     def after_form_show(form=form):
         center_window(form)
-        form.w.close.set_focus()
+        form.w._ok_button.set_focus()
 
     form.after_form_show = after_form_show
 
@@ -97,7 +98,6 @@ def q2AskYN(mess, title="Ask"):
             valid=lambda: buttonPressed(form, 2),
             eat_enter="*",
             tag="ok",
-            # hotkey="PgDown",
         )
         form.add_control("/s")
         form.add_control("/")
@@ -171,12 +171,8 @@ class Q2WaitForm:
         self.worker_thread = worker_thread
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
-        # self.wait_window.add_control("/s")
-        # self.wait_window.add_control("/h")
-        # self.wait_window.add_control("/s")
         self.wait_window.add_control("", label=mess, control="label")
-        # self.wait_window.add_control("/s")
-        # self.wait_window.add_control("/")
+        # self.wait_window.add_control("label", label="", data=mess)
         steps_count_separator = ""
         if Q2Thread.get_max() != 0:
             steps_count_separator = "/"

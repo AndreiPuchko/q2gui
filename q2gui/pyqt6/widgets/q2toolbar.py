@@ -36,7 +36,7 @@ from PyQt6.QtWidgets import (
     QToolButton,
     QMenu,
 )
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtCore import Qt, QMargins
 
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -105,6 +105,7 @@ class q2toolbar(QFrame, Q2Widget):
                         ]: act.setDisabled(mode)
                         action["engineAction"].setToolTip(action.get("mess", ""))
                         action["engineAction"].setStatusTip(action.get("mess", ""))
+                        action["engineAction"].setObjectName(action.get("tag", ""))
                         if action.get("icon", ""):
                             action["engineAction"].setIcon(QIcon(action.get("icon", "")))
                         if worker:
@@ -165,6 +166,38 @@ class q2toolbar(QFrame, Q2Widget):
 
         if self.show_actions:
             self.layout().addWidget(self.toolBarPanel)
+
+        self.set_background_color()
+
+    def set_background_color(self):
+        color_mode = q2app.q2_app.q2style.get_color_mode()
+        if color_mode == "dark":
+            background_color = (
+                QColor(q2app.q2_app.q2style.get_styles()["background_control"]).lighter(200).name()
+            )
+        elif color_mode == "light":
+            background_color = QColor(q2app.q2_app.q2style.get_styles()["background_control"]).name()
+        else:
+            background_color = "white"
+
+        for action in self.toolBarPanel.actions():
+            color = background_color
+            object_name = action.objectName()
+            if object_name == "edit":
+                object_name = "#41a7fa"
+            elif object_name == "select":
+                object_name = "#74d484"
+            if object_name:
+                tmp_color = QColor(object_name).lighter(140).name()
+                if tmp_color != "#000000":
+                    color = tmp_color
+            hover_color = QColor(color).darker(150).name()
+            self.toolBarPanel.widgetForAction(action).setStyleSheet(
+                """QToolButton {background: %s} 
+                    QToolButton:hover {background: %s}
+                    QToolButton:disabled {background: %s}
+                    """ % (color, hover_color, background_color)
+            )
 
     def set_context_menu(self, widget):
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)

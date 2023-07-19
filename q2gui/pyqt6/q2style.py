@@ -313,6 +313,14 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color:{color};
                     }}
+
+
+                q2button#_ok_button {{background-color:lightgreen;font-weight:bold}}
+                q2button#_ok_button:hover {{background-color:green}}
+                q2button#_ok_button:disabled {{background-color:{background_disabled}}}
+                q2button#_cancel_button {{background-color:salmon;font-weight:bold}}
+                q2button#_cancel_button:hover {{background-color:red}}
+                q2button#_cancel_button:disabled {{background-color:{background_disabled}}}
             """ % locals()
         return style
 

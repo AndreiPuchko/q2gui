@@ -299,6 +299,7 @@ class Q2Form:
             icon=q2app.ACTION_REMOVE_ICON,
             hotkey=q2app.ACTION_REMOVE_HOTKEY,
             eof_disabled=1,
+            tag="red"
         )
 
     def add_action_copy(self, actions=None):
@@ -498,6 +499,7 @@ class Q2Form:
                 control="button",
                 hotkey="PgDown",
                 valid=self._valid,
+                tag="_ok_button"
             )
         if self.cancel_button:
             buttons.add_control(
@@ -506,6 +508,7 @@ class Q2Form:
                 control="button",
                 mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
                 valid=self.close,
+                tag="_cancel_button"
             )
         buttons.add_control("/")
 
@@ -518,18 +521,18 @@ class Q2Form:
         if not self.no_view_action:
             buttons.add_control(
                 column="_prev_button",
-                label="<",
+                label="▲",
                 control="button",
-                mess="prev record",
+                mess="Previous row",
                 valid=lambda: self.move_crud_view(8),
                 disabled=True if mode is not VIEW else False,
                 hotkey="PgUp",
             )
             buttons.add_control(
                 column="_next_button",
-                label=">",
+                label="▼",
                 control="button",
-                mess="prev record",
+                mess="Next row",
                 valid=lambda: self.move_crud_view(2),
                 disabled=True if mode is not VIEW else False,
                 hotkey="PgDown",
@@ -557,6 +560,7 @@ class Q2Form:
             disabled=True if mode is VIEW else False,
             hotkey="PgDown",
             valid=self.crud_save,
+            tag="_ok_button"
         )
 
         buttons.add_control(
@@ -566,6 +570,7 @@ class Q2Form:
             mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
             # valid=self.crud_close,
             valid=self.close,
+            tag="_cancel_button"
         )
         buttons.add_control("/")
         self.system_controls = buttons
@@ -592,7 +597,7 @@ class Q2Form:
         else:
             ask_text = q2app.ASK_REMOVE_RECORDS_TEXT % len(selected_rows)
         waitbar = None
-        if selected_rows and self._q2dialogs.q2AskYN(ask_text):
+        if selected_rows and self._q2dialogs.q2AskYN(ask_text) == 2:
             show_error_messages = True
             if len(selected_rows) > 10:
                 waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_REMOVING, len(selected_rows))
@@ -1171,6 +1176,7 @@ class Q2FormWindow:
                 text=q2app.ACTION_CLOSE_TEXT,
                 worker=self.close,
                 icon=q2app.ACTION_CLOSE_ICON,
+                tag="orange"
             )
 
         return actions

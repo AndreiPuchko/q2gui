@@ -39,6 +39,8 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             self.apply_meta_margins()
         else:
             self.set_content_margins(1)
+        if self.meta.get("tag"):
+            self.setObjectName(self.meta.get("tag"))
 
     def apply_meta_margins(self):
         meta_margins = self.meta.get("margins")
@@ -161,7 +163,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def add_style_sheet(self, css: str):
         last_style = " ".join([self.styleSheet(), f"; {css}"])
         super().set_style_sheet(last_style)
-        self.setStyleSheet(last_style)
+        self.setStyleSheet(self.style_sheet)
 
     def get_style_sheet(self):
         return self.styleSheet()
