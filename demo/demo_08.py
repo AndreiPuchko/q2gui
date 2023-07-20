@@ -72,7 +72,7 @@ class DemoApp(Q2App):
             data_schema.add(**x)
 
         self.db.set_schema(data_schema)
-        print(self.db.migrate_error_list)
+        # print(self.db.migrate_error_list)
         mock_data_load(self.db)
         # self.customers()
 

@@ -25,6 +25,7 @@ if __name__ == "__main__":
 
 import darkdetect
 import logging
+from q2gui.q2app import q2app
 
 _logger = logging.getLogger(__name__)
 
@@ -180,5 +181,6 @@ class Q2Style:
     def set_style_sheet(self, q2widget=None, color_mode=None):
         # self.color_mode = color_mode
         if hasattr(q2widget, "set_style_sheet"):
-            q2widget.set_style_sheet(self.get_stylesheet(color_mode))
             q2widget.set_font(self._font_name, self._font_size)
+            q2app.q2_app.process_events()
+            q2widget.set_style_sheet(self.get_stylesheet(color_mode))
