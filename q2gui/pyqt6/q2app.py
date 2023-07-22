@@ -42,7 +42,7 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
-from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, QKeySequence
+from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, QKeySequence, QAction
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
@@ -406,6 +406,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 node.addSeparator()
             elif x["WORKER"]:
                 self._main_menu[_path] = node.addAction(topic)
+                self._main_menu[_path].setMenuRole(QAction.MenuRole.NoRole)
                 self._main_menu[_path].triggered.connect(x["WORKER"])
 
                 icon = self.get_icon(x["ICON"])

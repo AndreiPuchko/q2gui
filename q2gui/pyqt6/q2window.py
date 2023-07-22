@@ -50,6 +50,8 @@ def layout(arg="h"):
     elif arg.lower().startswith("f"):
         layout = QFormLayout()
         layout.setLabelAlignment(q2_align["6"])
+        layout.setFormAlignment(q2_align["0"])
+        layout.setFieldGrowthPolicy(layout.FieldGrowthPolicy.ExpandingFieldsGrow)
         layout.layout().setSpacing(2)
     elif arg.lower().startswith("g"):
         layout = QGridLayout()
