@@ -69,7 +69,7 @@ def q2Mess(mess="", title="Message"):
 q2_mess = q2mess = q2Mess
 
 
-def q2AskYN(mess, title="Ask"):
+def q2AskYN(mess, title="Question"):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.choice = 0

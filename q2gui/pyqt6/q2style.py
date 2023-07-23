@@ -317,8 +317,8 @@ class Q2Style(q2style.Q2Style):
                         color:{color};
                     }}
 
-
-                q2button#_ok_button {{background-color:lightgreen}}
+                q2button#_ok_button {{background-color:lightgreen; border: {border};}}
+                q2button#_ok_button:focus {{background-color:green;}}
                 q2button#_ok_button:hover {{background-color:green}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
             """

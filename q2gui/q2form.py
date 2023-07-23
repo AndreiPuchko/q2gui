@@ -150,7 +150,9 @@ class Q2Form:
             self.model.refresh()
             self.refresh_children()
         else:
-            self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
+            self._q2dialogs.q2working(
+                lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing...")
+            )
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
         if self.model.refreshed:
@@ -303,7 +305,7 @@ class Q2Form:
             icon=q2app.ACTION_REMOVE_ICON,
             hotkey=q2app.ACTION_REMOVE_HOTKEY,
             eof_disabled=1,
-            tag="red"
+            tag="red",
         )
 
     def add_action_copy(self, actions=None):
@@ -503,7 +505,7 @@ class Q2Form:
                 control="button",
                 hotkey="PgDown",
                 valid=self._valid,
-                tag="_ok_button"
+                tag="_ok_button",
             )
         if self.cancel_button:
             buttons.add_control(
@@ -512,7 +514,7 @@ class Q2Form:
                 control="button",
                 mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
                 valid=self.close,
-                tag="_cancel_button"
+                tag="_cancel_button",
             )
         buttons.add_control("/")
 
@@ -564,7 +566,7 @@ class Q2Form:
             disabled=True if mode is VIEW else False,
             hotkey="PgDown",
             valid=self.crud_save,
-            tag="_ok_button"
+            tag="_ok_button",
         )
 
         buttons.add_control(
@@ -574,7 +576,7 @@ class Q2Form:
             mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
             # valid=self.crud_close,
             valid=self.close,
-            tag="_cancel_button"
+            tag="_cancel_button",
         )
         buttons.add_control("/")
         self.system_controls = buttons
@@ -1171,16 +1173,16 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
 
-        actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
-            worker=self.q2_form.grid_print,
-            icon="⎙"
-        )
+        # actions.add_action(
+        #     text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
+        #     worker=self.q2_form.grid_print,
+        #     icon="⎙"
+        # )
 
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
-        
+
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
             worker=self.q2_form.grid_data_info,
@@ -1190,10 +1192,7 @@ class Q2FormWindow:
         if not self.q2_form.i_am_child:
             actions.add_action(text="-")
             actions.add_action(
-                text=q2app.ACTION_CLOSE_TEXT,
-                worker=self.close,
-                icon=q2app.ACTION_CLOSE_ICON,
-                tag="orange"
+                text=q2app.ACTION_CLOSE_TEXT, worker=self.close, icon=q2app.ACTION_CLOSE_ICON, tag="orange"
             )
 
         return actions
