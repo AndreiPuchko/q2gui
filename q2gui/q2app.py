@@ -257,7 +257,7 @@ class Q2Actions(list):
         if tag == "select":
             icon = ACTION_SELECT_ICON
 
-        icon = q2_app.get_icon(icon)
+        # icon = q2_app.get_icon(icon)
 
         # action["icon"] = icon if os.path.isfile(icon) else ""
         action["icon"] = icon if icon else ""
@@ -527,7 +527,7 @@ class Q2App:
         self.content_margin_bottom = None
         self.content_margin_left = None
         self.assets_folder = "assets"
-        self.set_icon("assets/q2gui.ico")
+        self.set_icon(f"{self.assets_folder}/q2gui.ico")
 
         self.on_init()
 
@@ -655,7 +655,7 @@ class Q2App:
         pass
 
     def on_init(self):
-        pass
+        self.set_icon(f"{self.assets_folder}/q2gui.ico")
 
     def on_start(self):
         pass

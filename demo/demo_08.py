@@ -56,7 +56,7 @@ class DemoApp(Q2App):
 
     def on_init(self):
         self.create_database()
-
+        self.q2style.font_size = 10
         self.add_menu("File|About", lambda: q2Mess("First application!"))
         self.add_menu("File|-", None)
         self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"))
@@ -107,6 +107,7 @@ class DemoApp(Q2App):
         model = Q2CursorModel(cursor)
         form.set_model(model)
         form.actions.add_action("/crud")
+        form.actions.add_action("Print", lambda: q2Mess("Test"), icon="⎙", tag="cyan")
         return form
 
     def customers(self):

@@ -143,10 +143,14 @@ class Q2Form:
         self.model.build()
         return self.model
 
-    def refresh(self):
+    def refresh(self, soft=None):
         row = self.current_row
         col = self.current_column
-        self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
+        if soft:
+            self.model.refresh()
+            self.refresh_children()
+        else:
+            self._q2dialogs.q2working(lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing..."))
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
         if self.model.refreshed:
@@ -363,7 +367,7 @@ class Q2Form:
                 nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
             self.model.update(nr)
             self.model.update(cr)
-            self.refresh()
+            self.refresh(True)
             self.set_grid_index(self.current_row - 1)
 
     def move_seq_down(self):
@@ -376,7 +380,7 @@ class Q2Form:
                 nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
             self.model.update(nr)
             self.model.update(cr)
-            self.refresh()
+            self.refresh(True)
             self.set_grid_index(self.current_row + 1)
 
     def seq_renumber(self):
@@ -391,7 +395,7 @@ class Q2Form:
             dic["seq"] = x + 1
             self.model.update(dic, refresh=False)
         wait.close()
-        self.refresh()
+        self.refresh(True)
         self.set_grid_index(curr_row)
 
     def build_grid_view_auto_form(self):
@@ -1006,6 +1010,9 @@ class Q2Form:
     def grid_data_bulk_update(self):
         Q2BulkUpdate(self)
 
+    def grid_print(self):
+        self._q2dialogs.q2mess("Must to be implemented")
+
     def grid_data_info(self):
         columns = self.model.columns
         self._q2dialogs.q2Mess(
@@ -1164,6 +1171,16 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
 
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
+            worker=self.q2_form.grid_print,
+            icon="⎙"
+        )
+
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|-",
+        )
+        
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
             worker=self.q2_form.grid_data_info,
