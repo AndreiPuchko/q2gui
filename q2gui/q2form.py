@@ -200,41 +200,34 @@ class Q2Form:
             self.last_closed_form = self.form_stack[-1]
             self.form_stack[-1].save_splitters()
             self.save_closed_form_text()
+        self.after_form_closed()
         self._in_close_flag = False
 
     def show_form(self, title="", modal="modal"):
         self.get_form_widget(title).show_form(modal)
-        self.after_form_closed()
 
     def show_mdi_form(self, title=""):
         form_widget = self.get_form_widget(title)
         form_widget.show_form(modal="")
-        self.after_form_closed()
 
     def show_mdi_modal_form(self, title=""):
         form_widget = self.get_form_widget(title)
         form_widget.show_form("modal")
-        self.after_form_closed()
 
     def show_app_modal_form(self, title=""):
         self.get_form_widget(title).show_form(modal="super")
-        self.after_form_closed()
 
     def show_grid(self, title="", modal=""):
         self.get_grid_widget(title).show_form(modal)
-        self.after_form_closed()
 
     def show_mdi_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="")
-        self.after_form_closed()
 
     def show_mdi_modal_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="modal")
-        self.after_form_closed()
 
     def show_app_modal_grid(self, title=""):
         self.get_grid_widget(title).show_form(modal="super")
-        self.after_form_closed()
 
     def get_form_widget(self, title=""):
         form_widget = self._Q2FormWindow_class(self, title)
@@ -726,7 +719,6 @@ class Q2Form:
         self.crud_form.build_form()
         self.set_crud_form_data(mode)
         self.crud_form.show_form(modal=modal)
-        self.after_form_closed()
 
     def set_crud_form_data(self, mode=EDIT):
         """set current record's value in crud_form"""
@@ -987,6 +979,9 @@ class Q2Form:
             self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_DONE % (_count, _time))
         waitbar.close()
 
+    def grid_data(self, row, col, skip_format=False):
+        return self.model.data(row, col, skip_format=skip_format)
+
     def grid_data_import(self):
         file, filetype = q2app.q2_app.get_open_file_dialoq(
             q2app.MESSAGE_GRID_DATA_IMPORT_TITLE, filter="CSV (*.csv);;JSON(*.json)"
@@ -1173,11 +1168,11 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
 
-        # actions.add_action(
-        #     text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
-        #     worker=self.q2_form.grid_print,
-        #     icon="⎙"
-        # )
+        actions.add_action(
+            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
+            worker=self.q2_form.grid_print,
+            icon="⎙"
+        )
 
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|-",

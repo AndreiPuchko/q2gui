@@ -212,6 +212,18 @@ class q2code(QsciScintilla, Q2Widget):
         replace_action.triggered.connect(self.editor_panel.show_replace)
         replace_action.setShortcut("Ctrl+H")
 
+        self.context_menu.addSeparator()
+
+        move_up_action = self.context_menu.addAction("Move selection up")
+        move_up_action.triggered.connect(self.perform_move_up)
+        move_up_action.setShortcuts(["Ctrl+Alt+Up"])
+
+        move_down_action = self.context_menu.addAction("Move selectipn down")
+        move_down_action.triggered.connect(self.perform_move_down)
+        move_down_action.setShortcuts(["Ctrl+Alt+Down"])
+
+        self.context_menu.addSeparator()
+
         gotoline_action = self.context_menu.addAction("Go to line")
         gotoline_action.triggered.connect(self.editor_panel.show_go)
         gotoline_action.setShortcut("Ctrl+G")
@@ -241,6 +253,12 @@ class q2code(QsciScintilla, Q2Widget):
                 x.setVisible(True)
             else:
                 x.setVisible(False)
+
+    def perform_move_down(self):
+        self.SendScintilla(QsciScintilla.SCI_MOVESELECTEDLINESDOWN)
+
+    def perform_move_up(self):
+        self.SendScintilla(QsciScintilla.SCI_MOVESELECTEDLINESUP)
 
     def perform_comment(self):
         selected_lines = []

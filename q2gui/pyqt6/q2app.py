@@ -377,6 +377,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         else:
             form.exec()
 
+    def dpi(self):
+        return self.physicalDpiX()
+
     def disable_current_form(self, mode=True):
         if self.q2_tabwidget.currentWidget().subWindowList():
             prev_mdi_window = self.q2_tabwidget.currentWidget().subWindowList()[-1]

@@ -197,7 +197,10 @@ class Q2Model:
         meta = q2app.Q2Controls.validate(meta)
         self.columns.append(meta["column"])
         self.headers.append(meta["gridlabel" if meta.get("gridlabel") else "label"])
-        self.alignments.append(meta.get("alignment", "7"))
+        if meta.get("relation"):
+            self.alignments.append("7")
+        else:
+            self.alignments.append(meta.get("alignment", "7"))
         self.meta.append(meta)
 
     def get_record(self, row):
@@ -229,7 +232,7 @@ class Q2Model:
     def get_related(self, to_table, filter, related):
         return "get_related"
 
-    def data(self, row, col, role="display"):
+    def data(self, row, col, role="display", skip_format=False):
         if role == "display":
             col_name = self.columns[col]
             value = self.get_record(row).get(col_name, "")
@@ -242,7 +245,7 @@ class Q2Model:
                 if num(value) == 0:
                     value = 1
                 value = meta.get("pic").split(";")[int(num(value)) - 1]
-            elif meta.get("num"):  # Numeric value
+            elif meta.get("num") and skip_format is False:  # Numeric value
                 if num(value) == 0:  # do not show zero
                     value = ""
                 elif meta.get("pic") == "F":  # financial format

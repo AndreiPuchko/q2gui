@@ -272,6 +272,7 @@ q2Wait = q2working
 
 class Q2WaitShow:
     def __init__(self, *args):
+        self.interrupted = False
         mess = "Working... \t"
         max_range = 0
         for x in args:
@@ -285,18 +286,11 @@ class Q2WaitShow:
 
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
-        # self.wait_window.add_control("/s")
-        # self.wait_window.add_control("/h")
-        # self.wait_window.add_control("/s")
         self.wait_window.add_control("mess", label=self.mess, control="label", alignment=5)
-        # self.wait_window.add_control("/s")
-        # self.wait_window.add_control("/")
         steps_count_separator = ">"
 
         if self.wait_window.add_control("/h"):
             self.wait_window.add_control("progressbar", "", control="progressbar")
-            # self.wait_window.add_control("min", "", control="label")
-            # self.wait_window.add_control("", steps_count_separator, control="label")
             self.wait_window.add_control("value", "", control="label")
             self.wait_window.add_control("", steps_count_separator, control="label")
             self.wait_window.add_control("max", "", control="label")
@@ -319,8 +313,14 @@ class Q2WaitShow:
         self.wait_window.s.max = max_range if max_range else ""
         q2app.q2_app.process_events()
         self.last_focus_widget = q2app.q2_app.focus_widget()
+        self.wait_window.after_form_closed = self.wait_windows_after_form_closed
+
+    def wait_windows_after_form_closed(self):
+        self.interrupted = True
 
     def step(self, *args):
+        if self.interrupted:
+            return True
         text = ""
         for x in args:
             x = str(x)
@@ -343,15 +343,12 @@ class Q2WaitShow:
             thread_time = int(time.time() - self.start_time)
             sec = thread_time % 60
             min = int((thread_time - sec) / 60)
-            # min = (thread_time - sec) % 3600
-            # hours = thread_time - min * 3600 - sec
             sec = int(sec)
             self.wait_window.s.time = f" {min}:{sec:02}"
 
             q2app.q2_app.process_events()
         else:
             q2app.q2_app.process_events()
-            return True
 
     def show(self):
         q2app.q2_app.disable_current_form()
@@ -371,14 +368,14 @@ class Q2WaitShow:
         q2app.q2_app.process_events()
 
     def close(self):
-        self.wait_window.close()
-        q2app.q2_app.disable_current_form(False)
-        if hasattr(self.last_focus_widget, "set_focus"):
-            self.last_focus_widget.set_focus()
+        if not self.interrupted:
+            self.wait_window.close()
+            q2app.q2_app.disable_current_form(False)
+            if hasattr(self.last_focus_widget, "set_focus"):
+                self.last_focus_widget.set_focus()
         q2app.q2_app.disable_toolbar(False)
         q2app.q2_app.disable_menubar(False)
         q2app.q2_app.disable_tabbar(False)
-
         q2app.q2_app.process_events()
         return self.value, time.time() - self.start_time
 

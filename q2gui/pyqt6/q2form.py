@@ -252,7 +252,6 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                     return
 
     def close(self):
-        # print("close event", self)
         super().close()
         if self.parent() is not None:
             if isinstance(self.parent(), QMdiSubWindow):

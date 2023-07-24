@@ -620,6 +620,9 @@ class Q2App:
     def show_form(self, form=None, modal="modal"):
         pass
 
+    def get_dpi(self):
+        pass
+
     def focus_changed(self, from_widget, to_widget):
         if from_widget.__class__.__name__ in (
             "q2line",
