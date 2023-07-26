@@ -14,13 +14,7 @@
 
 import sys
 
-if __name__ == "__main__":
 
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 
 import q2gui.q2app as q2app

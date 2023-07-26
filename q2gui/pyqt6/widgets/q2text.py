@@ -15,13 +15,7 @@
 import sys
 from PyQt6 import QtGui
 
-if __name__ == "__main__":
 
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 from PyQt6.QtWidgets import QTextEdit
 from PyQt6.QtCore import QSize

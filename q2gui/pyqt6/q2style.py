@@ -14,13 +14,7 @@
 
 import sys
 
-if __name__ == "__main__":
 
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 
 from q2gui import q2style
@@ -317,9 +311,9 @@ class Q2Style(q2style.Q2Style):
                         color:{color};
                     }}
 
-                q2button#_ok_button {{background-color:lightgreen; border: {border};}}
+                q2button#_ok_button {{background-color:lightgreen; border: {border};color:black}}
                 q2button#_ok_button:focus {{background-color:green;}}
-                q2button#_ok_button:hover {{background-color:green}}
+                q2button#_ok_button:hover {{background-color:LightSeaGreen}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
             """
             % locals()

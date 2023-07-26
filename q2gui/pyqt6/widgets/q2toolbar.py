@@ -16,13 +16,7 @@ import sys
 
 from PyQt6 import QtGui
 
-if __name__ == "__main__":
 
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 
 from q2gui import q2app
@@ -213,7 +207,7 @@ class q2toolbar(QFrame, Q2Widget):
             hover_color = QColor(color).darker(150).name()
             action_widget = self.toolBarPanel.widgetForAction(action)
             action_widget.setStyleSheet(
-                """QToolButton {background: %s; margin: 0 2} 
+                """QToolButton {background: %s; margin: 0 2; color:black} 
                     QToolButton:hover {background: %s}
                     QToolButton:disabled {background: %s}
                     """

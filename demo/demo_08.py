@@ -39,7 +39,7 @@ def mock_data_load(db: Q2Db):
 class DemoApp(Q2App):
     def on_start(self):
         mock_data_load(self.db)
-        self.set_color_mode("light")
+        self.set_color_mode("dark")
         self.customers()
 
     def create_database(self):
@@ -108,6 +108,7 @@ class DemoApp(Q2App):
         form.set_model(model)
         form.actions.add_action("/crud")
         form.actions.add_action("Print", lambda: q2Mess("Test"), icon="⎙", tag="cyan")
+        form.actions.add_action("Test", lambda: q2Mess("Test"), tag="HotPink")
         return form
 
     def customers(self):

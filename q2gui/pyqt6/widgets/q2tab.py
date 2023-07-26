@@ -14,13 +14,7 @@
 
 import sys
 
-if __name__ == "__main__":
 
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 from PyQt6.QtWidgets import QTabBar, QTabWidget
 from PyQt6.QtGui import QKeySequence, QShortcut

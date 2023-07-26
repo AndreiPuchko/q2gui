@@ -12,14 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(0, ".")
-
-    from demo.demo import demo
-
-    demo()
 
 
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFormLayout, QGridLayout, QApplication
