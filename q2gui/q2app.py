@@ -549,13 +549,13 @@ class Q2App:
                 return file_name
         return ""
 
-    def add_menu(self, text="", worker=None, before=None, toolbar=None, icon=None):
+    def add_menu(self, text="", worker=None, before=None, toolbar=None, icon=None, tag=""):
         if text.endswith("|"):
             text = text[:-1]
         if text.startswith("|"):
             text = text[1:]
         self.menu_list.append(
-            {"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon}
+            {"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon, "TAG": tag}
         )
 
     def clear_menu(self):

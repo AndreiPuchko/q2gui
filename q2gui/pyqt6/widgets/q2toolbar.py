@@ -17,15 +17,13 @@ import sys
 from PyQt6 import QtGui
 
 
-
-
 from q2gui import q2app
 from q2gui.q2app import Q2Actions
 from q2gui.q2app import GRID_ACTION_TEXT, GRID_ACTION_ICON
 
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QToolBar, QSizePolicy, QToolButton, QMenu
-from PyQt6.QtGui import QIcon, QColor, QFont, QFontMetrics, QPixmap, QPainter, QBrush
-from PyQt6.QtCore import Qt, QMargins, QSize, QRectF
+from PyQt6.QtGui import QIcon, QColor, QFont, QFontMetrics
+from PyQt6.QtCore import Qt, QMargins
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.q2window import q2_align
@@ -100,7 +98,7 @@ class q2toolbar(QFrame, Q2Widget):
                         action["engineAction"].setStatusTip(action.get("mess", ""))
                         action["engineAction"].setObjectName(action.get("tag", ""))
 
-                        action["engineAction"].setIcon(self.make_char_icon(action))
+                        action["engineAction"].setIcon(q2app.q2_app.get_engine_icon(action.get("icon", "")))
 
                         if worker:
                             action["_worker"] = worker
@@ -129,16 +127,16 @@ class q2toolbar(QFrame, Q2Widget):
                                 f"{action_text}  {'' if '|' in subMenu else '  '}"
                             )
                             if action.get("icon", ""):
-                                cascade_action[subMenu].setIcon(self.make_char_icon(action))
+                                cascade_action[subMenu].setIcon(
+                                    q2app.q2_app.get_engine_icon(action.get("icon", ""))
+                                )
 
         self.main_button = QToolBar()
 
         self.main_button_action = QToolButton()
         self.main_button_action.setText(GRID_ACTION_TEXT)
 
-        tmp_icon = q2app.q2_app.get_icon(GRID_ACTION_ICON)
-        if tmp_icon:
-            self.main_button_action.setIcon(QIcon(tmp_icon))
+        self.main_button_action.setIcon(q2app.q2_app.get_engine_icon(GRID_ACTION_ICON))
 
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
@@ -161,26 +159,6 @@ class q2toolbar(QFrame, Q2Widget):
             self.layout().addWidget(self.toolBarPanel)
 
         self.set_background_color()
-
-    def make_char_icon(self, action):
-        if q2app.q2_app.get_icon(action.get("icon", "")):
-            return QIcon(q2app.q2_app.get_icon(action.get("icon", "")))
-        elif len(action.get("icon", "")) == 1:
-            pix = QPixmap(self.icon_size, self.icon_size)
-            pix.fill(Qt.GlobalColor.transparent)
-            painter = QPainter(pix)
-            font = QFont("Arial")
-            font.setPixelSize(self.icon_size)
-            painter.setFont(font)
-            painter.drawText(
-                QRectF(0, 0, self.icon_size, self.icon_size),
-                Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignHCenter,
-                action.get("icon", "")[:1],
-            )
-            del painter
-            return QIcon(pix)
-        else:
-            return QIcon()
 
     def set_background_color(self):
         color_mode = q2app.q2_app.q2style.get_color_mode()
@@ -227,17 +205,13 @@ class q2toolbar(QFrame, Q2Widget):
         self.toolBarPanel.setMaximumHeight(button_height)
         for x in self.toolBarPanel.actions():
             action_widget = self.toolBarPanel.widgetForAction(x)
-            if hasattr(action_widget, "icon"):
+            if isinstance(action_widget, QToolButton):
                 if action_widget.icon().availableSizes() == []:
+                    # no icon
+                    font = action_widget.font()
+                    font.setPointSize(font.pointSize()+1)
+                    font.setWeight(QFont.Weight.Medium)
+                    action_widget.setFont(font)
                     action_widget.setFixedHeight(button_height)
-                    acton_text = action_widget.text()
-                    if len(acton_text) == 1:
-                        action_widget.setFixedWidth(self.main_button.sizeHint().width())
-                        font_size = q2app.q2_app.q2style.font_size
-                        while (
-                            QFontMetrics(QFont("", font_size)).horizontalAdvance(acton_text) < button_height
-                        ):
-                            font_size += 1
-                        action_widget.setFont(QFont("", font_size - 5))
 
         return super().showEvent(ev)

@@ -59,12 +59,12 @@ class DemoApp(Q2App):
         self.q2style.font_size = 10
         self.add_menu("File|About", lambda: q2Mess("First application!"))
         self.add_menu("File|-", None)
-        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"))
-        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"))
-        self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"))
+        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), icon="▓", toolbar=1)
+        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), icon="▒", toolbar=1)
+        self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"), icon="▯", toolbar=1)
         self.add_menu("File|-")
-        self.add_menu("File|Exit", self.close, toolbar=1)
-        self.add_menu("Catalogs|Customers", self.customers, toolbar=1)
+        self.add_menu("File|Exit", self.close, toolbar=1, icon="exit.png")
+        self.add_menu("Catalogs|Customers", self.customers, toolbar=1, icon="☮")
 
         data_schema = Q2DbSchema()
 

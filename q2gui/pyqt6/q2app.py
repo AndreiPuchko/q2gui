@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 # from q2gui import q2form
 
 import os
@@ -35,8 +33,20 @@ from PyQt6.QtWidgets import (
     QMdiArea,
 )
 
-from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer
-from PyQt6.QtGui import QFontMetrics, QIcon, QFont, QBrush, QColor, QShortcut, QKeySequence, QAction
+from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF
+from PyQt6.QtGui import (
+    QFontMetrics,
+    QIcon,
+    QFont,
+    QBrush,
+    QColor,
+    QShortcut,
+    QKeySequence,
+    QAction,
+    QPixmap,
+    QPainter,
+    QFontMetrics,
+)
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
@@ -406,9 +416,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self._main_menu[_path].setMenuRole(QAction.MenuRole.NoRole)
                 self._main_menu[_path].triggered.connect(x["WORKER"])
 
-                icon = self.get_icon(x["ICON"])
-                if icon:
-                    self._main_menu[_path].setIcon(QIcon(icon))
+                self._main_menu[_path].setIcon(self.get_engine_icon(x["ICON"]))
 
                 if x["TOOLBAR"]:
                     button = QToolButton(self)
@@ -422,6 +430,38 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         for a in self.actions():
             self.removeAction(a)
         self.addActions(self.menuBar().actions())
+
+    def get_engine_icon(self, icon_text):
+        if icon_text is None:
+            return QIcon()
+        elif self.get_icon(icon_text):
+            return QIcon(self.get_icon(icon_text))
+        tmp_icon = self.get_icon(q2app.GRID_ACTION_ICON)
+        icon_size = QIcon(tmp_icon).availableSizes()[0].width()
+
+        if len(icon_text) == 1:
+            pix = QPixmap(icon_size, icon_size)
+            pix.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(pix)
+            font = QFont("Arial")
+            font.setWeight(QFont.Weight.Bold)
+            font_size = icon_size
+            font.setPixelSize(font_size)
+            if QFontMetrics(font).horizontalAdvance(icon_text) <= icon_size:
+                while QFontMetrics(font).horizontalAdvance(icon_text) < icon_size:
+                    font_size += 1
+                    font.setPixelSize(font_size)
+                font.setPixelSize(font_size*110//100)
+            painter.setFont(font)
+            painter.drawText(
+                QRectF(0, 0, icon_size, icon_size),
+                Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignHCenter,
+                icon_text[:1],
+            )
+            del painter
+            return QIcon(pix)
+        else:
+            return QIcon()
 
     def set_color_mode(self, color_mode=None):
         q2app.Q2App.set_color_mode(self, color_mode)
