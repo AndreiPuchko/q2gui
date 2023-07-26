@@ -160,7 +160,10 @@ class Q2Toolbars:
                 )
                 self.toolbars[toolbar].move(int(x), int(y))
                 self.toolbars[toolbar].setOrientation(Qt.Orientation.Horizontal)
-        self.toolbars[toolbar].addAction(action)
+        if isinstance(action, QAction):
+            self.toolbars[toolbar].addAction(action)
+        elif isinstance(action, QToolButton):
+            self.toolbars[toolbar].addWidget(action)
 
     def isVisible(self):
         return self.visible
@@ -419,9 +422,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self._main_menu[_path].setIcon(self.get_engine_icon(x["ICON"]))
 
                 if x["TOOLBAR"]:
-                    button = QToolButton(self)
-                    button.setText(topic)
-                    button.setDefaultAction(self._main_menu[_path])
                     self.q2_toolbar.addAction(self._main_menu[_path], _path.split("|")[0])
             else:
                 self._main_menu[_path] = node.addMenu(topic)
@@ -438,20 +438,14 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             return QIcon(self.get_icon(icon_text))
         tmp_icon = self.get_icon(q2app.GRID_ACTION_ICON)
         icon_size = QIcon(tmp_icon).availableSizes()[0].width()
+        font = QFont("Arial")
+        font.setWeight(QFont.Weight.Bold)
+        font.setPixelSize(icon_size)
 
         if len(icon_text) == 1:
             pix = QPixmap(icon_size, icon_size)
             pix.fill(Qt.GlobalColor.transparent)
             painter = QPainter(pix)
-            font = QFont("Arial")
-            font.setWeight(QFont.Weight.Bold)
-            font_size = icon_size
-            font.setPixelSize(font_size)
-            if QFontMetrics(font).horizontalAdvance(icon_text) <= icon_size:
-                while QFontMetrics(font).horizontalAdvance(icon_text) < icon_size:
-                    font_size += 1
-                    font.setPixelSize(font_size)
-                font.setPixelSize(font_size*110//100)
             painter.setFont(font)
             painter.drawText(
                 QRectF(0, 0, icon_size, icon_size),

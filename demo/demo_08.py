@@ -44,15 +44,6 @@ class DemoApp(Q2App):
 
     def create_database(self):
         self.db = Q2Db("sqlite3", database_name=":memory:")
-        # self.db = Q2Db("sqlite3", database_name="temp/a1.sqlite")
-        # for x in [
-        #     "PRAGMA journal_mode = WAL",
-        #     "PRAGMA synchronous = EXTRA",
-        #     "PRAGMA cache_size = 1000000",
-        #     "PRAGMA locking_mode = EXCLUSIVE",
-        #     "PRAGMA temp_store = MEMORY",
-        # ]:
-        #     self.db.cursor(x)
 
     def on_init(self):
         self.create_database()
@@ -61,10 +52,10 @@ class DemoApp(Q2App):
         self.add_menu("File|-", None)
         self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), icon="▓", toolbar=1)
         self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), icon="▒", toolbar=1)
-        self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"), icon="▯", toolbar=1)
+        self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"), icon="|", toolbar=1)
         self.add_menu("File|-")
         self.add_menu("File|Exit", self.close, toolbar=1, icon="exit.png")
-        self.add_menu("Catalogs|Customers", self.customers, toolbar=1, icon="☮")
+        self.add_menu("Catalogs|Customers", self.customers, toolbar=1, icon="$")
 
         data_schema = Q2DbSchema()
 

@@ -209,7 +209,7 @@ class q2toolbar(QFrame, Q2Widget):
                 if action_widget.icon().availableSizes() == []:
                     # no icon
                     font = action_widget.font()
-                    font.setPointSize(font.pointSize()+1)
+                    # font.setPointSize(font.pointSize()+1)
                     font.setWeight(QFont.Weight.Medium)
                     action_widget.setFont(font)
                     action_widget.setFixedHeight(button_height)
