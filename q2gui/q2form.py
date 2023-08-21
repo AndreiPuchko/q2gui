@@ -818,9 +818,11 @@ class Q2Form:
             return "1=2"
 
     def grid_header_clicked(self, column):
+        current_record = self.model.get_record(self.current_row)
         if self.model is not None:
             self._q2dialogs.q2working(lambda: self.model.set_order(column), q2app.MESSAGE_SORTING)
             self.refresh()
+            self.set_grid_index(self.model.seek_row(current_record))
 
     def grid_double_clicked(self):
         for tag in ("select", "view", "edit"):
@@ -1161,9 +1163,7 @@ class Q2FormWindow:
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
-            worker=self.q2_form.grid_print,
-            icon="⎙"
+            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print", worker=self.q2_form.grid_print, icon="⎙"
         )
 
         actions.add_action(
