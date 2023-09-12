@@ -1474,9 +1474,8 @@ class Q2FormWindow:
                 self.q2_form.form_stack.pop()
                 return
         # search for the first enabled widget
-        for x in self.q2_form.widgets():
-            widget = self.q2_form.w.__getattr__(x)
-            if not x.startswith("/") and widget:
+        for x, widget in self.q2_form.widgets().items():
+            if not x.startswith("/") and widget is not None:
                 if hasattr(widget, "can_get_focus") and not widget.can_get_focus():
                     continue
                 elif hasattr(widget, "is_enabled") and widget.is_enabled():

@@ -15,7 +15,6 @@
 import sys
 
 
-
 from PyQt6.QtWidgets import (
     QComboBox,
     QWidget,
@@ -57,14 +56,21 @@ class q2date(QComboBox, Q2Widget):
                     lt = [x for x in text.replace(" ", "0").split(".")]
                     if int(lt[2]) == 0:  # year
                         lt[2] = QDate.currentDate().toString("yyyy")
+
                     if int(lt[1]) == 0:  # month
                         lt[1] = QDate.currentDate().toString("MM")
                     elif int(lt[1]) > 12:
                         lt[1] = "12"
+
                     if int(lt[0]) > 31:  # day
                         lt[0] = "31"
                     elif int(lt[0]) == 0:
-                        lt[0] = QDate.currentDate().toString("dd")
+                        lt[0] = "01"
+                    elif int(lt[0]) < 4 and len(lt[0]) > 2:
+                        lt[0] = f"{int(lt[0])}0"
+                    # else:
+                    #     lt[0] = QDate.currentDate().toString("dd")
+
                     if pos > 4:
                         mdm = QDate(int(lt[2]), int(lt[1]), 1).daysInMonth()
                         if mdm < int(lt[0]):
