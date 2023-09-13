@@ -40,6 +40,9 @@ class DemoApp(Q2App):
     def on_start(self):
         mock_data_load(self.db)
         self.set_color_mode("dark")
+
+    def on_new_tab(self):
+        super().on_new_tab()
         self.customers()
 
     def create_database(self):

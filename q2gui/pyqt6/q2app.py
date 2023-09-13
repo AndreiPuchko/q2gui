@@ -233,6 +233,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.setCurrentIndex(currentTabIndex - 1)
                 self.removeTab(currentTabIndex)
 
+        def get_subwindow_count(self):
+            return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
+
         def addTab(self, widget=None, label="="):
             if not widget:
                 widget = QMdiArea(self)
@@ -333,6 +336,19 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         else:
             return self
 
+    def subwindow_count_changed(self):
+        return self.q2_tabwidget.get_subwindow_count()
+
+    def disable_menu(self, menu_path=""):
+        action = self._main_menu.get(menu_path)
+        if action:
+            action.setDisabled(True)
+
+    def enable_menu(self, menu_path=""):
+        action = self._main_menu.get(menu_path)
+        if action:
+            action.setEnabled(True)
+
     def eventFilter(self, obj, ev: QEvent):
         if ev.type() == QEvent.Type.Close:
             if obj.heap.prev_mdi_window:
@@ -369,6 +385,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         self.q2_tabwidget.currentWidget().addSubWindow(form)
         form.installEventFilter(self)
+        self.subwindow_count_changed()
 
         if modal != "" and form.heap.prev_mdi_window:  # mdiarea normal window
             form.heap.prev_mdi_window.setDisabled(True)
@@ -383,6 +400,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             form.show()
         else:
             form.exec()
+        self.subwindow_count_changed()
 
     def dpi(self):
         return self.physicalDpiX()
@@ -551,6 +569,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return self.statusBar().currentMessage()
 
     def set_tabbar_text(self, text=""):
+        text = text.split("\n")[0]
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)
 
     def show_statusbar(self, mode=True):

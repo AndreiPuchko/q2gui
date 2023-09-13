@@ -528,6 +528,15 @@ class Q2App:
     def get_stdout_height(self):
         pass
 
+    def subwindow_count_changed(self):
+        pass
+
+    def disable_menu(self, menu_path=""):
+        pass
+
+    def enable_menu(self, menu_path=""):
+        pass
+
     def set_color_mode(self, color_mode=None):
         self.q2style.set_color_mode(self, color_mode)
 

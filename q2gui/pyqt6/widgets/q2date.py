@@ -12,8 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
 
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -22,7 +20,6 @@ from PyQt6.QtWidgets import (
     QCalendarWidget,
     QHBoxLayout,
     QPushButton,
-    QSizePolicy,
 )
 
 from PyQt6.QtGui import QValidator, QFontMetrics
