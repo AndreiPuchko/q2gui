@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QRadioButton, QSizePolicy, QApplication
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QKeyEvent
@@ -60,7 +58,6 @@ class q2radio(QFrame, Q2Widget):
             )
         else:
             super().keyPressEvent(ev)
-
 
     def can_get_focus(self):
         return True
@@ -118,7 +115,10 @@ class q2RadioButton(QRadioButton):
         return super().focusInEvent(ev)
 
     def value_changed(self, value):
-        return self.radio.valid()
+        if self.isChecked():
+            self.setFocus()
+            return self.radio.valid()
+        return False
 
     def get_text(self):
         return self.text()

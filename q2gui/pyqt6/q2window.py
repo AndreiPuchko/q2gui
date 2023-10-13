@@ -13,7 +13,6 @@
 #    limitations under the License.
 
 
-
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFormLayout, QGridLayout, QApplication
 from PyQt6.QtCore import Qt
 from q2gui import q2window
@@ -68,7 +67,11 @@ class Q2Frame(q2window.Q2Frame, QWidget):
         #     # widget.setContentsMargins(0,20, 0, 0)
         #     if widget.label:
         #         print("--",widget, widget.label.get_text())
-        self.layout().addWidget(widget)
+        if hasattr(widget, "meta"):
+            stretch_factor = int(widget.meta.get("stretch", 0))
+        else:
+            stretch_factor = 0
+        self.layout().addWidget(widget, stretch=stretch_factor)
         self.updateGeometry()
 
     def add_row(self, label=None, widget=None):

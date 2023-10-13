@@ -311,6 +311,9 @@ class Q2WaitShow:
         self.interrupted = True
 
     def step(self, *args):
+        """
+        
+        """
         if self.interrupted:
             return True
         text = ""

@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 import q2gui.q2app as q2app
 from configparser import ConfigParser
 

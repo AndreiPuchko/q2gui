@@ -24,7 +24,6 @@ from PyQt6.QtWidgets import (
     QWidget,
     QMainWindow,
     QToolButton,
-    QTextEdit,
     QToolBar,
     QFileDialog,
     QTabWidget,
@@ -45,12 +44,12 @@ from PyQt6.QtGui import (
     QAction,
     QPixmap,
     QPainter,
-    QFontMetrics,
 )
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
 from q2gui.pyqt6.widgets.q2frame import q2frame
+from q2gui.pyqt6.widgets.q2text import q2text
 from q2gui.q2utils import int_
 from q2gui.pyqt6.widgets.q2toolbutton import q2toolbutton
 
@@ -61,7 +60,8 @@ import q2gui.q2app as q2app
 class stdout_widget(q2frame):
     def __init__(self, mode="h"):
         super().__init__({"column": "/h", "label": "Output"})
-        self.stdout_widget = QTextEdit(self)
+        # self.stdout_widget = QTextEdit(self)
+        self.stdout_widget = q2text(self.make_meta({}))
 
         self.toolbar_frame = q2frame({"column": "/v"})
         self.closeButton = q2toolbutton(self.make_meta(column="hide", label="❌", mess="Hide output"))
@@ -413,7 +413,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 prev_mdi_window.setFocus()
 
     def build_menu(self):
-        self.menu_list = super().reorder_menu(self.menu_list)
+        # self.menu_list = super().reorder_menu(self.menu_list)
+        super().build_menu()
         self._main_menu = {}
         QMainWindow.menuBar(self).clear()
         self.q2_toolbar.clear()

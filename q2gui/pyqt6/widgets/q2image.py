@@ -12,8 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
+import os
 
 
 import codecs
@@ -77,11 +76,12 @@ class q2image(QLabel, Q2Widget):
         if image_file:
             self.image.save(image_file)
 
-    def load_image_from_file(self):
-        image_file = q2app.q2_app.get_open_file_dialoq(
-            "Load image",
-            filter="Images (*.png *.jpg)",
-        )[0]
+    def load_image_from_file(self, image_file=""):
+        if not os.path.isfile(image_file):
+            image_file = q2app.q2_app.get_open_file_dialoq(
+                "Load image",
+                filter="Images (*.png *.jpg)",
+            )[0]
         if image_file:
             self.set_qimage(image=QImage(image_file))
 

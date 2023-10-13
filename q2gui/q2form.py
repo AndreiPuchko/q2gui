@@ -580,6 +580,7 @@ class Q2Form:
         """
         self.move_grid_index(mode)
         self.set_crud_form_data()
+        self.before_form_show()
 
     def crud_delete(self):
         selected_rows = self.get_grid_selected_rows()
@@ -915,9 +916,55 @@ class Q2Form:
         hotkey="",
         **args,
     ):
+        """Adds a new control(widget) into the form
+        arguments:
+        column: name of form variable, also migrates to DB as column name
+        label: shows in the form as a label and in the grid as column label
+        gridlabel: shows in the grid as column label when not empty
+        control: control type - "line", "date", "combo", "list",
+                                "radio", "check", "text", "code",
+                                "button", "toolbutton"
+        pic: some extra data, the meaning depends
+            pic="F" if control="line" and datatype="num" - thouthands delimiters
+            pic="*" if control="line" - password input
+            pic="Item1;Item2;.." if control in ["radio", "list", "combo"] - controls items
+        data: initial value for control
+        datatype: defines default aligment and input mask
+                  if migrate=True - defines sql datatype
+        datalen=0: defines lenght of control and sql datatype
+        datadec=0: defines mask and sql datatype
+        pk: if migrate=True - this column is primary key
+        ai: if migrate=True - this column is autoincrement
+        migrate="*": if migrate=True - this column will be migrated to sql
+        actions: actions (Q2Actions) for widget
+        alignment: numbers [1-9] - see see keyboards numpad for meanings
+
+        to_table: this column linked to table (Foreign key)
+        to_column: this column linked to to_table.to_column (Foreign key)
+        to_form: Q2Form object, that appears to search and select the value of to_column
+        related: displayed value from table to_table (sql expression)
+
+        db: explicit database(Q2Db)
+        mask: -
+        opts: -
+        when: focus in callback
+        show: -
+        valid: focus out, data changed callback
+        dblclick: grid double click callback
+        readonly: .
+        disabled: .
+        check: has checkbox, contriol is enabled when it is checked
+        noform: do not show this control in the form
+        nogrid: do not show this control in the grid
+        widget: external widget (QWidget, ....)
+        margins: .
+        stretch: .
+        mess: tooltip message
+        tag: extradata, sometimes used as name, sometimes as a color
+        eat_enter: by default Enter key works like Tab
+        hotkey: usually for control="button", for example "Ok" - "PgDown"
         """
-        to_form - form class or function(fabric) that returns form object
-        """
+
         if isinstance(column, dict):
             self.controls.add_control(**column)
         else:

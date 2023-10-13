@@ -8,13 +8,14 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
+            // "program": "${input:choose_file}",
             "program": "demo/demo.py",
             // "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
                 "PYTHONPATH": "../q2db"
-            }
+            },
         }
     ]
 }
