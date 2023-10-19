@@ -20,6 +20,7 @@ from PyQt6.QtCore import QSize
 
 from q2gui.pyqt6.q2window import Q2Frame
 from q2gui.pyqt6.q2widget import Q2Widget
+from q2gui.q2utils import int_
 
 
 class q2frame(QGroupBox, Q2Widget, Q2Frame):
@@ -63,7 +64,7 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
         if self.splitter is not None:
             self.splitter.addWidget(widget)
             if hasattr(widget, "meta"):
-                self.splitter.setStretchFactor(self.splitter.count() - 1, widget.meta.get("stretch", 0))
+                self.splitter.setStretchFactor(self.splitter.count() - 1, int_(widget.meta.get("stretch", 0)))
         else:
             return super().add_widget(widget=widget, label=label)
 
