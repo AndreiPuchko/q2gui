@@ -1,12 +1,9 @@
 {
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true,
     "files.associations": {
         "*.qss": "css",
         "*.toml": "ini",
         "poetry.lock": "ini",
     },
-    "python.formatting.provider": "black",
     "python.testing.pytestArgs": [
         "tests"
     ],

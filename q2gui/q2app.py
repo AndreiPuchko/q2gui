@@ -435,7 +435,7 @@ class Q2Settings:
             # self.config.read(self.filename)
             if not os.path.isfile(self.filename):
                 self.write()
-            self.config.readfp(codecs.open(self.filename, "r", "utf8"))
+            self.config.read_file(codecs.open(self.filename, "r", "utf8"))
 
     def write(self):
         if self.filename == "none":
@@ -443,7 +443,6 @@ class Q2Settings:
         if isinstance(self.filename, io.StringIO):
             self.config.write(self.filename)
         else:
-            # with codecs.open(self.filename, "w", "utf8") as configfile:
             with codecs.open(self.filename, "w", "utf8") as configfile:
                 self.config.write(configfile)
 
@@ -561,9 +560,7 @@ class Q2App:
             text = text[:-1]
         if text.startswith("|"):
             text = text[1:]
-        self.menu_list.append(
-            {"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon, "TAG": tag}
-        )
+        self.menu_list.append({"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon, "TAG": tag})
 
     def clear_menu(self):
         self.menu_list = []

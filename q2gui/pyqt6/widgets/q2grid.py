@@ -214,12 +214,11 @@ class q2grid(QTableView):
 
     def set_column_settings(self, col_settings):
         headers = self.get_columns_headers()
-        for x in col_settings:
+        for x, col_size in col_settings.items():
             if "," not in col_settings[x]:
                 continue
-            column_pos = int_(col_settings[x].split(",")[0])
-            column_width = int_(col_settings[x].split(",")[1])
-            # column_width = column_width if column_width else 10
+            column_pos, column_width = [int_(sz) for sz in col_size.split(",")]
+            # print(column_pos, column_width, headers.get(x))
             self.setColumnWidth(headers.get(x), column_width)
             old_visual = self.horizontalHeader().visualIndex(int_(headers[x]))
             self.horizontalHeader().moveSection(old_visual, column_pos)

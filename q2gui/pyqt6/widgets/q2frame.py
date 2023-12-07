@@ -79,7 +79,7 @@ class q2splitter(QSplitter):
 
     def set_sizes(self, sizes):
         if sizes == "":
-            init_sizes = [self.widget(x).meta.get("stretch", 1) for x in range(self.count())]
+            init_sizes = [int_(self.widget(x).meta.get("stretch", 1)) for x in range(self.count())]
             init_sizes = [x if x > 0 else 1 for x in init_sizes]
             if sum(init_sizes):
                 widget_size = (
