@@ -1553,7 +1553,6 @@ class Q2FormWindow:
             col_settings = {}
             for count, x in enumerate(self.q2_form.model.headers):
                 data = q2app.q2_app.settings.get(self.window_title, f"grid_column__'{x}'")
-                # print(">", data, ">", f"grid_column__'{x}'")
                 if data == "":
                     if (
                         self.q2_form.model.meta[count].get("relation")

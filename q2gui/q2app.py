@@ -560,7 +560,9 @@ class Q2App:
             text = text[:-1]
         if text.startswith("|"):
             text = text[1:]
-        self.menu_list.append({"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon, "TAG": tag})
+        self.menu_list.append(
+            {"TEXT": text, "WORKER": worker, "BEFORE": before, "TOOLBAR": toolbar, "ICON": icon, "TAG": tag}
+        )
 
     def clear_menu(self):
         self.menu_list = []

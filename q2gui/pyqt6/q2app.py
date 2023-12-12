@@ -291,11 +291,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         self.central_widget.addWidget(self.q2_tabwidget)
         self.central_widget.addWidget(self.stdout_widget)
-        self.central_widget.setSizes(
-            [
-                10,
-            ]
-        )
+        self.central_widget.setSizes([10])
 
         self.statusBar().setVisible(True)
         self.set_title(title)

@@ -218,7 +218,6 @@ class q2grid(QTableView):
             if "," not in col_settings[x]:
                 continue
             column_pos, column_width = [int_(sz) for sz in col_size.split(",")]
-            # print(column_pos, column_width, headers.get(x))
             self.setColumnWidth(headers.get(x), column_width)
             old_visual = self.horizontalHeader().visualIndex(int_(headers[x]))
             self.horizontalHeader().moveSection(old_visual, column_pos)
