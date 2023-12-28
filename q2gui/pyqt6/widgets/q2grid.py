@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 from PyQt6.QtWidgets import (
     QTableView,
     QStyledItemDelegate,
@@ -25,7 +23,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPalette, QPainter
 
-from PyQt6.QtCore import Qt, QAbstractTableModel, QVariant
+from PyQt6.QtCore import Qt, QAbstractTableModel, QVariant, QItemSelectionModel
 
 from q2gui.pyqt6.q2window import q2_align
 from q2gui.q2utils import int_
@@ -122,7 +120,7 @@ class q2grid(QTableView):
         self.horizontalHeader().setDefaultAlignment(q2_align["7"])
         self.horizontalHeader().sectionClicked.connect(self.q2_form.grid_header_clicked)
         h = self.fontMetrics().height()
-        self.verticalHeader().setMinimumSectionSize(h + h//4)
+        self.verticalHeader().setMinimumSectionSize(h + h // 4)
         self.verticalHeader().setDefaultSectionSize(self.fontMetrics().height())
 
         self.setAlternatingRowColors(True)
@@ -191,6 +189,12 @@ class q2grid(QTableView):
 
     def get_selected_rows(self):
         return [x.row() for x in self.selectionModel().selectedRows()]
+
+    def set_selected_rows(self, index_list):
+        print(12)
+        indexes = [self.model().index(r, 0) for r in index_list]
+        mode = QItemSelectionModel.SelectionFlag.Select | QItemSelectionModel.SelectionFlag.Rows
+        [self.selectionModel().select(index, mode) for index in indexes]
 
     def get_columns_headers(self):
         rez = {}

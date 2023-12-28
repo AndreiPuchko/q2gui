@@ -627,6 +627,9 @@ class Q2Form:
     def get_grid_selected_rows(self):
         return self.grid_form.get_grid_selected_rows()
 
+    def set_grid_selected_rows(self, index_list):
+        return self.grid_form.set_grid_selected_rows(index_list)
+
     def before_delete(self):
         pass
 
@@ -1250,6 +1253,9 @@ class Q2FormWindow:
 
     def get_grid_selected_rows(self):
         return self.widgets["form__grid"].get_selected_rows()
+
+    def set_grid_selected_rows(self, index_list=[]):
+        self.widgets["form__grid"].set_selected_rows(index_list)
 
     def get_grid_row_count(self):
         return self.widgets["form__grid"].row_count()
