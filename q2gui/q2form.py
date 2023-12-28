@@ -345,7 +345,12 @@ class Q2Form:
         actions.add_action("-")
 
     def move_seq_up(self):
-        if self.current_row > 0:
+        selected_row = sorted(self.get_grid_selected_rows())
+        if selected_row[0] == 0:
+            return
+
+        for row in selected_row:
+            self.set_grid_index(row)
             nr = self.model.get_record(self.current_row - 1)
             cr = self.model.get_record(self.current_row)
             if nr["seq"] == cr["seq"]:
@@ -354,11 +359,18 @@ class Q2Form:
                 nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
             self.model.update(nr)
             self.model.update(cr)
-            self.refresh(True)
-            self.set_grid_index(self.current_row - 1)
+        self.refresh(True)
+        self.set_grid_index(selected_row[0])
+        self.set_grid_selected_rows([x - 1 for x in selected_row])
 
     def move_seq_down(self):
-        if self.current_row < self.model.row_count() - 1:
+        selected_row = sorted(self.get_grid_selected_rows())
+        selected_row.reverse()
+        if selected_row[0] == self.model.row_count() - 1:
+            return
+
+        for row in selected_row:
+            self.set_grid_index(row)
             nr = self.model.get_record(self.current_row + 1)
             cr = self.model.get_record(self.current_row)
             if nr["seq"] == cr["seq"]:
@@ -367,8 +379,9 @@ class Q2Form:
                 nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
             self.model.update(nr)
             self.model.update(cr)
-            self.refresh(True)
-            self.set_grid_index(self.current_row + 1)
+        self.refresh(True)
+        self.set_grid_index(selected_row[0])
+        self.set_grid_selected_rows([x + 1 for x in selected_row])
 
     def seq_renumber(self):
         curr_row = self.current_row

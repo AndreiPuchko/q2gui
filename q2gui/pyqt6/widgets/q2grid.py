@@ -191,7 +191,7 @@ class q2grid(QTableView):
         return [x.row() for x in self.selectionModel().selectedRows()]
 
     def set_selected_rows(self, index_list):
-        print(12)
+        self.clearSelection()
         indexes = [self.model().index(r, 0) for r in index_list]
         mode = QItemSelectionModel.SelectionFlag.Select | QItemSelectionModel.SelectionFlag.Rows
         [self.selectionModel().select(index, mode) for index in indexes]
