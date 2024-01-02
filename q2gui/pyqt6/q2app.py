@@ -272,6 +272,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         # self.q2_toolbar = QToolBar(self)
         self.q2_toolbar = Q2Toolbars(self)
         self.stdout_widget = stdout_widget()
+        self.QApplication.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar)
 
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
