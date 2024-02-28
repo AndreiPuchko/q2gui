@@ -88,15 +88,17 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
                 self.to_form.set_grid_index(row)
 
             self.to_form.before_grid_show = seek
+            self.get.when()
             self.to_form.show_mdi_modal_grid()
             # self.set_related()
 
     def show_related_form_result(self):
         if self.to_form:
+            self.get.set_focus()
             self.get.set_text(self.to_form.r.__getattr__(self.meta["to_column"]))
             self.to_form.close()
-            self.get.set_focus()
             self.get_valid()
+            self.get.valid()
 
     def edit_done(self):
         self.get_valid()
