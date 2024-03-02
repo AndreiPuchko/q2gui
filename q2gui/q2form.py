@@ -774,6 +774,8 @@ class Q2Form:
                     self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
         # take care about PK and filters
         for x in self.controls.get_names():
+            if x not in self.crud_form.widgets:
+                continue
             if mode == EDIT and self.controls.get(x)["pk"] and x in self.crud_form.widgets:
                 # Disable primary key when edit
                 self.crud_form.widgets[x].set_disabled()
