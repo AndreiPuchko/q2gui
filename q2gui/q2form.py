@@ -388,7 +388,7 @@ class Q2Form:
         pk = self.model.get_meta_primary_key()
         wait = self._q2dialogs.Q2WaitShow(self.model.row_count(), _("Renumber sequence"))
         for x in range(self.model.row_count()):
-            wait.step()
+            wait.step(100)
             self.set_grid_index(x)
             # dic = {pk: self.model.get_record(x)[pk]}
             dic = {pk: self.r.__getattr__(pk)}
@@ -608,7 +608,7 @@ class Q2Form:
                 waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_REMOVING, len(selected_rows))
             for row in selected_rows:
                 if waitbar:
-                    waitbar.step(1)
+                    waitbar.step(100)
 
                 if self.before_delete() is False:
                     continue
@@ -1029,7 +1029,7 @@ class Q2Form:
             q2app.MESSAGE_GRID_DATA_EXPORT_WAIT % file, self.model.row_count()
         )
         try:
-            self.model.data_export(file, tick_callback=lambda: waitbar.step())
+            self.model.data_export(file, tick_callback=lambda: waitbar.step(100))
         except Exception as e:
             self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_ERROR % (file + ": " + str(e)))
             waitbar.close()
@@ -1050,7 +1050,7 @@ class Q2Form:
         file = self.validate_impexp_file_name(file, filetype)
         waitbar = self._q2dialogs.Q2WaitShow(q2app.MESSAGE_GRID_DATA_IMPORT_WAIT % file)
         try:
-            self.model.data_import(file, tick_callback=lambda: waitbar.step())
+            self.model.data_import(file, tick_callback=lambda: waitbar.step(100))
         except Exception as e:
             self._q2dialogs.q2Mess(
                 q2app.MESSAGE_GRID_DATA_IMPORT_ERROR % (self.db.last_sql_error + ": " + str(e))
@@ -1752,7 +1752,7 @@ class Q2PasteClipboard:
         self.q2_form.show_crud_form(NEW, modal="")
 
         for row in self.data_data:
-            waitbar.step(1)
+            waitbar.step(100)
             for col in row:
                 if col in source_map:
                     self.q2_form.s.__setattr__(source_map[col], row[col])
@@ -1938,7 +1938,7 @@ class Q2BulkUpdate:
             record_list.append(self.q2_form.model.get_record(x))
         waitbar = self.q2_form.show_progressbar(q2app.BULK_DATA_WAIT, len(record_list))
         for x in record_list:
-            waitbar.step(1)
+            waitbar.step(100)
             self.q2_form.set_grid_index(self.q2_form.model.seek_row(x))
             self.q2_form.show_crud_form(EDIT, modal="")
             for bulk_column in bulk_columns:
