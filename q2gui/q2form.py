@@ -752,6 +752,8 @@ class Q2Form:
             for x in self._model_record:
                 if x not in self.crud_form.widgets:
                     continue
+                if self.c.__getattr__(x) is None:
+                    continue
                 if self.c.__getattr__(x)["check"]:
                     if self.c.__getattr__(x)["num"]:
                         value = num(self._model_record[x])

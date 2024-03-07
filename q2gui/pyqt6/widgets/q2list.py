@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem, QApplication
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QKeyEvent
@@ -44,6 +42,7 @@ class q2list(QListWidget, Q2Widget):
         for item in data:
             self.addItem(QListWidgetItem(item))
             width = max(len(item), width)
+        width = self.meta.get("datalen", width)
         self.set_minimum_width(width)
 
     def set_text(self, text):
