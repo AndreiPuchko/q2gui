@@ -33,6 +33,8 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             self.set_content_margins(1)
         if self.meta.get("tag"):
             self.setObjectName(self.meta.get("tag"))
+        if self.meta.get("dblclick") and hasattr(self, "doubleClicked"):
+            self.doubleClicked.connect(self.meta.get("dblclick"))
 
     def apply_meta_margins(self):
         meta_margins = self.meta.get("margins")
@@ -49,10 +51,10 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         else:
             self.set_content_margins(int(meta_margins[0]), meta_margins[1], meta_margins[2], meta_margins[3])
 
-    def mouseDoubleClickEvent(self, event):
-        if self.meta.get("dblclick"):
-            self.meta.get("dblclick")()
-        return super().mouseDoubleClickEvent(event)
+    # def mouseDoubleClickEvent(self, event):
+    #     if self.meta.get("dblclick"):
+    #         self.meta.get("dblclick")()
+    #     return super().mouseDoubleClickEvent(event)
 
     def set_tooltip(self, mess):
         self.setToolTip(mess)
@@ -99,7 +101,11 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def has_focus(self):
         return self.hasFocus()
 
-    def set_maximum_width(self, width, char="O"):
+    def _check_min_width(self, width):
+        return width if width >5 else width + 2
+
+    def set_maximum_width(self, width, char="W"):
+        width = self._check_min_width(width)
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 # self.setMaximumWidth(QFontMetrics(self.font()).width(char) * width)
@@ -107,14 +113,16 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             else:
                 self.setMaximumWidth(int(width))
 
-    def set_minimum_width(self, width, char="O"):
+    def set_minimum_width(self, width, char="W"):
+        width = self._check_min_width(width)
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
                 self.setMinimumWidth(int(width))
 
-    def set_fixed_width(self, width, char="O"):
+    def set_fixed_width(self, width, char="W"):
+        width = self._check_min_width(width)
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 self.setFixedWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
