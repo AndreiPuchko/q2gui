@@ -401,6 +401,10 @@ class Q2Form:
         self.refresh(True)
         self.set_grid_index(curr_row)
 
+    def is_grid_updateable(self):
+        table_name = self.model.get_table_name()
+        return table_name !="" and " " not in table_name
+
     def build_grid_view_auto_form(self):
         # Define layout
         if self.model.records:
@@ -1207,11 +1211,12 @@ class Q2FormWindow:
             eof_disabled=1,
         )
 
-        actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
-            worker=self.q2_form.grid_data_import,
-            icon=q2app.ACTION_TOOLS_IMPORT_ICON,
-        )
+        if self.q2_form.is_grid_updateable():
+            actions.add_action(
+                text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
+                worker=self.q2_form.grid_data_import,
+                icon=q2app.ACTION_TOOLS_IMPORT_ICON,
+            )
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|-",
         )
@@ -1251,7 +1256,7 @@ class Q2FormWindow:
             actions.add_action(
                 text=q2app.ACTION_CLOSE_TEXT, worker=self.close, icon=q2app.ACTION_CLOSE_ICON, tag="orange"
             )
-
+        self.q2_form.grid_navigation_actions_hook(actions)
         return actions
 
     def move_grid_index(self, direction=None):
@@ -1319,6 +1324,9 @@ class Q2FormWindow:
         self.build_form(tmp_grid_form.get_controls())
         self.q2_form.refresh_children()
         self.move_grid_index(1)
+
+    def grid_navigation_actions_hook(self, actions):
+        pass
 
     def build_form(self, controls=[]):
         frame_stack = [self]

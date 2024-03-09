@@ -42,7 +42,7 @@ def q2Mess(mess="", title="Message"):
             eat_enter=True,
             hotkey="PgDown",
             valid=form.close,
-            tag="_ok_button"
+            tag="_ok_button",
         )
 
         form.add_control("/s")
@@ -61,7 +61,7 @@ def q2Mess(mess="", title="Message"):
 q2_mess = q2mess = q2Mess
 
 
-def q2AskYN(mess, title="Question"):
+def q2AskYN(mess, title="Question", buttons=["Cancel", "Ok"]):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.choice = 0
@@ -73,30 +73,27 @@ def q2AskYN(mess, title="Question"):
         form.add_control("/s")
 
         def buttonPressed(form=form, answer=0):
-            form.choice = answer
-            form.close()
+            def worker():
+                form.choice = answer
+                form.close()
 
-        form.add_control(
-            "cancel",
-            "Cancel",
-            control="button",
-            valid=lambda: buttonPressed(form, 1),
-            eat_enter="*",
-        )
-        form.add_control(
-            "ok",
-            "Ok",
-            control="button",
-            valid=lambda: buttonPressed(form, 2),
-            eat_enter="*",
-            tag="ok",
-        )
+            return worker
+
+        for index, x in enumerate(buttons):
+            form.add_control(
+                f"button_{index+1}",
+                x,
+                control="button",
+                valid=buttonPressed(form, index + 1),
+                eat_enter="*",
+                tag="ok" if x == "Ok" else "",
+            )
         form.add_control("/s")
         form.add_control("/")
 
     def after_form_show(form=form):
         center_window(form)
-        form.w.cancel.set_focus()
+        form.w.button_1.set_focus()
 
     form.after_form_show = after_form_show
     form.show_app_modal_form()
@@ -311,9 +308,7 @@ class Q2WaitShow:
         self.interrupted = True
 
     def step(self, *args):
-        """
-        
-        """
+        """ """
         if self.interrupted:
             return True
         text = ""
