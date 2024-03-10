@@ -44,6 +44,9 @@ class Q2Form(q2form.Q2Form):
         self.q2_app = q2app.q2_app
         self.on_init()
 
+    def grid_navigation_actions_hook(self, actions):
+        pass
+
 
 class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
     def __init__(self, q2_form: Q2Form, title=""):
