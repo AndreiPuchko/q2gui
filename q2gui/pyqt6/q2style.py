@@ -207,8 +207,9 @@ class Q2Style(q2style.Q2Style):
 
                 QSplitter:handle
                     {{
-                        border-left: 0.1em dotted {color};
-                        border-top: 0.1em dotted {color};
+                        border-left: 1px dotted {color};
+                        border-top: 1px dotted {color};
+                        margin-top: 1px;
                     }}
                 *:disabled
                     {{
@@ -312,7 +313,7 @@ class Q2Style(q2style.Q2Style):
                     }}
 
                 q2button#_ok_button {{background-color:lightgreen; border: {border};color:black}}
-                q2button#_ok_button:focus {{background-color:green;}}
+                q2button#_ok_button:focus {{background-color:green;color:white}}
                 q2button#_ok_button:hover {{background-color:LightSeaGreen}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
             """

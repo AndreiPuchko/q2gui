@@ -50,8 +50,8 @@ from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
 from q2gui.pyqt6.widgets.q2frame import q2frame
 from q2gui.pyqt6.widgets.q2text import q2text
+from q2gui.pyqt6.widgets.q2button import q2button
 from q2gui.q2utils import int_
-from q2gui.pyqt6.widgets.q2toolbutton import q2toolbutton
 
 
 import q2gui.q2app as q2app
@@ -60,23 +60,22 @@ import q2gui.q2app as q2app
 class stdout_widget(q2frame):
     def __init__(self, mode="h"):
         super().__init__({"column": "/h", "label": "Output"})
-        # self.stdout_widget = QTextEdit(self)
         self.stdout_widget = q2text(self.make_meta({}))
 
         self.toolbar_frame = q2frame({"column": "/v"})
-        self.closeButton = q2toolbutton(self.make_meta(column="hide", label="❌", mess="Hide output"))
+        self.closeButton = q2button(self.make_meta(column="hide", label="❌", mess="Hide output"))
         self.closeButton.clicked.connect(lambda: self.hide())
 
-        self.cleanButton = q2toolbutton(self.make_meta(label="🧹", mess="Clean output"))
-        self.cleanButton.clicked.connect(self.stdout_widget.clear)
+        self.cleanButton = q2button(self.make_meta(label="🧹", mess="Clean output"))
+        self.cleanButton.clicked.connect(lambda: [self.stdout_widget.clear(), self.stdout_widget.set_focus()])
 
         self.toolbar_frame.insert_widget(widget=self.closeButton)
-        # self.toolbar_frame.insert_widget(widget=q2space())
         self.toolbar_frame.insert_widget(widget=self.cleanButton)
 
         self.insert_widget(widget=self.stdout_widget)
         self.insert_widget(widget=self.toolbar_frame)
         self.setVisible(False)
+        self.setStyleSheet("margin: 0.5em 2px 2px 2px; padding:1px")
 
     def write(self, text):
         if not self.isVisible():
@@ -266,13 +265,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def __init__(self, title=""):
         if QCoreApplication.startingUp():  # one and only QApplication allowed
             self.QApplication = QApplication([])
+            self.QApplication.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar)
         QMainWindow.__init__(self)
         Q2QtWindow.__init__(self)
         self.q2_tabwidget = self.Q2TabWidget(self)
         # self.q2_toolbar = QToolBar(self)
         self.q2_toolbar = Q2Toolbars(self)
         self.stdout_widget = stdout_widget()
-        self.QApplication.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar)
 
         self.Q2Style = Q2Style
         q2app.Q2App.__init__(self)
@@ -303,14 +302,18 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.next_tab_shortcut = QShortcut(QKeySequence("Ctrl+Tab"), self)
         self.prev_tab_shortcut = QShortcut(QKeySequence("Ctrl+Shift+Tab"), self)
         self.next_tab_shortcut.activated.connect(
-            lambda: self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() + 1)
-            if self.q2_tabwidget.tabBar().isVisible()
-            else None
+            lambda: (
+                self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() + 1)
+                if self.q2_tabwidget.tabBar().isVisible()
+                else None
+            )
         )
         self.prev_tab_shortcut.activated.connect(
-            lambda: self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() - 1)
-            if self.q2_tabwidget.tabBar().isVisible()
-            else None
+            lambda: (
+                self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() - 1)
+                if self.q2_tabwidget.tabBar().isVisible()
+                else None
+            )
         )
 
         # replace static methods for instance

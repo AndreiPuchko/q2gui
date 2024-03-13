@@ -84,7 +84,7 @@ class Q2Style:
                 "background_control": "#c8e4f7",
                 # for contol with focus
                 # "background_focus": "yellow",
-                # "border_focus": "2px solid #005599",
+                "border_focus": "1px solid blue",
                 # general border
                 "border": "1px solid palette(Mid)",
             }
