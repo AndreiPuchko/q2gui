@@ -79,7 +79,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 QRadioButton:checked, QTabBar::tab:selected
                     {{
-                        color: {color_selected_item};
+                        color: {color};
                         background-color: {background_selected_item};
                         border: none;
                         min-height:1.2em;

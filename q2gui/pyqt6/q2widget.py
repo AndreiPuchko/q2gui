@@ -13,13 +13,13 @@
 #    limitations under the License.
 
 
-
 from decimal import Decimal
 from PyQt6.QtWidgets import QWidget, QSizePolicy
 from PyQt6.QtGui import QFontMetrics, QFont
 from PyQt6.QtCore import Qt
 
 from q2gui import q2widget
+from q2gui.q2utils import int_
 from q2gui.pyqt6.q2window import q2_align
 
 
@@ -102,7 +102,8 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         return self.hasFocus()
 
     def _check_min_width(self, width):
-        return width if width >5 else width + 2
+        width = int_(width)
+        return width if width > 5 else width + 2
 
     def set_maximum_width(self, width, char="W"):
         width = self._check_min_width(width)
