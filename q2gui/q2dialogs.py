@@ -15,6 +15,7 @@
 
 from threading import Thread, current_thread
 import time
+import json
 from q2gui.q2form import Q2Form
 import q2gui.q2app as q2app
 
@@ -31,10 +32,11 @@ def q2Mess(mess="", title="Message"):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.add_control("/v")
+    if isinstance(mess, dict) or isinstance(mess, list):
+        mess = "<pre>" + json.dumps(mess, indent=2) + "</pre>"
     form.add_control("mess", control="text", data=f"{mess}", readonly=True)
     if form.add_control("/h"):
         form.add_control("/s")
-
         form.add_control(
             "_ok_button",
             "Ok",
