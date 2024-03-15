@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 from q2gui import q2style
 
 
@@ -54,6 +52,10 @@ class Q2Style(q2style.Q2Style):
                 QFrame, q2frame {{
                     color:{color};
                     background-color:{background};
+                    margin:0px;
+                    padding:0px;
+                    border: {border};
+                    {border_raduis}
                 }}
                 %(focusable_controls)s
                     {{
@@ -115,8 +117,8 @@ class Q2Style(q2style.Q2Style):
                 QGroupBox#title
                     {{
                         border: {border};
-                        margin-top: 2ex;
-                        padding: 2ex;
+                        margin-top: 1ex;
+                        padding: 1ex;
                     }}
                 QGroupBox::title {{
                         subcontrol-origin: margin;
@@ -225,6 +227,7 @@ class Q2Style(q2style.Q2Style):
 
                 q2combo QAbstractItemView
                     {{
+                        color: {color_focus};
                         background:{background_focus};
                     }}
                 QListView::item:selected
@@ -322,6 +325,7 @@ class Q2Style(q2style.Q2Style):
                 q2button#_ok_button:focus {{background-color:green;color:white}}
                 q2button#_ok_button:hover {{background-color:LightSeaGreen}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
+                q2label {{border:0px;margin: 0em 0.5em}}
             """
             % locals()
         )
