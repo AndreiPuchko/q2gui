@@ -79,7 +79,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 QRadioButton:checked, QTabBar::tab:selected
                     {{
-                        color: {color};
+                        color: {color_focus};
                         background-color: {background_selected_item};
                         border: none;
                         min-height:1.2em;
@@ -138,16 +138,22 @@ class Q2Style(q2style.Q2Style):
                         border: None;
                     }}
 
-                QMenuBar::item:selected, QMenu::item:selected
-                    , QToolButton:hover
+                QMenuBar::item:selected
+                    , QMenu::item:selected
+                    {{
+                        color: {color_selection};
+                        background-color: {background_selection};
+                    }}
+
+                QToolButton:hover
                     , QTabBar::tab:hover
                     , q2button:hover
                     , q2list::item:hover
                     , q2combo::item:selected
                     , QRadioButton:hover
                     {{
-                        color: {color_selection};
-                        background-color: {background_selection};
+                        color: {color_focus};
+                        background-color: {background_focus};
                     }}
 
                 QToolButton

@@ -403,7 +403,7 @@ class Q2Form:
 
     def is_grid_updateable(self):
         table_name = self.model.get_table_name()
-        return table_name !="" and " " not in table_name
+        return table_name != "" and " " not in table_name
 
     def build_grid_view_auto_form(self):
         # Define layout

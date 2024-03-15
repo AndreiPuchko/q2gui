@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 import darkdetect
 import logging
 from q2gui.q2app import q2app
