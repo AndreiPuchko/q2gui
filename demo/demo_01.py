@@ -3,6 +3,7 @@ defining the main menu and toolbar shortcuts
 the possibilities for creating complex user interface forms
 managing main window appearance
 """
+
 if __name__ == "__main__":
     import sys
 
@@ -35,8 +36,8 @@ class DemoApp(Q2App):
         self.add_menu("File|Toogle tabbar", self.show_hide_tabbar, toolbar="*")
         self.add_menu("File|Toogle statusbar", self.show_hide_statusbar, toolbar="*")
         self.add_menu("File|-", None)
-        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"))
-        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"))
+        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), toolbar="*")
+        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), toolbar="*")
         self.add_menu("File|-", None)
         self.add_menu("Documents|Personal", None)
         self.add_menu("Documents|Business", None)
@@ -258,6 +259,23 @@ class DemoApp(Q2App):
                     pic="checkbox text",
                     control="check",
                     data="*",
+                )
+                form.add_control(
+                    "check2",
+                    label="checkbox - readonly",
+                    # pic="checkbox text2",
+                    control="check",
+                    data="*",
+                    readonly="*",
+                )
+
+                form.add_control(
+                    "check3",
+                    label="checkbox - readonly",
+                    # pic="checkbox text3",
+                    control="check",
+                    data="",
+                    readonly="*",
                 )
 
                 form.add_control("f1", label="F1", control="line", data="f1 label content")
