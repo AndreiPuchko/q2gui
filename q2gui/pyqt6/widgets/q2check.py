@@ -15,7 +15,6 @@
 import sys
 
 
-
 from PyQt6.QtWidgets import QCheckBox, QSizePolicy
 
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -25,6 +24,7 @@ from q2gui.q2utils import int_
 class q2check(QCheckBox, Q2Widget):
     def __init__(self, meta):
         super().__init__(meta)
+        self.read_only = True if meta.get("readonly", False) else False
         if meta.get("pic"):
             self.setText(meta.get("pic"))
         else:
@@ -32,6 +32,7 @@ class q2check(QCheckBox, Q2Widget):
         self.managed_widgets = []
         self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
         self.stateChanged.connect(self.state_changed)
+        self.read_only_state = self.isChecked() if self.read_only else None
 
     def state_changed(self):
         for x in self.managed_widgets:
@@ -74,3 +75,18 @@ class q2check(QCheckBox, Q2Widget):
 
     def is_checked(self):
         return True if self.get_text() else False
+
+    def nextCheckState(self):
+        if not self.read_only:
+            self.setChecked(not self.isChecked())
+
+    def setReadOnly(self, arg):
+        self.read_only = True if arg else False
+        if self.read_only:
+            self.read_only_state = self.isChecked()
+        else:
+            self.read_only_state = None
+        return self.read_only
+
+    def isReadOnly(self):
+        return self.read_only
