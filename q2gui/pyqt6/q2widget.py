@@ -30,7 +30,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         if self.meta.get("margins"):
             self.apply_meta_margins()
         else:
-            self.set_content_margins(1)
+            self.set_content_margins(0)
         if self.meta.get("tag"):
             self.setObjectName(self.meta.get("tag"))
         if self.meta.get("dblclick") and hasattr(self, "doubleClicked"):

@@ -115,6 +115,9 @@ class DemoApp(Q2App):
     def first_form(self):
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
+        form.add_control(column="p1")
+        form.add_control(column="p1", label="just label")
+        form.add_control(column="p1", label="just label")
         form.add_control("/")
         actions = Q2Actions()
         # actions.show_main_button = False

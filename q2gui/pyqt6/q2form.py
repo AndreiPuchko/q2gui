@@ -55,6 +55,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         Q2QtWindow.__init__(self, self.title)
         self._widgets_package = q2gui.pyqt6.widgets
         self.setObjectName("q2form")
+        self.layout().setContentsMargins(2, 2, 2, 2)
 
     def restore_geometry(self, settings):
         paw = self.parent()

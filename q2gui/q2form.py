@@ -1352,8 +1352,8 @@ class Q2FormWindow:
                 label2add, widget2add = self.widget(meta)
 
                 if current_frame.frame_mode == "f":  # form layout
-                    if label2add is not None:
-                        label2add.set_content_margins(0, int(q2app.q2_app.get_char_height() / 4), 2, 0)
+                    # if label2add is not None:
+                    #     label2add.set_content_margins(10, int(q2app.q2_app.get_char_height() / 4), 2, 0)
                     if hasattr(widget2add, "frame_mode") and not meta.get("relation"):
                         # add any frame into form frame
                         if label2add is None:

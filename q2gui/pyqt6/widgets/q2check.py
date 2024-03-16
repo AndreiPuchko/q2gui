@@ -12,8 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
 
 from PyQt6.QtWidgets import QCheckBox, QSizePolicy
 
@@ -79,6 +77,7 @@ class q2check(QCheckBox, Q2Widget):
     def nextCheckState(self):
         if not self.read_only:
             self.setChecked(not self.isChecked())
+            self.state_changed()
 
     def setReadOnly(self, arg):
         self.read_only = True if arg else False

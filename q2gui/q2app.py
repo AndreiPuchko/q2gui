@@ -513,7 +513,7 @@ class Q2App:
         # self.set_color_mode("light")
 
         self.menu_list = []
-        self.content_margin_top = 3
+        self.content_margin_top = 0
         self.content_margin_right = None
         self.content_margin_bottom = None
         self.content_margin_left = None

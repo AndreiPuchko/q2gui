@@ -12,8 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
 
 from q2gui import q2style
 
@@ -54,7 +52,6 @@ class Q2Style(q2style.Q2Style):
                     background-color:{background};
                     margin:0px;
                     padding:0px;
-                    border: {border};
                     {border_raduis}
                 }}
                 %(focusable_controls)s
@@ -117,8 +114,9 @@ class Q2Style(q2style.Q2Style):
                 QGroupBox#title
                     {{
                         border: {border};
+                        margin: 0px;
                         margin-top: 1ex;
-                        padding: 1ex;
+                        padding: 1ex 0.3ex 0.1ex 0.3ex;
                     }}
                 QGroupBox::title {{
                         subcontrol-origin: margin;
@@ -284,9 +282,17 @@ class Q2Style(q2style.Q2Style):
                         min-width: 1.2em;
                     }}
 
-                #radio, q2check {{border:none;}}
-                #mdiarea {{border:none;}}
+                #radio, q2check
+                    {{
+                        border:none;
+                        {border_raduis}
 
+                    }}
+                #mdiarea {{border:none;}}
+                q2check
+                    {{
+                        padding: 0.3ex  1ex
+                    }}
                 q2text
                     {{
                         margin:0.2em;
@@ -325,7 +331,9 @@ class Q2Style(q2style.Q2Style):
                 q2button#_ok_button:focus {{background-color:green;color:white}}
                 q2button#_ok_button:hover {{background-color:LightSeaGreen}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
-                q2label {{border:0px;margin: 0em 0.5em}}
+                q2label {{border:0px;margin: 0px}}
+                QRadioButton {{padding:0px 0.3em}}
+                QListView {{padding:0.3em 0.1em}}
             """
             % locals()
         )

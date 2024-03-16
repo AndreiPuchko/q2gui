@@ -58,8 +58,8 @@ class Q2Style:
             "border": "1px solid #fff",
             # actice window border
             "border_raduis": "border-radius: 0.3em;",
-            "padding": "1px",
-            "margin": "1px",
+            "padding": "0px",
+            "margin": "0px",
         }
 
         self.styles["dark"] = dict(self.default_style)
