@@ -23,7 +23,6 @@ load_q2engine(globals(), "PyQt6")
 class DemoApp(Q2App):
     def on_start(self):
         # self.sheet_form()
-        print(12)
         self.first_form()
 
     def on_init(self):
@@ -116,8 +115,8 @@ class DemoApp(Q2App):
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
         form.add_control(column="p1")
-        form.add_control(column="p1", label="just label")
-        form.add_control(column="p1", label="just label")
+        form.add_control(column="p2", label="just label", datatype="num", datalen=15, datadec=2, data=-250.12, pic="F")
+        form.add_control(column="p3", label="just label")
         form.add_control("/")
         actions = Q2Actions()
         # actions.show_main_button = False

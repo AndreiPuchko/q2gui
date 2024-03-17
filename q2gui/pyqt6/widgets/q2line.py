@@ -44,6 +44,11 @@ class q2line(QLineEdit, Q2Widget):
             self.textChanged.emit("")
 
     def track_cursor(self, old, new):
+        text = self.text()
+        cursor_pos = self.cursorPosition()
+        if cursor_pos == 0 and len(text) > 0 and text[0] == "-":
+            self.setCursorPosition(1)
+            new += 1
         self.last_cur_pos = new
 
     def get_text(self):
@@ -54,15 +59,27 @@ class q2line(QLineEdit, Q2Widget):
 
     def format_decimal(self):
         text = self.text()
-
         self.blockSignals(True)
         cursor_pos = self.cursorPosition()
+
+        if cursor_pos == 0 and len(text) > 0 and text[0] == "-":
+            cursor_pos = 1
+
         cursor_pos_right = len(text) - cursor_pos
 
         negative = text.count("-") == 1 and text.count("+") == 0
         # divide text by cursor pos
         right_text = text[cursor_pos:]
         left_text = text[:-cursor_pos_right] if cursor_pos_right else text
+
+        if self.declen != 0 and self.DS not in text:
+            # DS removed
+            if cursor_pos_right == self.declen:
+                left_text = left_text[:-1] + self.DS
+                cursor_pos -= 1
+                cursor_pos_right += 1
+            else:
+                right_text = right_text[1:] + "0"
 
         if left_text.endswith(","):  # replace comma with point
             left_text = left_text[:-1] + self.DS

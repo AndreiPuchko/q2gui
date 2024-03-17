@@ -230,6 +230,8 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             keyText = QKeySequence(key).toString()
         except Exception:
             keyText = ""
+        if self.mode == "form" and key in (Qt.Key.Key_End,):
+            keyText = "PgDown"
         if key == Qt.Key.Key_Escape and self.escape_enabled:
             self.close()
         elif key == Qt.Key.Key_Escape and not self.escape_enabled:
