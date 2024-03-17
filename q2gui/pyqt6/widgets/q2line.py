@@ -32,7 +32,7 @@ class q2line(QLineEdit, Q2Widget):
             self.setEchoMode(self.EchoMode.Password)
         self.TS = " "  # thousands separator
         self.DS = "."  # decimal separator
-
+        self.setStyleSheet("QLineEdit { qproperty-cursorPosition: 0; }")
         if self.meta.get("num"):
             self.declen = int_(self.meta.get("datadec", 0))
             if self.meta.get("pic") == "F":  # financial

@@ -43,14 +43,13 @@ def layout(arg="h"):
         layout.setLabelAlignment(q2_align["6"])
         layout.setFormAlignment(q2_align["0"])
         layout.setFieldGrowthPolicy(layout.FieldGrowthPolicy.ExpandingFieldsGrow)
-        # layout.layout().setSpacing(2)
     elif arg.lower().startswith("g"):
         layout = QGridLayout()
     else:
         layout = QHBoxLayout()
         layout.setAlignment(q2_align["7"])
     layout.layout().setSpacing(3)
-    layout.layout().setContentsMargins(3, 3, 3, 3)
+    layout.layout().setContentsMargins(0, 0, 0, 0)
     return layout
 
 
