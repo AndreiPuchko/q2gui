@@ -80,7 +80,7 @@ class q2list(QListWidget, Q2Widget):
         else:
             super().keyPressEvent(ev)
 
-    def focusInEvent(self, e: QFocusEvent | None) -> None:
+    def focusInEvent(self, event):
         if self.meta["q2_app"].q2style.color_mode in ("dark", "light"):
             self._focus_background_color = self.meta["q2_app"].q2style.styles[
                 self.meta["q2_app"].q2style.color_mode
@@ -89,13 +89,13 @@ class q2list(QListWidget, Q2Widget):
                 "color_focus"
             ]
             self.setStyleSheet(f"background-color:{self._focus_background_color}; color:{self._focus_color}")
-        return super().focusInEvent(e)
+        return super().focusInEvent(event)
 
-    def focusOutEvent(self, e: QFocusEvent | None) -> None:
+    def focusOutEvent(self, event):
         if self.meta["q2_app"].q2style.color_mode in ("dark", "light"):
             self._background_color = self.meta["q2_app"].q2style.styles[
                 self.meta["q2_app"].q2style.color_mode
             ]["background"]
             self._color = self.meta["q2_app"].q2style.styles[self.meta["q2_app"].q2style.color_mode]["color"]
             self.setStyleSheet(f"background-color:{self._background_color}; color:{self._color}")
-        return super().focusOutEvent(e)
+        return super().focusOutEvent(event)
