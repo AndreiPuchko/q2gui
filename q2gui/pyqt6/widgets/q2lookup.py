@@ -30,13 +30,14 @@ from q2gui.pyqt6.widgets.q2list import q2list
 
 
 class q2lookup(QWidget):
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, meta={}):
         super().__init__(parent, Qt.WindowType.Popup)
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.lookup_edit = q2line({})
-        self.lookup_list = q2list({})
+        self.meta = {'q2_app': meta.get("q2_app")}
+        self.lookup_edit = q2line(self.meta)
+        self.lookup_list = q2list(self.meta)
         self.layout().addWidget(self.lookup_edit)
         self.layout().addWidget(self.lookup_list)
         self.lookup_edit.set_text("" if text == "*" else text)

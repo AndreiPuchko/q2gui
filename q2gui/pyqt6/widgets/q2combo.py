@@ -39,7 +39,8 @@ class q2combo(QComboBox, Q2Widget):
         for item in data:
             self.addItem(item)
             width = max(len(item), width)
-        width = self.meta.get("datalen", width)
+        if int_(self.meta.get("datalen", 0)) != 0:
+            width = int_(self.meta.get("datalen", 0))
         self.set_minimum_width(width)
 
     def keyPressEvent(self, ev):

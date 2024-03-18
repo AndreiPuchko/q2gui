@@ -152,7 +152,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def get_text_changed(self, text):
         if "*" in text and self.meta.get("num") or text.startswith("*"):
-            lookup_widget = q2_realtion_lookup(self, "")
+            lookup_widget = q2_realtion_lookup(self, "", meta=self.meta)
             lookup_widget.show(self.meta)
 
     def set_focus(self):
@@ -175,8 +175,8 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
 
 class q2_realtion_lookup(q2lookup):
-    def __init__(self, parent, text):
-        super().__init__(parent, text)
+    def __init__(self, parent, text, meta):
+        super().__init__(parent, text, meta)
 
     def lookup_search(self):
         self.lookup_list.clear()

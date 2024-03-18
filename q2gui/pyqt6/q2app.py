@@ -570,7 +570,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return self.statusBar().currentMessage()
 
     def set_tabbar_text(self, text=""):
-        text = text.split("\n")[0]
+        # text = text.strip().split("\n")[0][:50]
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)
 
     def show_statusbar(self, mode=True):

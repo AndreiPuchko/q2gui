@@ -12,12 +12,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
 
 from PyQt6.QtWidgets import QListWidget, QListWidgetItem, QApplication
 from PyQt6.QtCore import Qt, QEvent
-from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtGui import QFocusEvent, QKeyEvent
 
 
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -42,7 +40,8 @@ class q2list(QListWidget, Q2Widget):
         for item in data:
             self.addItem(QListWidgetItem(item))
             width = max(len(item), width)
-        width = self.meta.get("datalen", width)
+        if int_(self.meta.get("datalen", 0)) != 0:
+            width = int_(self.meta.get("datalen", 0))
         self.set_minimum_width(width)
 
     def set_text(self, text):
@@ -80,3 +79,23 @@ class q2list(QListWidget, Q2Widget):
             )
         else:
             super().keyPressEvent(ev)
+
+    def focusInEvent(self, e: QFocusEvent | None) -> None:
+        if self.meta["q2_app"].q2style.color_mode in ("dark", "light"):
+            self._focus_background_color = self.meta["q2_app"].q2style.styles[
+                self.meta["q2_app"].q2style.color_mode
+            ]["background_focus"]
+            self._focus_color = self.meta["q2_app"].q2style.styles[self.meta["q2_app"].q2style.color_mode][
+                "color_focus"
+            ]
+            self.setStyleSheet(f"background-color:{self._focus_background_color}; color:{self._focus_color}")
+        return super().focusInEvent(e)
+
+    def focusOutEvent(self, e: QFocusEvent | None) -> None:
+        if self.meta["q2_app"].q2style.color_mode in ("dark", "light"):
+            self._background_color = self.meta["q2_app"].q2style.styles[
+                self.meta["q2_app"].q2style.color_mode
+            ]["background"]
+            self._color = self.meta["q2_app"].q2style.styles[self.meta["q2_app"].q2style.color_mode]["color"]
+            self.setStyleSheet(f"background-color:{self._background_color}; color:{self._color}")
+        return super().focusOutEvent(e)

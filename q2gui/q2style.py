@@ -28,8 +28,8 @@ class Q2Style:
         self._font_size = 12
         self._font_name = "Arial"
         self.color_mode = color_mode
-        # if color_mode is None:
-        #     self.color_mode = self.get_system_color_mode()
+        if color_mode is None:
+            self.color_mode = self.get_system_color_mode()
 
         self.default_style = {
             "font_size": f"{self._font_size}",
@@ -57,7 +57,7 @@ class Q2Style:
             # general border
             "border": "1px solid #fff",
             # actice window border
-            "border_raduis": "border-radius: 0.3em;",
+            "border_radius": "border-radius: 0.3em;",
             "padding": "0px",
             "margin": "0px",
         }
@@ -93,9 +93,9 @@ class Q2Style:
     def set_color_mode(self, q2widget=None, color_mode=None):
         if q2widget is None:
             return
-        self.color_mode = color_mode
-        if color_mode is [None, "", "None"]:
+        if color_mode is [None, "", "None", ""]:
             color_mode = self.get_system_color_mode()
+        self.color_mode = color_mode
         self.set_style_sheet(q2widget, color_mode)
 
     @property

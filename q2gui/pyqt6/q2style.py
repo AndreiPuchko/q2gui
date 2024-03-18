@@ -52,7 +52,7 @@ class Q2Style(q2style.Q2Style):
                     background-color:{background};
                     margin:0px;
                     padding:0px;
-                    {border_raduis}
+                    {border_radius}
                 }}
                 %(focusable_controls)s
                     {{
@@ -63,7 +63,7 @@ class Q2Style(q2style.Q2Style):
                         selection-color: {color_selection};
                         selection-background-color : {background_selection};
                         border: {border};
-                        {border_raduis}
+                        {border_radius}
                     }}
                 %(focusable_controls_with_readonly)s
                     {{
@@ -104,6 +104,7 @@ class Q2Style(q2style.Q2Style):
                 q2tab::pane{{
                     background:{background_selected_item};
                     border: {border};
+                    {border_radius}
                 }}
 
                 q2label{{
@@ -116,12 +117,10 @@ class Q2Style(q2style.Q2Style):
                         border: {border};
                         margin: 0px;
                         margin-top: 1ex;
-                        padding: 1ex 0.3ex 0.1ex 0.3ex;
+                        padding: 1.3ex 0.3ex 0.1ex 0.3ex;
                     }}
                 QGroupBox::title {{
                         subcontrol-origin: margin;
-                        color: {color};
-                        background-color:{background};
                         font: bold;
                         left: 1em;
                 }}
@@ -136,6 +135,7 @@ class Q2Style(q2style.Q2Style):
                         color: {color};
                         background-color: {background_control};
                         border: None;
+                        {border_radius}
                     }}
 
                 QMenuBar::item:selected
@@ -152,8 +152,8 @@ class Q2Style(q2style.Q2Style):
                     , q2combo::item:selected
                     , QRadioButton:hover
                     {{
-                        color: {color_focus};
-                        background-color: {background_focus};
+                        color: black;
+                        background-color: {background_menu_selection};
                     }}
 
                 QToolButton
@@ -233,8 +233,16 @@ class Q2Style(q2style.Q2Style):
                         background-color: {background_selection};
                         color: {color_selected_item};
                     }}
-
-
+                QListWidget
+                    {{
+                        color:{color};
+                        background-color:{background}
+                    }}
+                QListWidget:focus
+                    {{
+                        color:{color_focus};
+                        background-color:{background_focus}
+                    }}
                 QTableView
                     {{
                     alternate-background-color:{background_control};
@@ -284,8 +292,8 @@ class Q2Style(q2style.Q2Style):
 
                 #radio, q2check
                     {{
-                        border:none;
-                        {border_raduis}
+                        border:1px solid gray;
+                        {border_radius}
 
                     }}
                 #mdiarea {{border:none;}}
@@ -317,7 +325,7 @@ class Q2Style(q2style.Q2Style):
                 QProgressBar
                     {{
                         text-align: center;
-                        {border_raduis}
+                        {border_radius}
                     }}
                 QProgressBar::chunk {{
                     background-color: {background_selected_item};
@@ -334,6 +342,7 @@ class Q2Style(q2style.Q2Style):
                 q2label {{border:0px;margin: 0px}}
                 QRadioButton {{padding:0px 0.3em}}
                 QListView {{padding:0.3em 0.1em}}
+                QMdiSubWindow:title {{height: 1.3em}}
             """
             % locals()
         )

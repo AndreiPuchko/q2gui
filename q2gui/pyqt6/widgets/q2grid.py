@@ -182,7 +182,7 @@ class q2grid(QTableView):
             and event.modifiers() != Qt.KeyboardModifier.ControlModifier
             and event.modifiers() != Qt.KeyboardModifier.AltModifier
         ):
-            lookup_widget = q2_grid_lookup(self, event.text())
+            lookup_widget = q2_grid_lookup(self, event.text(), meta=self.meta)
             lookup_widget.show(self, self.currentIndex().column())
         else:
             super().keyPressEvent(event)
@@ -243,7 +243,8 @@ class q2_grid_lookup(q2lookup):
         self.q2_grid = q2_grid
         self.q2_model_column = column
         self.q2_model = q2_grid.q2_model
-        return super().show()
+        super().show()
+        self.lookup_edit.setCursorPosition(1)
 
     def set_geometry(self):
         parent = self.parent()

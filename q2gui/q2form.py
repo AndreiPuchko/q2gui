@@ -35,7 +35,7 @@ NO_LABEL_WIDGETS = ("button", "toolbutton", "frame", "label", "check")
 class Q2Form:
     def __init__(self, title=""):
         super().__init__()
-        self.title = title
+        self.title = title.strip().split("\n")[0][:50]
         self.name = title
         self.form_stack = []
         self.style_sheet = ""
