@@ -342,6 +342,11 @@ class Q2Style(q2style.Q2Style):
                 q2label {{border:0px;margin: 0px}}
                 QRadioButton {{padding:0px 0.3em}}
                 QListView {{padding:0.3em 0.1em}}
+                QComboBox {{padding:0.3em 0.1em;margin-right:0.3em;}}
+                QComboBox  QListView {{margin-right:0.3em;}}
+                
+                QComboBox {{ }}
+                
                 QMdiSubWindow:title {{height: 1.3em}}
             """
             % locals()
