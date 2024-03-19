@@ -111,18 +111,17 @@ class Q2Style(q2style.Q2Style):
                     color:{color};
                     background: transparent;
                 }}
-
                 QGroupBox#title
                     {{
                         border: {border};
-                        margin: 0px;
-                        margin-top: 1ex;
-                        padding: 1.3ex 0.3ex 0.1ex 0.3ex;
+                        margin: 0.5em 0em;
+                        padding: 0.5em 0.3em 0.1em 0.3em;
                     }}
                 QGroupBox::title {{
-                        subcontrol-origin: margin;
+                        subcontrol-origin: padding;
                         font: bold;
                         left: 1em;
+                        top: -0.5em;
                 }}
                 QMdiSubWindow, QMainWindow
                     {{
@@ -130,7 +129,7 @@ class Q2Style(q2style.Q2Style):
                         background-color: {background};
                     }}
 
-                QMenuBar, QToolButton
+                QMenuBar
                     {{
                         color: {color};
                         background-color: {background_control};
@@ -145,6 +144,17 @@ class Q2Style(q2style.Q2Style):
                         background-color: {background_selection};
                     }}
 
+                QToolButton
+                {{
+                    color: {color};
+                    background-color: {background_control};
+                    border: None;
+                    {border_radius}
+                    margin: 0px 0.1em;
+                    padding-bottom: 0.1em;
+                    border: 1px solid gray;
+                }}
+
                 QToolButton:hover
                     , QTabBar::tab:hover
                     , q2button:hover
@@ -156,21 +166,13 @@ class Q2Style(q2style.Q2Style):
                         background-color: {background_menu_selection};
                     }}
 
-                QToolButton
-                {{
-                    margin: 0px 0.1em;
-                    padding-bottom: 0.1em;
-                    border: 1px solid {color};
-                }}
-
-
                 QToolButton::menu-indicator
                     {{
                         subcontrol-origin: relative ;
-                        bottom: -0.3em;
+                        subcontrol-position: center bottom;
+                        bottom:  -0.3ex;
+                        left:  0.1ex;
                     }}
-
-
                 q2button
                     {{
                         border:{border};
@@ -198,7 +200,7 @@ class Q2Style(q2style.Q2Style):
                 #main_tab_bar::tab:last
                     {{
                         color:white;
-                        max-height: 1ex;
+                        max-height: 1em;
                         width: 2em;
                         background:green;
                     }}
@@ -206,16 +208,20 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color:green;
                         background:white;
-                        max-height: 1ex;
+                        max-height: 1em;
                         width: 2em;
                         font: bold;
                     }}
-
+                QSplitter
+                    {{
+                        height:2px;
+                        width:2px;
+                    }}
                 QSplitter:handle
                     {{
                         border-left: 1px dotted {color};
                         border-top: 1px dotted {color};
-                        margin-top: 1px;
+                        width:9px;
                     }}
                 *:disabled
                     {{
@@ -299,7 +305,7 @@ class Q2Style(q2style.Q2Style):
                 #mdiarea {{border:none;}}
                 q2check
                     {{
-                        padding: 0.3ex  1ex
+                        padding: 0.3em  1em
                     }}
                 q2text
                     {{
@@ -317,8 +323,8 @@ class Q2Style(q2style.Q2Style):
                 QMenu::item, QMenu:disabled
                     {{
                         color: palette(Text);
-                        background-color: palette(Midlight);
-                        selection-color: palette(highlighttext);
+                        background-color: palette(Window);
+                        selection-color: palette(HighlightedText);
                         selection-background-color: {background_selection};
                     }}
 
@@ -344,9 +350,9 @@ class Q2Style(q2style.Q2Style):
                 QListView {{padding:0.3em 0.1em}}
                 QComboBox {{padding:0.3em 0.1em;margin-right:0.3em;}}
                 QComboBox  QListView {{margin-right:0.3em;}}
-                
+
                 QComboBox {{ }}
-                
+
                 QMdiSubWindow:title {{height: 1.3em}}
             """
             % locals()

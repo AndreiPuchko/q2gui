@@ -57,7 +57,7 @@ class Q2Style:
             # general border
             "border": "1px solid #fff",
             # actice window border
-            "border_radius": "border-radius: 0.3em;",
+            "border_radius": "border-radius: 0.25ex;",
             "padding": "0px",
             "margin": "0px",
         }

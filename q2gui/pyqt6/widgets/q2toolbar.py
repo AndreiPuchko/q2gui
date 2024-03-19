@@ -36,7 +36,7 @@ class q2toolbar(QFrame, Q2Widget):
         # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
         self.layout().setAlignment(q2_align["7"])
         self.layout().setSpacing(-1)
-        self.layout().setContentsMargins(QMargins(0, 0, 0, 0))
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.icon_size = 24
         tmp_icon = q2app.q2_app.get_icon(GRID_ACTION_ICON)
@@ -61,6 +61,7 @@ class q2toolbar(QFrame, Q2Widget):
         self.show_main_button = actions.show_main_button
         self.show_actions = actions.show_actions
         tool_bar_qt_actions = QMenu()
+        # tool_bar_qt_actions.setStyleSheet("border:1px solid red")
         cascade_action = {"": tool_bar_qt_actions}
 
         for action in action_list:
@@ -134,14 +135,27 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button = QToolBar()
 
         self.main_button_action = QToolButton()
-        self.main_button_action.setText(GRID_ACTION_TEXT)
+        self.main_button_action.setText(GRID_ACTION_TEXT+"*")
 
         self.main_button_action.setIcon(q2app.q2_app.get_engine_icon(GRID_ACTION_ICON))
 
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
+        self.main_button_action.menu().setStyleSheet("""
+                                QMenu {border:1px solid palette(Mid)}
+                                QMenu::separator {height: 1px;background: palette(Mid);}
+                        """)
         self.main_button.addWidget(self.main_button_action)
+        
+        self.main_button_action.setStyleSheet("""
+                    QToolButton
+                    {
+                        background:palette(Button);
+                        color: palette(Text);
+                    }
+                    QToolButton:hover {background:palette(Mid)}
+                    """)
 
         self.layout().addWidget(self.main_button)
         if not self.show_main_button:
@@ -184,6 +198,8 @@ class q2toolbar(QFrame, Q2Widget):
                     color = tmp_color
             hover_color = QColor(color).darker(150).name()
             action_widget = self.toolBarPanel.widgetForAction(action)
+            if action_widget is None:
+                continue
             action_widget.setStyleSheet(
                 """QToolButton {background: %s; margin: 0 2; color:black} 
                     QToolButton:hover {background: %s}
@@ -203,6 +219,7 @@ class q2toolbar(QFrame, Q2Widget):
     def showEvent(self, ev):
         button_height = self.main_button.sizeHint().height()
         self.toolBarPanel.setMaximumHeight(button_height)
+        self.setFixedHeight(button_height + 1)
         for x in self.toolBarPanel.actions():
             action_widget = self.toolBarPanel.widgetForAction(x)
             if isinstance(action_widget, QToolButton):
