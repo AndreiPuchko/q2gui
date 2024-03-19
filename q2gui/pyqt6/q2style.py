@@ -146,8 +146,8 @@ class Q2Style(q2style.Q2Style):
 
                 QToolButton
                 {{
-                    color: {color};
-                    background-color: {background_control};
+                    color: palette(Text);
+                    background-color: {toolbutton_background};
                     border: None;
                     {border_radius}
                     margin: 0px 0.1em;
@@ -286,10 +286,6 @@ class Q2Style(q2style.Q2Style):
                         border: 1px solid gray;
                     }}
 
-                QHeaderView:selected {{
-                  color: red;
-                }}
-
                 QToolButton
                     {{
                         min-height: 1.2em;
@@ -303,9 +299,9 @@ class Q2Style(q2style.Q2Style):
 
                     }}
                 #mdiarea {{border:none;}}
-                q2check
+                q2check, #radio
                     {{
-                        padding: 0.3em  1em
+                        padding: 0em  0.3ex
                     }}
                 q2text
                     {{
@@ -348,7 +344,7 @@ class Q2Style(q2style.Q2Style):
                 q2label {{border:0px;margin: 0px}}
                 QRadioButton {{padding:0px 0.3em}}
                 QListView {{padding:0.3em 0.1em}}
-                QComboBox {{padding:0.3em 0.1em;margin-right:0.3em;}}
+                QComboBox {{padding:0ex 0.1em;margin-right:0.3em;}}
                 QComboBox  QListView {{margin-right:0.3em;}}
 
                 QComboBox {{ }}

@@ -217,6 +217,9 @@ class q2toolbar(QFrame, Q2Widget):
         widget.addActions(self.toolBarPanel.actions())
 
     def showEvent(self, ev):
+        if not (self.show_main_button or self.show_actions):
+            self.hide()
+            return
         button_height = self.main_button.sizeHint().height()
         self.toolBarPanel.setMaximumHeight(button_height)
         self.setFixedHeight(button_height + 1)

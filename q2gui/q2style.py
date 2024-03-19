@@ -59,6 +59,7 @@ class Q2Style:
             # actice window border
             "border_radius": "border-radius: 0.25ex;",
             "padding": "0px",
+            "toolbutton_background": "palette(Mid)",
             "margin": "0px",
         }
 
@@ -85,6 +86,7 @@ class Q2Style:
                 "border_focus": "1px solid blue",
                 # general border
                 "border": "1px solid palette(Mid)",
+                "toolbutton_background": "palette(Button)",
             }
         )
         if q2widget:
