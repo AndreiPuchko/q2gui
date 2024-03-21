@@ -104,7 +104,8 @@ class q2code(QsciScintilla, Q2Widget):
         # print(color_mode, self.meta.get("q2_app").q2style.color_mode)
         # b_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("background"))
         # f_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("color"))
-
+        d_color = self.meta.get("q2_app").q2style.get_style("background_disabled")
+        self.set_style_sheet("QFrame:disabled {background:%s}" % d_color)
         # self.setMatchedBraceForegroundColor(QColor("lightgreen"))
         self.lexer.setDefaultPaper(QColor(red, green, blue))
         self.lexer.setPaper(QColor(red, green, blue))

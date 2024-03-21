@@ -49,6 +49,11 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             }
         )
         self.say = q2line({"disabled": "*"})
+        self.say.set_style_sheet("""
+                            background-color:transparent;
+                            border:0;
+                            border-radius:0;
+                            border-bottom:1px solid gray""")
         self.to_form = None
         if self.meta.get("to_form"):
             if isinstance(self.meta.get("to_form"), Q2Form):
@@ -69,6 +74,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.set_content_margins(0)
         self.get.setDisabled(True)
+        self.button.setDisabled(True)
         # self.get_valid()
 
     def show_related_form(self):
@@ -107,10 +113,10 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def get_valid(self):
         value = self.get.get_text()
-        if self.meta.get("num") and num(value) == 0:
-            return True
-        elif value == "":
-            return True
+        # if self.meta.get("num") and num(value) == 0:
+        #     return True
+        # elif value == "":
+        #     return True
         return self.set_related()
 
     def get_related(self):
@@ -129,7 +135,9 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def set_related(self):
         rel = self.get_related()
-        if rel == "":
+        print(rel, "-", self.get.get_text())
+        # if rel == "":
+        if rel == {}:
             rel = None
             self.say.set_text("")
             self.show_related_form()

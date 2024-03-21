@@ -347,9 +347,12 @@ class Q2Style(q2style.Q2Style):
                 QComboBox {{padding:0ex 0.1em;margin-right:0.3em;}}
                 QComboBox  QListView {{margin-right:0.3em;}}
 
-                QComboBox {{ }}
-
                 QMdiSubWindow:title {{height: 1.3em}}
+                QFrame:disabled,QGroupBox:disabled {{background-color:transparent}}
+                QTabBar::tab:disabled, QTabWidget::pane:disabled
+                    {{
+                        background-color:{background_disabled}
+                    }}
             """
             % locals()
         )

@@ -15,8 +15,6 @@
 import sys
 
 
-
-
 from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
@@ -35,7 +33,7 @@ class q2lookup(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.meta = {'q2_app': meta.get("q2_app")}
+        self.meta = {"q2_app": meta.get("q2_app")}
         self.lookup_edit = q2line(self.meta)
         self.lookup_list = q2list(self.meta)
         self.layout().addWidget(self.lookup_edit)
@@ -66,7 +64,7 @@ class q2lookup(QWidget):
     #     return super().show()
 
     def lookup_list_selected(self):
-        print(self.lookup_list.currentItem().text())
+        # print(self.lookup_list.currentItem().text())
         self.close()
 
     def lookup_search(self):

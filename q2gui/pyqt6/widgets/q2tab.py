@@ -12,9 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
-
 
 from PyQt6.QtWidgets import QTabBar, QTabWidget
 from PyQt6.QtGui import QKeySequence, QShortcut
@@ -94,7 +91,6 @@ class q2tab(QTabWidget, Q2Widget, Q2Frame):
     def set_tab(self, index=0):
         if isinstance(index, str):
             for x in range(self.tabBar().count()):
-                print(self.tabBar().tabText(x))
                 if self.tabBar().tabText(x) == index:
                     index = x
                     break
