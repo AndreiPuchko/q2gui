@@ -73,8 +73,8 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.layout().setSpacing(0)
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.set_content_margins(0)
-        self.get.setDisabled(True)
-        self.button.setDisabled(True)
+        # self.get.setDisabled(True)
+        # self.button.setDisabled(True)
         # self.get_valid()
 
     def show_related_form(self):
@@ -135,7 +135,6 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def set_related(self):
         rel = self.get_related()
-        print(rel, "-", self.get.get_text())
         # if rel == "":
         if rel == {}:
             rel = None
@@ -165,6 +164,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def set_focus(self):
         self.get.setFocus()
+        self.get.selectAll()
 
     def set_disabled(self, arg=True):
         if hasattr(self, "get"):
