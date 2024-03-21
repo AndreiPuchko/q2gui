@@ -68,10 +68,10 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.add_widget(self.say)
         self.set_text(self.meta.get("data", ""))
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        # self.setFocusProxy(self.get)
+        self.setFocusProxy(self.get)
         self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.5em")
         self.layout().setSpacing(0)
-        self.layout().setContentsMargins(0, 0, 0, 0)
+        # self.layout().setContentsMargins(0, 0, 0, 0)
         self.set_content_margins(0)
         # self.get.setDisabled(True)
         # self.button.setDisabled(True)
@@ -168,12 +168,14 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def set_disabled(self, arg=True):
         if hasattr(self, "get"):
+            self.setFocusProxy(None)
             self.get.set_disabled(arg)
             self.button.set_disabled(arg)
             # self.set_disabled(arg)
 
     def set_enabled(self, arg=True):
         if hasattr(self, "get"):
+            self.setFocusProxy(self.get)
             self.get.set_enabled(arg)
             self.button.set_enabled(arg)
             # self.set_enabled(arg)
