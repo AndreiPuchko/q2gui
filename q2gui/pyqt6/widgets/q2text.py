@@ -12,13 +12,11 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-from PyQt6 import QtGui
 
-
-
+from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import QTextEdit
 from PyQt6.QtCore import QSize
+import webbrowser
 
 from q2gui.pyqt6.q2widget import Q2Widget
 
@@ -28,6 +26,12 @@ class q2text(QTextEdit, Q2Widget):
         super().__init__(meta)
         self.setTabChangesFocus(True)
         self.set_text(meta.get("data"))
+
+    def mousePressEvent(self, e: QMouseEvent | None) -> None:
+        anchor = self.anchorAt(e.pos())
+        if anchor:
+            webbrowser.open_new_tab(anchor)
+        return super().mousePressEvent(e)
 
     def set_text(self, text):
         self.setHtml(text)

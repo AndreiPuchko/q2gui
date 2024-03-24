@@ -337,7 +337,17 @@ class Q2Style(q2style.Q2Style):
                         color:{color};
                     }}
 
-                q2button#_ok_button {{background-color:lightgreen; border: {border};color:black}}
+                q2button#_cancel_button, q2button#_ok_button
+                    {{
+                        margin: 0.4ex 1ex;
+                        min-width: 8ex;
+                        border: {border};
+                    }}
+                q2button#_ok_button
+                    {{
+                        background-color:lightgreen;
+                        color:black;
+                    }}
                 q2button#_ok_button:focus {{background-color:green;color:white}}
                 q2button#_ok_button:hover {{background-color:LightSeaGreen}}
                 q2button#_ok_button:disabled {{background-color:{background_disabled}}}
@@ -347,11 +357,16 @@ class Q2Style(q2style.Q2Style):
                 QComboBox {{padding:0ex 0.1em;margin-right:0.3em;}}
                 QComboBox  QListView {{margin-right:0.3em;}}
 
-                QMdiSubWindow:title {{height: 1.3em}}
+                QMdiSubWindow:title {{height: 1.5em}}
                 QFrame:disabled,QGroupBox:disabled {{background-color:transparent}}
                 QTabBar::tab:disabled, QTabWidget::pane:disabled
                     {{
                         background-color:{background_disabled}
+                    }}
+                q2text[readOnly="true"]
+                    {{
+                        color:{color_selection};
+                        background-color:silver;
                     }}
             """
             % locals()

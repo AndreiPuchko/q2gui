@@ -40,7 +40,8 @@ class DemoApp(Q2App):
         self.add_menu("File|-", None)
         self.add_menu("Documents|Personal", None)
         self.add_menu("Documents|Business", None)
-        self.add_menu("Help|About", lambda: q2Mess("About q2gui"))
+        self.add_menu("Help|About", lambda: q2Mess("""About q2gui<br>
+            <a href="https://github.com/AndreiPuchko/q2gui">Open GitHub!</a> """))
         self.add_menu("File|Quit", self.close, toolbar="*")
 
     def sheet_form(self):
@@ -115,8 +116,11 @@ class DemoApp(Q2App):
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
         form.add_control(column="p1")
-        form.add_control(column="p2", label="just label", datatype="num", datalen=15, datadec=2, data=-250.12, pic="F")
-        form.add_control(column="p3", label="just label")
+        form.add_control(label="Label")
+        form.add_control(
+            column="p2", label="just label", datatype="num", datalen=15, datadec=2, data=-250.12, pic="F"
+        )
+        form.add_control(column="p3", label="just label 2", valid=lambda: q2Mess(123))
         form.add_control("/")
         actions = Q2Actions()
         # actions.show_main_button = False
@@ -193,10 +197,10 @@ class DemoApp(Q2App):
         )
 
         if form.add_control("/h", "ddd"):
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
+            form.add_control(label="Just label 1")
+            form.add_control("", "Just label 2")
+            form.add_control("", "Just label 3")
+            form.add_control("", "Just label 4")
         form.add_control("/")
 
         if form.add_control("/t", "Tab1"):
@@ -215,10 +219,12 @@ class DemoApp(Q2App):
             )
 
         if form.add_control("/t", "Tab2"):
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
-            form.add_control("", "Just label on Tab2")
+            if form.add_control("/v"):
+                form.add_control("", "Just label on Tab2")
+                form.add_control("", "Just label on Tab2")
+                form.add_control("", "Just label on Tab2")
+                form.add_control("", "Just label on Tab2")
+            form.add_control("/")
         form.add_control("/")
 
         if form.add_control("/t", "Tab3"):
@@ -290,12 +296,13 @@ class DemoApp(Q2App):
             column="text",
             label="Enter big text",
             control="text",
-            readonly=1,
+            readonly=0,
             data="simple <b>text<br>line2",
             mess="Input for big amount of text<br>"
             "Like <b><font color=red>War</font> and"
             " <font color=green>Peace</font></b>,"
             "<br> for example",
+            valid=lambda: q2Mess(456),
         )
 
         if form.add_control("/h", "ToolButtons"):

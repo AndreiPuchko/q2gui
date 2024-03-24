@@ -522,6 +522,9 @@ class Q2App:
 
         self.on_init()
 
+    def set_clipboard(self, text):
+        pass
+
     def get_stdout_height(self):
         pass
 
@@ -624,23 +627,28 @@ class Q2App:
         pass
 
     def focus_changed(self, from_widget, to_widget):
+        if not (hasattr(from_widget, "meta") and hasattr(to_widget, "meta")):
+            return
         if from_widget.__class__.__name__ in (
             "q2line",
+            "q2text",
             "q2relation",
             "q2ScriptEdit",
             "q2ScriptSqlEdit",
         ):
-            if from_widget.valid() is False:
-                from_widget.set_focus()
-
+            if from_widget.meta.get("form") == to_widget.meta.get("form"):
+                if from_widget.valid() is False:
+                    from_widget.set_focus()
         if to_widget.__class__.__name__ in (
             "q2line",
+            "q2text",
             "q2relation",
             "q2ScriptEdit",
             "q2ScriptSqlEdit",
         ):
-            if to_widget:
-                to_widget.when()
+            if from_widget.meta.get("form") == to_widget.meta.get("form"):
+                if to_widget:
+                    to_widget.when()
 
     def get_clipboard_text(self):
         pass
