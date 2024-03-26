@@ -33,6 +33,7 @@ class Q2Style(q2style.Q2Style):
             "q2date",
             "q2tab",
             "q2list",
+            "QToolButton",
             "q2spin",
             "q2doublespin",
             "QTabBar::tab",
@@ -141,7 +142,7 @@ class Q2Style(q2style.Q2Style):
                     , QMenu::item:selected
                     {{
                         color: {color_selection};
-                        background-color: {background_selection};
+                        background-color: {background_menu_selection};
                     }}
 
                 QToolButton
@@ -236,7 +237,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 QListView::item:selected
                     {{
-                        background-color: {background_selection};
+                        background-color: {background_selected_item};
                         color: {color_selected_item};
                     }}
                 QListWidget
@@ -294,7 +295,7 @@ class Q2Style(q2style.Q2Style):
 
                 #radio, q2check
                     {{
-                        border:1px solid gray;
+                        border:1px solid palette(Mid);
                         {border_radius}
 
                     }}
@@ -321,7 +322,7 @@ class Q2Style(q2style.Q2Style):
                         color: palette(Text);
                         background-color: palette(Window);
                         selection-color: palette(HighlightedText);
-                        selection-background-color: {background_selection};
+                        selection-background-color: {background_menu_selection};
                     }}
 
                 QProgressBar
@@ -368,6 +369,12 @@ class Q2Style(q2style.Q2Style):
                         color:{color_selection};
                         background-color:silver;
                     }}
+                QToolButton
+                    {{
+                        background:palette(Button);
+                        color: palette(Text);
+                    }}
+                QToolButton:hover {{background:palette(Mid)}}
             """
             % locals()
         )

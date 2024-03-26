@@ -148,14 +148,14 @@ class q2toolbar(QFrame, Q2Widget):
                         """)
         self.main_button.addWidget(self.main_button_action)
         
-        self.main_button_action.setStyleSheet("""
-                    QToolButton
-                    {
-                        background:palette(Button);
-                        color: palette(Text);
-                    }
-                    QToolButton:hover {background:palette(Mid)}
-                    """)
+        # self.main_button_action.setStyleSheet("""
+        #             QToolButton
+        #             {
+        #                 background:palette(Button);
+        #                 color: palette(Text);
+        #             }
+        #             QToolButton:hover {background:palette(Mid)}
+        #             """)
 
         self.layout().addWidget(self.main_button)
         if not self.show_main_button:

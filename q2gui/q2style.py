@@ -45,17 +45,17 @@ class Q2Style:
             "background_selection": "#B0E2FF",
             # selected item
             "color_selected_item": "#111",
-            "background_selected_item": "#A1A1F6",
+            "background_selected_item": "#6b6bcf",
             # selected menu item
             "background_menu_selection": "#B0E2FF",
             # for focusable controls
             "background_control": "#53556C",
             # for contol with focus
-            "background_focus": "#0077BB",
+            "background_focus": "#215370",
             "color_focus": "#FFF",
             "border_focus": "1px solid yellow",
             # general border
-            "border": "1px solid #fff",
+            "border": "1px solid palette(Mid)",
             # actice window border
             "border_radius": "border-radius: 0.25ex;",
             "padding": "0px",
@@ -74,15 +74,19 @@ class Q2Style:
                 # disabled color, background doesnt change
                 "color_disabled": "#333",
                 "background_disabled": "#cccccc",
+                # selected text
+                "color_selection": "#222",
+                "background_selection": "#f3f5a4",
                 # selected item
                 "color_selected_item": "#111",
-                "background_selected_item": "#A1A1F6",
+                "background_selected_item": "#cdcdf7",
                 # selected menu item
                 "background_menu_selection": "#B0E2FF",
                 # for focusable controls
-                "background_control": "#c8e4f7",
+                "background_control": "#dae7f0",
                 # for contol with focus
-                # "background_focus": "yellow",
+                "background_focus": "#b1d6f0",
+                "color_focus": "#000",
                 "border_focus": "1px solid blue",
                 # general border
                 "border": "1px solid palette(Mid)",
