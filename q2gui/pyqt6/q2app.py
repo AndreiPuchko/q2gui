@@ -235,7 +235,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def get_subwindow_count(self):
             return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
 
-        def addTab(self, widget=None, label="="):
+        def addTab(self, widget=None, label="New Tab"):
             if not widget:
                 widget = QMdiArea(self)
                 self.set_tab_background(widget)
@@ -575,6 +575,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def set_tabbar_text(self, text=""):
         # text = text.strip().split("\n")[0][:50]
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)
+        self.q2_tabwidget.tabBar().update()
 
     def show_statusbar(self, mode=True):
         q2app.Q2App.show_statusbar(self)
