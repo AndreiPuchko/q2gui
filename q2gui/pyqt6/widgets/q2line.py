@@ -12,9 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
-
 
 from PyQt6.QtWidgets import QLineEdit
 
@@ -25,6 +22,7 @@ from q2gui import q2app
 
 class q2line(QLineEdit, Q2Widget):
     def __init__(self, meta):
+        self.formatstring = None
         super().__init__(meta)
         self.last_text_len = 0
         self.last_cur_pos = 0
@@ -50,6 +48,11 @@ class q2line(QLineEdit, Q2Widget):
             self.setCursorPosition(1)
             new += 1
         self.last_cur_pos = new
+
+    def set_text(self, text):
+        if self.formatstring is not None:
+            text = self.format_decimal_string(str(text))
+        return super().set_text(text)
 
     def get_text(self):
         if self.meta.get("num"):
@@ -128,7 +131,7 @@ class q2line(QLineEdit, Q2Widget):
                         text = spl[0][:-1] + self.DS + spl[1]
                         cursor_pos_right -= 1
 
-        text = self.formatstring.format(num(text.replace(self.TS, ""))).replace(",", self.TS)
+        text = self.format_decimal_string(text)
         cursor_pos = len(text) - cursor_pos_right
         if negative:
             text = f"-{text}"
@@ -139,3 +142,6 @@ class q2line(QLineEdit, Q2Widget):
         self.last_text_len = len(text)
         self.last_cur_pos = cursor_pos
         self.blockSignals(False)
+
+    def format_decimal_string(self, text):
+        return self.formatstring.format(num(text.replace(self.TS, ""))).replace(",", self.TS)
