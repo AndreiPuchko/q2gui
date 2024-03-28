@@ -845,10 +845,10 @@ class Q2Form:
                 action["child_form_object"].grid_form.set_disabled()
             return "1=2"
 
-    def grid_header_clicked(self, column):
+    def grid_header_clicked(self, column, direction=None):
         current_record = self.model.get_record(self.current_row)
         if self.model is not None:
-            self._q2dialogs.q2working(lambda: self.model.set_order(column), q2app.MESSAGE_SORTING)
+            self._q2dialogs.q2working(lambda: self.model.set_order(column, direction), q2app.MESSAGE_SORTING)
             self.refresh()
             self.set_grid_index(self.model.seek_row(current_record))
 
