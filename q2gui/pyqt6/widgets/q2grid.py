@@ -12,23 +12,41 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
 
 from PyQt6.QtWidgets import (
+    QTableWidget,
+    QFrame,
     QTableView,
     QStyledItemDelegate,
     QAbstractItemView,
+    QHeaderView,
+    QSpacerItem,
     QSizePolicy,
+    QVBoxLayout,
+    QTableWidgetItem,
+    QHBoxLayout,
 )
-from PyQt6.QtGui import QPalette, QPainter
+from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPalette, QPainter, QFontMetrics, QBrush
 
-from PyQt6.QtCore import Qt, QAbstractTableModel, QVariant, QItemSelectionModel
+from PyQt6.QtCore import (
+    QModelIndex,
+    QObject,
+    Qt,
+    QAbstractTableModel,
+    QVariant,
+    QItemSelectionModel,
+    QSortFilterProxyModel,
+)
 
 from q2gui.pyqt6.q2window import q2_align
 from q2gui.q2utils import int_
 from q2gui.q2model import Q2Model
 from q2gui.pyqt6.widgets.q2lookup import q2lookup
+from q2gui.pyqt6.widgets.q2button import q2button
+from q2gui.pyqt6.widgets.q2line import q2line
+from q2gui.pyqt6.widgets.q2check import q2check
+from q2gui.pyqt6.widgets.q2label import q2label
+from q2gui.pyqt6.widgets.q2frame import q2frame
 
 
 sort_ascend_char = "▲"
@@ -93,6 +111,8 @@ class q2grid(QTableView):
                     else:
                         sort_char = sort_ascend_char
                 return sort_char + self.q2_model.headers[col]
+            elif orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.BackgroundRole:
+                return QBrush(Qt.GlobalColor.red)
             elif orientation == Qt.Orientation.Vertical and role == Qt.ItemDataRole.DisplayRole:
                 return QVariant("")
             else:
@@ -129,6 +149,14 @@ class q2grid(QTableView):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.doubleClicked.connect(self.q2_form.grid_double_clicked)
         self.setModel(self.Q2TableModel(self.q2_form.model))
+        self.horizontalHeader().setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.horizontalHeader().customContextMenuRequested.connect(self.activate_header_menu)
+
+    def activate_header_menu(self, pos):
+        self.set_index(self.currentIndex().row(), self.horizontalHeader().logicalIndexAt(pos))
+        self.meta["q2_app"].process_events()
+        cm = q2_col_manager(self)
+        cm.show()
 
     def currentChanged(self, current, previous):
         super().currentChanged(current, previous)
@@ -254,4 +282,194 @@ class q2_grid_lookup(q2lookup):
         pos = rect.topLeft()
         pos = parent.mapToGlobal(pos)
         self.setFixedWidth(parent.width() - rect.x())
+        self.move(pos)
+
+
+class q2_col_manager(QFrame):
+
+    class content_view(QTableView):
+        class content_view_model(QAbstractTableModel):
+            def __init__(self, parent):
+                super().__init__(parent)
+                self._content = set()
+                for x in range(self.parent().parent().q2grid.model().rowCount()):
+                    self._content.add(
+                        self.parent().parent().q2grid.model().q2_model.data(x, self.parent().parent()._column)
+                    )
+                self._content = {
+                    index: {"v": value, "c": True} for index, value in enumerate(sorted(list(self._content)))
+                }
+
+            def rowCount(self, parent: None):
+                return len(self._content)
+
+            def columnCount(self, parent=None):
+                return 1
+
+            def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+                if role == Qt.ItemDataRole.DisplayRole:
+                    return self._content[index.row()]["v"]
+                elif role == Qt.ItemDataRole.TextAlignmentRole:
+                    return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+                elif role == Qt.ItemDataRole.CheckStateRole:
+                    if self._content[index.row()]["c"]:
+                        return Qt.CheckState.Checked
+                    else:
+                        return Qt.CheckState.Unchecked
+
+            def toogle_check(self, index):
+                self._content[index.row()]["c"] = not self._content[index.row()]["c"]
+                self.dataChanged.emit(index, index)
+
+        def __init__(self, parent):
+            super().__init__(parent)
+            self.setShowGrid(False)
+            self.setTabKeyNavigation(False)
+            self.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
+            self._model = q2_col_manager.content_view.content_view_model(self)
+            self.proxy = QSortFilterProxyModel()
+            self.proxy.setSourceModel(self._model)
+            self.setModel(self.proxy)
+
+            self.horizontalHeader().hide()
+            self.verticalHeader().hide()
+
+            self.setHorizontalScrollMode(QTableView.ScrollMode.ScrollPerPixel)
+            self.verticalHeader().setDefaultSectionSize(QFontMetrics(self.font()).height())
+            self.resizeColumnsToContents()
+            self.clicked.connect(self.on_click)
+
+        def on_search_changed(self, text):
+            self.proxy.setFilterRegularExpression("{}".format(text))
+
+        def get_checked(self):
+            rez = []
+            for x in range(self.model().rowCount()):
+                row = self.proxy.mapToSource(self.proxy.index(x, 0)).row()
+                if self._model._content[row]["c"]:
+                    rez.append(self._model._content[row]["v"])
+            return rez
+
+        def check_all(self, state):
+            for x in range(self.model().rowCount()):
+                self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"] = state
+            self._model.beginResetModel()
+            self._model.endResetModel()
+
+        def keyPressEvent(self, event: QKeyEvent):
+            if event.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return, Qt.Key.Key_Space):
+                self.on_click(self.currentIndex())
+                self.setCurrentIndex(self.model().index(self.currentIndex().row() + 1, 0))
+            return super().keyPressEvent(event)
+
+        def on_click(self, index):
+            self._model.toogle_check(self.proxy.mapToSource(index))
+
+    def __init__(self, parent):
+        parent.setDisabled(True)
+        super().__init__(parent, Qt.WindowType.Popup)
+        self.q2grid = parent
+        self._column = parent.currentIndex().column()
+        self.setLayout(QVBoxLayout())
+        self.layout().setContentsMargins(0, 0, 0, 0)
+        self.layout().setSpacing(0)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.setObjectName("col_manager")
+        self.setStyleSheet("QFrame#col_manager {border: 1px solid palette(Mid);border-radius: 0.25ex;}")
+        self.meta = {}
+        # self.q2grid.meta["q2_app"].process_events()
+
+        self.frame_order = q2frame({"column": "/v", "label": "Order"})
+
+        self.order_az = q2button(self.meta)
+        self.order_az.set_minimum_width(20)
+        self.order_az.set_text("Sort A - Z")
+        self.order_az.clicked.connect(self._order_az)
+
+        self.order_za = q2button(self.meta)
+        self.order_za.set_text("Sort Z - A")
+        self.order_za.clicked.connect(self._order_za)
+
+        self.frame_order.layout().addWidget(self.order_az)
+        self.frame_order.layout().addWidget(self.order_za)
+
+        self.filter_by_cond = q2button(self.meta)
+        self.filter_by_cond.set_text("Filter by condition")
+
+        self.filter_by_values = q2button(self.meta)
+        self.filter_by_values.set_text("Filter by values")
+        self.filter_by_values.set_minimum_width(20)
+
+        self._search_item = q2line()
+        self._search_item.setPlaceholderText("Search items...")
+        self._search_item.textChanged.connect(self.on_search_changed)
+
+        self.frame_filter = q2frame({"column": "/v", "label": "Filter"})
+        self.check_all = q2check({"label": "Check all", "data": True})
+        self.content_viewer = q2_col_manager.content_view(self)
+        self.check_all.toggled.connect(self.content_viewer.check_all)
+
+        self.frame_filter_buttons = q2frame({"column": "/h", "label": "-"})
+
+        self.filter_ok_button = q2button(self.meta)
+        self.filter_ok_button.set_text("Ok")
+        self.filter_ok_button.setObjectName("_ok_button")
+        self.filter_ok_button.clicked.connect(self.apply_filter)
+
+        self.filter_cancel_button = q2button(self.meta)
+        self.filter_cancel_button.set_text("Cancel")
+        self.filter_cancel_button.setObjectName("_cancel_button")
+        self.filter_cancel_button.clicked.connect(self.close)
+        self.frame_filter_buttons.layout().addWidget(self.filter_ok_button)
+        self.frame_filter_buttons.layout().addWidget(self.filter_cancel_button)
+
+        self.frame_filter.layout().addWidget(self._search_item)
+        self.frame_filter.layout().addWidget(self.check_all)
+        self.frame_filter.layout().addWidget(self.content_viewer)
+        self.frame_filter.layout().addWidget(self.frame_filter_buttons)
+
+        self.layout().addWidget(self.frame_order)
+        self.layout().addWidget(self.frame_filter)
+
+    def on_search_changed(self, text):
+        self.content_viewer.on_search_changed(text)
+
+    def apply_filter(self):
+        print(self.content_viewer.get_checked())
+        self.close()
+
+    def check_all_changed(self):
+        self.content_viewer.check_all(self.check_all.isChecked())
+
+    def closeEvent(self, a0: QCloseEvent | None) -> None:
+        self.q2grid.setEnabled(True)
+        return super().closeEvent(a0)
+
+    def _order_az(self):
+        self.hide()
+        self.q2grid.q2_form.grid_header_clicked(self._column, "AZ")
+        self.close()
+
+    def _order_za(self):
+        self.hide()
+        self.q2grid.q2_form.grid_header_clicked(self._column, "ZA")
+        self.close()
+
+    def show(self) -> None:
+        super().show()
+        self.set_geometry()
+
+    def set_geometry(self):
+        rect = self.q2grid.visualRect(self.q2grid.currentIndex())
+        rect.moveTop(self.q2grid.horizontalHeader().height() + 2)
+        rect.moveLeft(self.q2grid.verticalHeader().width() + rect.x() + 2)
+        if self.content_viewer.columnWidth(0) > self.q2grid.width():
+            w = self.content_viewer.columnWidth(0)
+            if w > self.q2grid.width():
+                w = self.q2grid.width() - rect.topLeft().x()
+            self.setFixedWidth(w)
+        pos = rect.topLeft()
+        if pos.x() + self.width() > self.q2grid.rect().width():
+            pos.setX(self.q2grid.rect().width() - self.width())
+        pos = self.q2grid.mapToGlobal(pos)
         self.move(pos)

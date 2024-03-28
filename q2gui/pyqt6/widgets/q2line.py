@@ -21,7 +21,7 @@ from q2gui import q2app
 
 
 class q2line(QLineEdit, Q2Widget):
-    def __init__(self, meta):
+    def __init__(self, meta={}):
         self.formatstring = None
         super().__init__(meta)
         self.last_text_len = 0
