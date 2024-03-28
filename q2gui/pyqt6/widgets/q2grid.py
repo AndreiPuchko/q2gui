@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
     QStyledItemDelegate,
     QAbstractItemView,
     QHeaderView,
+    QDialog,
     QSpacerItem,
     QSizePolicy,
     QVBoxLayout,
@@ -30,7 +31,6 @@ from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPalette, QPainter, QFontMetrics
 
 from PyQt6.QtCore import (
     QModelIndex,
-    QObject,
     Qt,
     QAbstractTableModel,
     QVariant,
@@ -51,6 +51,7 @@ from q2gui.pyqt6.widgets.q2frame import q2frame
 
 sort_ascend_char = "▲"
 sort_decend_char = "▼"
+filtered_char = "☑"
 
 
 class q2Delegate(QStyledItemDelegate):
@@ -69,6 +70,7 @@ class q2grid(QTableView):
             self.q2_model: Q2Model = q2_model
             self._q2_model_refresh = self.q2_model.refresh
             self.q2_model.refresh = self.refresh
+            self.filtered_columns = []
 
         def set_order(self, column):
             self.q2_model.order_column(column)
@@ -110,6 +112,8 @@ class q2grid(QTableView):
                         sort_char = sort_decend_char
                     else:
                         sort_char = sort_ascend_char
+                if col in self.filtered_columns:
+                    sort_char += f" {filtered_char} "
                 return sort_char + self.q2_model.headers[col]
             elif orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.BackgroundRole:
                 return QBrush(Qt.GlobalColor.red)
@@ -135,6 +139,7 @@ class q2grid(QTableView):
         self.setItemDelegate(q2Delegate(self))
         self.setTabKeyNavigation(False)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.columns_filter_values = {}
 
         self.horizontalHeader().setSectionsMovable(True)
         self.horizontalHeader().setDefaultAlignment(q2_align["7"])
@@ -155,8 +160,22 @@ class q2grid(QTableView):
     def activate_header_menu(self, pos):
         self.set_index(self.currentIndex().row(), self.horizontalHeader().logicalIndexAt(pos))
         self.meta["q2_app"].process_events()
-        cm = q2_col_manager(self)
-        cm.show()
+        column_manager = q2_col_manager(self)
+        column_manager.show()
+
+    def apply_col_filter(self, filter_values):
+        self.columns_filter_values[self.currentIndex().column()] = filter_values
+        if self.columns_filter_values[self.currentIndex().column()] == []:
+            del self.columns_filter_values[self.currentIndex().column()]
+        self.model().filtered_columns = list(self.columns_filter_values.keys())
+        for row in range(self.model().rowCount()):
+            show = True
+            for col, values in self.columns_filter_values.items():
+                show = self.model().q2_model.data(row, col) in values
+                if not show:
+                    break
+            self.setRowHidden(row, not show)
+        self.set_index(0)
 
     def currentChanged(self, current, previous):
         super().currentChanged(current, previous)
@@ -183,6 +202,7 @@ class q2grid(QTableView):
         return self.model().columnCount()
 
     def set_index(self, row, column=None):
+        _last_row = self.currentIndex().row()
         self.clearSelection()
         if row < 0:
             row = 0
@@ -195,6 +215,18 @@ class q2grid(QTableView):
             column = 0
         elif column > self.column_count() - 1:
             column = self.column_count() - 1
+        print(row, _last_row)
+        if row == 0:
+            while self.isRowHidden(row):
+                row += 1
+        elif row == self.model().rowCount()-1:
+            while self.isRowHidden(row):
+                row -= 1
+        elif row > _last_row:
+            pass
+        elif row < _last_row:
+            pass
+
 
         self.setCurrentIndex(self.model().index(row, column))
 
@@ -292,15 +324,17 @@ class q2_col_manager(QFrame):
             def __init__(self, parent):
                 super().__init__(parent)
                 self._content = set()
-                for x in range(self.parent().parent().q2grid.model().rowCount()):
-                    self._content.add(
-                        self.parent().parent().q2grid.model().q2_model.data(x, self.parent().parent()._column)
-                    )
+                q2grid = self.parent().parent().q2grid
+                column = self.parent().parent()._column
+                for row in range(q2grid.model().rowCount()):
+                    if q2grid.isRowHidden(row) and column not in q2grid.columns_filter_values:
+                        continue
+                    self._content.add(q2grid.model().q2_model.data(row, column))
                 self._content = {
                     index: {"v": value, "c": True} for index, value in enumerate(sorted(list(self._content)))
                 }
 
-            def rowCount(self, parent: None):
+            def rowCount(self, parent=None):
                 return len(self._content)
 
             def columnCount(self, parent=None):
@@ -368,6 +402,8 @@ class q2_col_manager(QFrame):
     def __init__(self, parent):
         parent.setDisabled(True)
         super().__init__(parent, Qt.WindowType.Popup)
+        self.setWindowModality(Qt.WindowModality.WindowModal)
+        self.filter_values = None
         self.q2grid = parent
         self._column = parent.currentIndex().column()
         self.setLayout(QVBoxLayout())
@@ -435,7 +471,10 @@ class q2_col_manager(QFrame):
         self.content_viewer.on_search_changed(text)
 
     def apply_filter(self):
-        print(self.content_viewer.get_checked())
+        checked = self.content_viewer.get_checked()
+        if len(checked) == self.content_viewer._model.rowCount():
+            checked = []
+        self.q2grid.apply_col_filter(checked)
         self.close()
 
     def check_all_changed(self):
@@ -458,6 +497,7 @@ class q2_col_manager(QFrame):
     def show(self) -> None:
         super().show()
         self.set_geometry()
+        self._search_item.setFocus()
 
     def set_geometry(self):
         rect = self.q2grid.visualRect(self.q2grid.currentIndex())
@@ -473,3 +513,8 @@ class q2_col_manager(QFrame):
             pos.setX(self.q2grid.rect().width() - self.width())
         pos = self.q2grid.mapToGlobal(pos)
         self.move(pos)
+
+    def keyPressEvent(self, event: QKeyEvent | None) -> None:
+        if event.key() == Qt.Key.Key_PageDown:
+            self.apply_filter()
+        return super().keyPressEvent(event)
