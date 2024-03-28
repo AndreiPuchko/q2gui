@@ -254,6 +254,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                     alternate-background-color:{background_control};
                     background-color:{background};
+                    gridline-color: palette(mid);
                     }}
 
                 QHeaderView::section, QTableView:focus
