@@ -116,7 +116,7 @@ class Q2Model:
     def get_where(self):
         return self.where_text
 
-    def set_order(self, order_data=""):
+    def set_order(self, order_data="", direction=None):
         if isinstance(order_data, int):
             self.order_text = self.columns[order_data]
         elif isinstance(order_data, list):
@@ -444,11 +444,15 @@ class Q2CursorModel(Q2Model):
         db: Q2Db = self.cursor.q2_db
         return db.get(to_table, filter, related)
 
-    def set_order(self, order_data):
+    def set_order(self, order_data, direction=None):
         super().set_order(order_data=order_data)
         if self.order_text == "":
             return self
-        if self.order_text in self.last_order_text and "desc" not in self.last_order_text:
+        if direction == "AZ":
+            pass
+        elif direction == "ZA":
+            self.order_text += " desc"
+        elif self.order_text in self.last_order_text and "desc" not in self.last_order_text:
             self.order_text += " desc"
 
         if self.cursor.table_name:
