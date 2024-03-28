@@ -19,18 +19,12 @@ from PyQt6.QtWidgets import (
     QTableView,
     QStyledItemDelegate,
     QAbstractItemView,
-    QHeaderView,
-    QDialog,
-    QSpacerItem,
     QSizePolicy,
     QVBoxLayout,
-    QTableWidgetItem,
-    QHBoxLayout,
 )
 from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPalette, QPainter, QFontMetrics, QBrush
 
 from PyQt6.QtCore import (
-    QModelIndex,
     Qt,
     QAbstractTableModel,
     QVariant,
@@ -45,7 +39,6 @@ from q2gui.pyqt6.widgets.q2lookup import q2lookup
 from q2gui.pyqt6.widgets.q2button import q2button
 from q2gui.pyqt6.widgets.q2line import q2line
 from q2gui.pyqt6.widgets.q2check import q2check
-from q2gui.pyqt6.widgets.q2label import q2label
 from q2gui.pyqt6.widgets.q2frame import q2frame
 
 
@@ -70,10 +63,20 @@ class q2grid(QTableView):
             self.q2_model: Q2Model = q2_model
             self._q2_model_refresh = self.q2_model.refresh
             self.q2_model.refresh = self.refresh
+
+            self._q2_model_set_where = self.q2_model.set_where
+            self.q2_model.set_where = self.set_where
+
             self.filtered_columns = []
+            self.columns_filter_values = {}
 
         def set_order(self, column):
             self.q2_model.order_column(column)
+
+        def set_where(self, where_text=""):
+            self.filtered_columns = []
+            self.columns_filter_values = {}
+            self._q2_model_set_where(where_text)
 
         def rowCount(self, parent=None):
             return self.q2_model.row_count()
@@ -85,6 +88,7 @@ class q2grid(QTableView):
             self.beginResetModel()
             self.endResetModel()
             self._q2_model_refresh()
+            self.apply_col_filter()
 
         def data(self, index, role=Qt.ItemDataRole.DisplayRole):
             control = self.q2_model.meta[index.column()].get("control")
@@ -129,6 +133,20 @@ class q2grid(QTableView):
                 flags |= Qt.ItemFlag.ItemIsUserCheckable
             return flags
 
+        def apply_col_filter(self, filter_values=None, column=None):
+            if filter_values is not None:
+                self.columns_filter_values[column] = filter_values
+                if self.columns_filter_values[column] == []:
+                    del self.columns_filter_values[column]
+                self.filtered_columns = list(self.columns_filter_values.keys())
+            for row in range(self.rowCount()):
+                show = True
+                for col, values in self.columns_filter_values.items():
+                    show = self.q2_model.data(row, col) in values
+                    if not show:
+                        break
+                self.q2grid.setRowHidden(row, not show)
+
     def __init__(self, meta):
         super().__init__()
         self.meta = meta
@@ -139,7 +157,6 @@ class q2grid(QTableView):
         self.setItemDelegate(q2Delegate(self))
         self.setTabKeyNavigation(False)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.columns_filter_values = {}
 
         self.horizontalHeader().setSectionsMovable(True)
         self.horizontalHeader().setDefaultAlignment(q2_align["7"])
@@ -154,6 +171,7 @@ class q2grid(QTableView):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.doubleClicked.connect(self.q2_form.grid_double_clicked)
         self.setModel(self.Q2TableModel(self.q2_form.model))
+        self.model().q2grid = self
         self.horizontalHeader().setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.horizontalHeader().customContextMenuRequested.connect(self.activate_header_menu)
 
@@ -164,17 +182,7 @@ class q2grid(QTableView):
         column_manager.show()
 
     def apply_col_filter(self, filter_values):
-        self.columns_filter_values[self.currentIndex().column()] = filter_values
-        if self.columns_filter_values[self.currentIndex().column()] == []:
-            del self.columns_filter_values[self.currentIndex().column()]
-        self.model().filtered_columns = list(self.columns_filter_values.keys())
-        for row in range(self.model().rowCount()):
-            show = True
-            for col, values in self.columns_filter_values.items():
-                show = self.model().q2_model.data(row, col) in values
-                if not show:
-                    break
-            self.setRowHidden(row, not show)
+        self.model().apply_col_filter(filter_values, self.currentIndex().column())
         self.set_index(0)
 
     def currentChanged(self, current, previous):
@@ -215,18 +223,21 @@ class q2grid(QTableView):
             column = 0
         elif column > self.column_count() - 1:
             column = self.column_count() - 1
-        print(row, _last_row)
-        if row == 0:
-            while self.isRowHidden(row):
-                row += 1
-        elif row == self.model().rowCount()-1:
-            while self.isRowHidden(row):
-                row -= 1
-        elif row > _last_row:
-            pass
-        elif row < _last_row:
-            pass
 
+        if self.model().filtered_columns:
+            if row > _last_row:
+                while self.isRowHidden(row) and row < self.model().rowCount() - 1:
+                    row += 1
+            elif row < _last_row and row > 0:
+                while self.isRowHidden(row) and row > 0:
+                    row -= 1
+
+            if row == 0:
+                while self.isRowHidden(row):
+                    row += 1
+            elif row == self.model().rowCount() - 1:
+                while self.isRowHidden(row):
+                    row -= 1
 
         self.setCurrentIndex(self.model().index(row, column))
 
@@ -248,11 +259,11 @@ class q2grid(QTableView):
             super().keyPressEvent(event)
 
     def get_selected_rows(self):
-        return [x.row() for x in self.selectionModel().selectedRows()]
+        return [x.row() for x in self.selectionModel().selectedRows() if not self.isRowHidden(x.row())]
 
     def set_selected_rows(self, index_list):
         self.clearSelection()
-        indexes = [self.model().index(r, 0) for r in index_list]
+        indexes = [self.model().index(row, 0) for row in index_list if not self.isRowHidden(row)]
         mode = QItemSelectionModel.SelectionFlag.Select | QItemSelectionModel.SelectionFlag.Rows
         [self.selectionModel().select(index, mode) for index in indexes]
 
@@ -326,10 +337,11 @@ class q2_col_manager(QFrame):
                 self._content = set()
                 q2grid = self.parent().parent().q2grid
                 column = self.parent().parent()._column
-                for row in range(q2grid.model().rowCount()):
-                    if q2grid.isRowHidden(row) and column not in q2grid.columns_filter_values:
+                q2grid_model = q2grid.model()
+                for row in range(q2grid_model.rowCount()):
+                    if q2grid.isRowHidden(row) and column not in q2grid_model.columns_filter_values:
                         continue
-                    self._content.add(q2grid.model().q2_model.data(row, column))
+                    self._content.add(q2grid_model.q2_model.data(row, column))
                 self._content = {
                     index: {"v": value, "c": True} for index, value in enumerate(sorted(list(self._content)))
                 }
@@ -363,6 +375,7 @@ class q2_col_manager(QFrame):
             self._model = q2_col_manager.content_view.content_view_model(self)
             self.proxy = QSortFilterProxyModel()
             self.proxy.setSourceModel(self._model)
+            self.proxy.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
             self.setModel(self.proxy)
 
             self.horizontalHeader().hide()
