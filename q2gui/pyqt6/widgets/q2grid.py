@@ -134,6 +134,7 @@ class q2grid(QTableView):
             return flags
 
         def apply_col_filter(self, filter_values=None, column=None):
+            self.q2_model.hidden_rows = []
             if filter_values is not None:
                 self.columns_filter_values[column] = filter_values
                 if self.columns_filter_values[column] == []:
@@ -144,6 +145,7 @@ class q2grid(QTableView):
                 for col, values in self.columns_filter_values.items():
                     show = self.q2_model.data(row, col) in values
                     if not show:
+                        self.q2_model.hidden_rows.append(row)
                         break
                 self.q2grid.setRowHidden(row, not show)
 
@@ -387,7 +389,8 @@ class q2_col_manager(QFrame):
             self.clicked.connect(self.on_click)
 
         def on_search_changed(self, text):
-            self.proxy.setFilterRegularExpression("{}".format(text))
+            self.proxy.setFilterWildcard(text)
+            # self.proxy.setFilterRegularExpression(text)
 
         def get_checked(self):
             rez = []
@@ -495,6 +498,7 @@ class q2_col_manager(QFrame):
 
     def closeEvent(self, a0: QCloseEvent | None) -> None:
         self.q2grid.setEnabled(True)
+        self.q2grid.set_focus()
         return super().closeEvent(a0)
 
     def _order_az(self):
