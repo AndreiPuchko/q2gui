@@ -118,9 +118,9 @@ class DemoApp(Q2App):
         form.add_control(column="p1")
         form.add_control(label="Label")
         form.add_control(
-            column="p2", label="just label", datatype="num", datalen=15, datadec=2, data=-250.12, pic="F"
+            column="p2", label="just label", datatype="num", datalen=15, datadec=2, data="-250.12", pic="F"
         )
-        form.add_control(column="p3", label="just label 2", valid=lambda: q2Mess(123))
+        form.add_control(column="p3", label="just label 2")
         form.add_control("/")
         actions = Q2Actions()
         # actions.show_main_button = False
@@ -302,7 +302,6 @@ class DemoApp(Q2App):
             "Like <b><font color=red>War</font> and"
             " <font color=green>Peace</font></b>,"
             "<br> for example",
-            valid=lambda: q2Mess(456),
         )
 
         if form.add_control("/h", "ToolButtons"):

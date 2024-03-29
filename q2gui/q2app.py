@@ -408,7 +408,7 @@ class Q2Controls(list):
                 meta["pic"] = "9" * int(num(meta["datalen"]) - num(meta["datadec"])) + (
                     "" if num(meta["datadec"]) == 0 else "." + "9" * int(num(meta["datadec"]))
                 )
-            if meta.get("alignment", -1) == -1:
+            if num(meta.get("alignment", -1)) in (-1, 0, ):
                 meta["alignment"] = 9
 
         if not meta["column"].startswith("/"):
