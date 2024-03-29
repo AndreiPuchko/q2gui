@@ -41,6 +41,16 @@ class q2line(QLineEdit, Q2Widget):
             self.cursorPositionChanged.connect(self.track_cursor)
             self.textChanged.emit("")
 
+    def set_maximum_len(self, length):
+        declen = int_(self.meta.get("datadec", 0))
+        if self.meta.get("num"):
+            add_len = 0 if declen == 0 else 1
+            if self.meta.get("pic") == "F":
+                add_len += (int(length) - declen) // 3 + 1
+            return self.setMaxLength(int(length) + add_len)
+        else:
+            return super().set_maximum_len(int(length))
+
     def track_cursor(self, old, new):
         text = self.text()
         cursor_pos = self.cursorPosition()
@@ -81,8 +91,8 @@ class q2line(QLineEdit, Q2Widget):
                 left_text = left_text[:-1] + self.DS
                 cursor_pos -= 1
                 cursor_pos_right += 1
-            else:
-                right_text = right_text[1:] + "0"
+            # else:
+            #     right_text = right_text[1:] + "0"
 
         if left_text.endswith(","):  # replace comma with point
             left_text = left_text[:-1] + self.DS
@@ -130,13 +140,11 @@ class q2line(QLineEdit, Q2Widget):
                         # 0 only was left from DS-cut 0
                         text = spl[0][:-1] + self.DS + spl[1]
                         cursor_pos_right -= 1
-
         text = self.format_decimal_string(text)
         cursor_pos = len(text) - cursor_pos_right
         if negative:
             text = f"-{text}"
             cursor_pos += 1
-
         self.setText(text)
         self.setCursorPosition(cursor_pos)
         self.last_text_len = len(text)
