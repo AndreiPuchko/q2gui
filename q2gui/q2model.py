@@ -35,6 +35,7 @@ class Q2Model:
         self.alignments = []
 
         self.records = []
+        self.hidden_rows = []
         self.proxy_records = []
         self.use_proxy = False
         self.relation_cache = {}
@@ -56,6 +57,9 @@ class Q2Model:
 
         self.order_text = ""
         self.where_text = ""
+
+    def is_hidden(self, row):
+        return row in self.hidden_rows
 
     def get_records(self):
         for x in range(self.row_count):
@@ -480,7 +484,18 @@ class Q2CursorModel(Q2Model):
             meta["datadec"] = int(num(db_meta.get("datadec", 2)))
         return super().add_column(meta)
 
+    def before_export(self, write_to, records):
+        if self.hidden_rows:
+            new_records = []
+            for row in range(len(records)):
+                if not self.is_hidden(row):
+                    new_records.append(records[row])
+            records = new_records
+        return write_to, records
+
     def data_export(self, file: str, tick_callback=None):
+        if self.cursor.before_export != self.before_export:
+            self.cursor.before_export = self.before_export
         if file.lower().endswith(".csv"):
             self.cursor.export_csv(file, tick_callback=tick_callback)
         else:
