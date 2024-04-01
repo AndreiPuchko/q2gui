@@ -36,7 +36,8 @@ class Q2Model:
 
         self.records = []
         self.hidden_rows = []
-        self.proxy_records = []
+        self.filtered_columns = []
+        self.columns_filter_values = {}
         self.use_proxy = False
         self.relation_cache = {}
         self.lastdata_error_text = ""
@@ -104,6 +105,8 @@ class Q2Model:
         return True
 
     def set_where(self, where_text=""):
+        self.filtered_columns = []
+        self.columns_filter_values = {}
         self.where_text = where_text
         if self.where_text:
             self.use_proxy = True
@@ -160,6 +163,7 @@ class Q2Model:
         return self.order_text
 
     def refresh(self):
+        self.hidden_rows = []
         self.relation_cache = {}
         self.refreshed = True
 
@@ -241,7 +245,7 @@ class Q2Model:
                 if num(value) == 0:
                     value = 1
                 tmp_list = meta.get("pic").split(";")
-                value = tmp_list[int(num(value)) - 1] if int(num(value)) - 1<len(tmp_list) else "****"
+                value = tmp_list[int(num(value)) - 1] if int(num(value)) - 1 < len(tmp_list) else "****"
             elif meta.get("num") and skip_format is False:  # Numeric value
                 if num(value) == 0:  # do not show zero
                     value = ""
@@ -313,6 +317,17 @@ class Q2Model:
                 rez.append([x, model_value])
         return rez
 
+    def unique_column_values(self, column):
+        uniq_values = set()
+        for row in range(self.row_count()):
+            if self.is_hidden(row) and column not in self.columns_filter_values:
+                continue
+            uniq_values.add(self.data(row, column))
+        uniq_values = {
+            index: {"v": value, "c": True} for index, value in enumerate(sorted(list(uniq_values)))
+        }
+        return uniq_values
+
     def data_export(self, file):
         pass
 
@@ -320,6 +335,8 @@ class Q2Model:
         pass
 
     def seek_row(self, row_dict):
+        if self.row_count() > 10000:
+            return 0
         pk = self.get_meta_primary_key()
         if pk and pk in row_dict:
             for row_number in range(self.row_count()):
@@ -381,11 +398,11 @@ class Q2CursorModel(Q2Model):
         self.delete_enabled = False
         self.insert_enabled = False
         self.update_enabled = False
-        self.set_where(self.cursor.where)
-        self.set_order(self.cursor.order)
+        self.where_text = self.cursor.where
+        self.order_text = self.cursor.order
 
     def set_cursor(self, cursor):
-        self.cursor = cursor
+        self.cursor: Q2Cursor = cursor
         self.original_sql = self.cursor.sql
         last_order_text, last_order_text = self.last_order_text, ""
         if self.last_order_text:
@@ -402,6 +419,14 @@ class Q2CursorModel(Q2Model):
 
     def get_record(self, row):
         return self.cursor.record(row)
+
+    def seek_row(self, row_dict):
+        if self.row_count() > 10000:
+            return 0
+        if self.cursor.table_name:
+            return self.cursor.seek_primary_key_row(row_dict)
+        else:
+            return super().seek_row(row_dict)
 
     def refresh(self):
         super().refresh()

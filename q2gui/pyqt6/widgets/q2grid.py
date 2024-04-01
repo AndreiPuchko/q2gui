@@ -64,20 +64,6 @@ class q2grid(QTableView):
             self._q2_model_refresh = self.q2_model.refresh
             self.q2_model.refresh = self.refresh
 
-            self._q2_model_set_where = self.q2_model.set_where
-            self.q2_model.set_where = self.set_where
-
-            self.filtered_columns = []
-            self.columns_filter_values = {}
-
-        def set_order(self, column):
-            self.q2_model.order_column(column)
-
-        def set_where(self, where_text=""):
-            self.filtered_columns = []
-            self.columns_filter_values = {}
-            self._q2_model_set_where(where_text)
-
         def rowCount(self, parent=None):
             return self.q2_model.row_count()
 
@@ -116,12 +102,14 @@ class q2grid(QTableView):
                         sort_char = sort_decend_char
                     else:
                         sort_char = sort_ascend_char
-                if col in self.filtered_columns:
+                if col in self.q2_model.filtered_columns:
                     sort_char += f" {filtered_char} "
                 return sort_char + self.q2_model.headers[col]
-            elif orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.BackgroundRole:
-                return QBrush(Qt.GlobalColor.red)
+            # elif orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.BackgroundRole:
+            #     return QBrush(Qt.GlobalColor.red)
             elif orientation == Qt.Orientation.Vertical and role == Qt.ItemDataRole.DisplayRole:
+                if col in self.q2_model.hidden_rows and not self.q2grid.isRowHidden(col):
+                    self.q2grid.setRowHidden(col, True)
                 return QVariant("")
             else:
                 return QVariant()
@@ -134,20 +122,22 @@ class q2grid(QTableView):
             return flags
 
         def apply_col_filter(self, filter_values=None, column=None):
+            for row in range(self.rowCount()):
+                self.q2grid.setRowHidden(row, False)
             self.q2_model.hidden_rows = []
             if filter_values is not None:
-                self.columns_filter_values[column] = filter_values
-                if self.columns_filter_values[column] == []:
-                    del self.columns_filter_values[column]
-                self.filtered_columns = list(self.columns_filter_values.keys())
+                self.q2_model.columns_filter_values[column] = filter_values
+                if self.q2_model.columns_filter_values[column] == []:
+                    del self.q2_model.columns_filter_values[column]
+                self.q2_model.filtered_columns = list(self.q2_model.columns_filter_values.keys())
             for row in range(self.rowCount()):
-                show = True
-                for col, values in self.columns_filter_values.items():
-                    show = self.q2_model.data(row, col) in values
-                    if not show:
+                if row in self.q2_model.hidden_rows:
+                    continue
+                for col, values in self.q2_model.columns_filter_values.items():
+                    if self.q2_model.data(row, col) not in values:
                         self.q2_model.hidden_rows.append(row)
+                        # self.q2grid.setRowHidden(row, True)
                         break
-                self.q2grid.setRowHidden(row, not show)
 
     def __init__(self, meta):
         super().__init__()
@@ -180,6 +170,8 @@ class q2grid(QTableView):
     def activate_header_menu(self, pos):
         self.set_index(self.currentIndex().row(), self.horizontalHeader().logicalIndexAt(pos))
         self.meta["q2_app"].process_events()
+        if self.row_count() > 10000:
+            return
         column_manager = q2_col_manager(self)
         column_manager.show()
 
@@ -226,7 +218,7 @@ class q2grid(QTableView):
         elif column > self.column_count() - 1:
             column = self.column_count() - 1
 
-        if self.model().filtered_columns:
+        if self.model().q2_model.filtered_columns:
             if row > _last_row:
                 while self.isRowHidden(row) and row < self.model().rowCount() - 1:
                     row += 1
@@ -336,17 +328,10 @@ class q2_col_manager(QFrame):
         class content_view_model(QAbstractTableModel):
             def __init__(self, parent):
                 super().__init__(parent)
-                self._content = set()
+                # self._content = set()
                 q2grid = self.parent().parent().q2grid
                 column = self.parent().parent()._column
-                q2grid_model = q2grid.model()
-                for row in range(q2grid_model.rowCount()):
-                    if q2grid.isRowHidden(row) and column not in q2grid_model.columns_filter_values:
-                        continue
-                    self._content.add(q2grid_model.q2_model.data(row, column))
-                self._content = {
-                    index: {"v": value, "c": True} for index, value in enumerate(sorted(list(self._content)))
-                }
+                self._content = q2grid.model().q2_model.unique_column_values(column)
 
             def rowCount(self, parent=None):
                 return len(self._content)
@@ -360,13 +345,13 @@ class q2_col_manager(QFrame):
                 elif role == Qt.ItemDataRole.TextAlignmentRole:
                     return Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
                 elif role == Qt.ItemDataRole.CheckStateRole:
-                    if self._content[index.row()]["c"]:
+                    if self._content[index.row()].get("c", True):
                         return Qt.CheckState.Checked
                     else:
                         return Qt.CheckState.Unchecked
 
             def toogle_check(self, index):
-                self._content[index.row()]["c"] = not self._content[index.row()]["c"]
+                self._content[index.row()]["c"] = not self._content[index.row()].get("c", True)
                 self.dataChanged.emit(index, index)
 
         def __init__(self, parent):
@@ -396,7 +381,7 @@ class q2_col_manager(QFrame):
             rez = []
             for x in range(self.model().rowCount()):
                 row = self.proxy.mapToSource(self.proxy.index(x, 0)).row()
-                if self._model._content[row]["c"]:
+                if self._model._content[row].get("c", True):
                     rez.append(self._model._content[row]["v"])
             return rez
 
@@ -496,7 +481,7 @@ class q2_col_manager(QFrame):
     def check_all_changed(self):
         self.content_viewer.check_all(self.check_all.isChecked())
 
-    def closeEvent(self, a0: QCloseEvent | None) -> None:
+    def closeEvent(self, a0):
         self.q2grid.setEnabled(True)
         self.q2grid.set_focus()
         return super().closeEvent(a0)
@@ -531,7 +516,7 @@ class q2_col_manager(QFrame):
         pos = self.q2grid.mapToGlobal(pos)
         self.move(pos)
 
-    def keyPressEvent(self, event: QKeyEvent | None) -> None:
+    def keyPressEvent(self, event: QKeyEvent):
         if event.key() == Qt.Key.Key_PageDown:
             self.apply_filter()
         return super().keyPressEvent(event)

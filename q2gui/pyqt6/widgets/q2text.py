@@ -27,7 +27,7 @@ class q2text(QTextEdit, Q2Widget):
         self.setTabChangesFocus(True)
         self.set_text(meta.get("data"))
 
-    def mousePressEvent(self, e: QMouseEvent | None) -> None:
+    def mousePressEvent(self, e: QMouseEvent) -> None:
         anchor = self.anchorAt(e.pos())
         if anchor:
             webbrowser.open_new_tab(anchor)
