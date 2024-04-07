@@ -146,7 +146,8 @@ class q2grid(QTableView):
         self.q2_form = self.meta.get("form")
         self.q2_model = self.q2_form.model
 
-        self.setItemDelegate(q2Delegate(self))
+        if self.q2_model.column_count() > 1:
+            self.setItemDelegate(q2Delegate(self))
         self.setTabKeyNavigation(False)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
@@ -391,6 +392,14 @@ class q2_col_manager(QFrame):
             self._model.beginResetModel()
             self._model.endResetModel()
 
+        def invert(self, state):
+            for x in range(self.model().rowCount()):
+                self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"] = (
+                    not self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"]
+                )
+            self._model.beginResetModel()
+            self._model.endResetModel()
+
         def keyPressEvent(self, event: QKeyEvent):
             if event.key() in (Qt.Key.Key_Enter, Qt.Key.Key_Return, Qt.Key.Key_Space):
                 self.on_click(self.currentIndex())
@@ -441,10 +450,13 @@ class q2_col_manager(QFrame):
         self._search_item.setPlaceholderText("Search items...")
         self._search_item.textChanged.connect(self.on_search_changed)
 
+        self.content_viewer = q2_col_manager.content_view(self)
+
         self.frame_filter = q2frame({"column": "/v", "label": "Filter"})
         self.check_all = q2check({"label": "Check all", "data": True})
-        self.content_viewer = q2_col_manager.content_view(self)
         self.check_all.toggled.connect(self.content_viewer.check_all)
+        self.invert = q2check({"label": "Invert", "data": True})
+        self.invert.toggled.connect(self.content_viewer.invert)
 
         self.frame_filter_buttons = q2frame({"column": "/h", "label": "-"})
 
@@ -461,7 +473,10 @@ class q2_col_manager(QFrame):
         self.frame_filter_buttons.layout().addWidget(self.filter_cancel_button)
 
         self.frame_filter.layout().addWidget(self._search_item)
-        self.frame_filter.layout().addWidget(self.check_all)
+        self.frame_toogler = q2frame({"column": "/h", "label": "-"})
+        self.frame_toogler.layout().addWidget(self.check_all)
+        self.frame_toogler.layout().addWidget(self.invert)
+        self.frame_filter.layout().addWidget(self.frame_toogler)
         self.frame_filter.layout().addWidget(self.content_viewer)
         self.frame_filter.layout().addWidget(self.frame_filter_buttons)
 
