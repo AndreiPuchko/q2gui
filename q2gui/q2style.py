@@ -17,7 +17,7 @@ import sys
 
 import darkdetect
 import logging
-from q2gui.q2app import q2app
+
 
 _logger = logging.getLogger(__name__)
 
@@ -179,6 +179,6 @@ class Q2Style:
     def set_style_sheet(self, q2widget=None, color_mode=None):
         if hasattr(q2widget, "set_style_sheet"):
             q2widget.set_style_sheet(
-                "* {font-family:'%s';font-size: %spx;}" % (self._font_name, self._font_size)
+                "* {font-family:'%s';font-size: %spt;}" % (self._font_name, self._font_size)
                 + self.get_stylesheet(color_mode)
             )

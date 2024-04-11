@@ -23,7 +23,7 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtGui import QValidator, QFontMetrics
-from PyQt6.QtCore import pyqtSignal, QDate, Qt
+from PyQt6.QtCore import QEvent, pyqtSignal, QDate, Qt
 
 from q2gui.pyqt6.q2widget import Q2Widget
 
@@ -38,12 +38,7 @@ class q2date(QComboBox, Q2Widget):
         if self.meta.get("readonly"):
             self.lineedit.setReadOnly(True)
         self.lineedit.setInputMask("99.99.9999")
-        # self.lineedit.setStyleSheet("QLineEdit")
         self.set_text(self.meta.get("data"))
-        # self.setMinimumWidth(QFontMetrics(self.font()).width("0") * 14)
-        self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("0") * 16))
-        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
-        # self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.MinimumExpanding)
 
         class q2DateValidator(QValidator):
             def validate(self, text, pos):
@@ -78,10 +73,11 @@ class q2date(QComboBox, Q2Widget):
         self.lineedit.setValidator(q2DateValidator())
         self.lineedit.editingFinished.connect(self.lineeditEditingFinished)
         self.lineedit.cursorPositionChanged.connect(self.lineeditCursorPositionChanged)
-        # q2Widget.__init__(self, meta)
 
-    # def sizeHint(self):
-    #     return super().sizeHint()
+    def changeEvent(self, e):
+        if e.type() == QEvent.Type.StyleChange:
+            self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("0") * 16))
+        return super().changeEvent(e)
 
     def lineeditCursorPositionChanged(self, old, new):
         if old in [3, 4] and (new < 3 or new > 4):
@@ -172,10 +168,6 @@ class q2date(QComboBox, Q2Widget):
         clndr.setFont(self.font())
         clndr.move(self.mapToGlobal(self.rect().bottomLeft()))
         clndr.show()
-
-    # def set_readonly(self, arg):
-    #     self.lineEdit().setReadOnly(arg)
-    #     return super().set_readonly(arg)
 
     def set_text(self, text):
         if hasattr(self, "lineedit"):

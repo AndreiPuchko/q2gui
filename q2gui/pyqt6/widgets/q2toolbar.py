@@ -12,18 +12,14 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
-from PyQt6 import QtGui
-
 
 from q2gui import q2app
 from q2gui.q2app import Q2Actions
 from q2gui.q2app import GRID_ACTION_TEXT, GRID_ACTION_ICON
 
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QToolBar, QSizePolicy, QToolButton, QMenu
-from PyQt6.QtGui import QIcon, QColor, QFont, QFontMetrics
-from PyQt6.QtCore import Qt, QMargins
+from PyQt6.QtGui import QIcon, QColor, QFont
+from PyQt6.QtCore import Qt
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.q2window import q2_align
@@ -135,19 +131,21 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button = QToolBar()
 
         self.main_button_action = QToolButton()
-        self.main_button_action.setText(GRID_ACTION_TEXT+"*")
+        self.main_button_action.setText(GRID_ACTION_TEXT + "*")
 
         self.main_button_action.setIcon(q2app.q2_app.get_engine_icon(GRID_ACTION_ICON))
 
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
-        self.main_button_action.menu().setStyleSheet("""
+        self.main_button_action.menu().setStyleSheet(
+            """
                                 QMenu {border:1px solid palette(Mid)}
                                 QMenu::separator {height: 1px;background: palette(Mid);}
-                        """)
+                        """
+        )
         self.main_button.addWidget(self.main_button_action)
-        
+
         # self.main_button_action.setStyleSheet("""
         #             QToolButton
         #             {
@@ -201,7 +199,7 @@ class q2toolbar(QFrame, Q2Widget):
             if action_widget is None:
                 continue
             action_widget.setStyleSheet(
-                """QToolButton {background: %s; margin: 0 2; color:black} 
+                """QToolButton {background: %s; margin: 0 2; color:black}
                     QToolButton:hover {background: %s}
                     QToolButton:disabled {background: %s}
                     """

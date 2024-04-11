@@ -45,7 +45,6 @@ class Q2Style(q2style.Q2Style):
         focusable_controls_with_readonly = ", ".join(
             ['%s[readOnly="true"]' % x for x in focusable_controls_list]
         )
-
         style = (
             """
                 QFrame, q2frame {{
@@ -122,7 +121,7 @@ class Q2Style(q2style.Q2Style):
                         subcontrol-origin: padding;
                         font: bold;
                         left: 1em;
-                        top: -0.5em;
+                        top: -{font_size}px;
                 }}
                 QMdiSubWindow, QMainWindow
                     {{

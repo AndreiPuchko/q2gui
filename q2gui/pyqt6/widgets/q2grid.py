@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
     QSizePolicy,
     QVBoxLayout,
 )
-from PyQt6.QtGui import QCloseEvent, QKeyEvent, QPalette, QPainter, QFontMetrics, QBrush
+from PyQt6.QtGui import QKeyEvent, QPalette, QPainter, QFontMetrics
 
 from PyQt6.QtCore import (
     Qt,
@@ -154,9 +154,6 @@ class q2grid(QTableView):
         self.horizontalHeader().setSectionsMovable(True)
         self.horizontalHeader().setDefaultAlignment(q2_align["7"])
         self.horizontalHeader().sectionClicked.connect(self.q2_form.grid_header_clicked)
-        h = self.fontMetrics().height()
-        self.verticalHeader().setMinimumSectionSize(h + h // 4)
-        self.verticalHeader().setDefaultSectionSize(self.fontMetrics().height())
 
         self.setAlternatingRowColors(True)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
@@ -175,6 +172,12 @@ class q2grid(QTableView):
             return
         column_manager = q2_col_manager(self)
         column_manager.show()
+
+    def showEvent(self, event):
+        h = self.fontMetrics().height()
+        self.verticalHeader().setDefaultSectionSize(h)
+        self.verticalHeader().setMinimumSectionSize(h + h // 4)
+        return super().showEvent(event)
 
     def apply_col_filter(self, filter_values):
         self.model().apply_col_filter(filter_values, self.currentIndex().column())
