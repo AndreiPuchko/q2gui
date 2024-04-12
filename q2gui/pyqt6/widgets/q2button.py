@@ -40,7 +40,7 @@ class q2button(QPushButton, Q2Widget):
             self.ensurePolished()
             ml = num(self.meta.get("datalen"))
             if ml:
-                self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("W") * 16))
+                self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("W") * ml))
         return super().changeEvent(e)
 
     def keyPressEvent(self, ev):

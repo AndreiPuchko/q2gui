@@ -80,7 +80,6 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color: {color_focus};
                         background-color: {background_selected_item};
-                        border: none;
                         min-height:1.2em;
                     }}
                 QRadioButton
@@ -97,8 +96,10 @@ class Q2Style(q2style.Q2Style):
 
                 QTabBar::tab
                     {{
-                        margin: {margin};
                         padding:0.1em 0.3em;
+                        margin-top: 0.3em;
+                        border-bottom-right-radius: 0;
+                        border-bottom-left-radius: 0;
                     }}
 
                 q2tab::pane{{
@@ -306,7 +307,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 q2text
                     {{
-                        margin:0.2em;
+                        margin:0em;
                     }}
 
                 QMenu{{
@@ -337,7 +338,6 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color:{color};
                     }}
-
                 q2button#_cancel_button, q2button#_ok_button
                     {{
                         margin: 0.4ex 1ex;
@@ -375,6 +375,7 @@ class Q2Style(q2style.Q2Style):
                         color: palette(Text);
                     }}
                 QToolButton:hover {{background:palette(Mid)}}
+                q2frame#grb {{margin:2px}}
             """
             % locals()
         )

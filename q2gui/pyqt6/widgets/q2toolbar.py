@@ -131,19 +131,22 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button = QToolBar()
 
         self.main_button_action = QToolButton()
-        self.main_button_action.setText(GRID_ACTION_TEXT + "*")
+        self.main_button_action.setText(GRID_ACTION_TEXT)
 
         self.main_button_action.setIcon(q2app.q2_app.get_engine_icon(GRID_ACTION_ICON))
 
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
+        # self.set_font(q2app.q2_app.q2style.font_name, q2app.q2_app.q2style.font_size*2)
+
         self.main_button_action.menu().setStyleSheet(
             """
-                                QMenu {border:1px solid palette(Mid)}
+                                QMenu {border:1px solid palette(Mid);font-size:%spt; font-family:'%s'}
                                 QMenu::separator {height: 1px;background: palette(Mid);}
-                        """
+                        """ % (q2app.q2_app.q2style.font_size, q2app.q2_app.q2style.font_name)
         )
+        
         self.main_button.addWidget(self.main_button_action)
 
         # self.main_button_action.setStyleSheet("""

@@ -13,6 +13,7 @@
 #    limitations under the License.
 
 
+from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import QFrame
 from PyQt6.QtCore import Qt
 
@@ -42,7 +43,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.button = q2button(
             {
                 "label": "?",
-                "datalen": 2,
+                # "datalen": 2,
                 "valid": self.show_related_form,
                 # "when": self.when,
                 "form": self.meta["form"],
@@ -69,7 +70,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.set_text(self.meta.get("data", ""))
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocusProxy(self.get)
-        self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.5em")
+        self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.4em")
         self.layout().setSpacing(0)
         # self.layout().setContentsMargins(0, 0, 0, 0)
         self.set_content_margins(0)
@@ -182,6 +183,13 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
     def is_enabled(self):
         return self.get.is_enabled()
+
+    def mousePressEvent(self, a0: QMouseEvent | None) -> None:
+        if not self.is_enabled():
+            self.set_disabled()
+            if hasattr(self.check, "set_focus"):
+                self.check.set_focus()
+        return super().mousePressEvent(a0)
 
 
 class q2_realtion_lookup(q2lookup):
