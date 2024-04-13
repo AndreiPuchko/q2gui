@@ -80,6 +80,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                         color: {color_focus};
                         background-color: {background_selected_item};
+                        border-bottom: None;
                         min-height:1.2em;
                     }}
                 QRadioButton

@@ -35,6 +35,7 @@ class Q2Model:
         self.alignments = []
 
         self.records = []
+        self.proxy_records = []
         self.hidden_rows = []
         self.filtered_columns = []
         self.columns_filter_values = {}

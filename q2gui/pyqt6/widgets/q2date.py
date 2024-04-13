@@ -26,6 +26,8 @@ from PyQt6.QtGui import QValidator, QFontMetrics
 from PyQt6.QtCore import QEvent, pyqtSignal, QDate, Qt
 
 from q2gui.pyqt6.q2widget import Q2Widget
+import re
+import datetime
 
 
 class q2date(QComboBox, Q2Widget):
@@ -171,7 +173,8 @@ class q2date(QComboBox, Q2Widget):
 
     def set_text(self, text):
         if hasattr(self, "lineedit"):
-            self.lineedit.setText(QDate.fromString(f"{text}", "yyyy-MM-dd").toString("dd.MM.yyyy"))
+            self.lineedit.setText(extract_date(text))
+            # self.lineedit.setText(QDate.fromString(f"{text}", "yyyy-MM-dd").toString("dd.MM.yyyy"))
             self.lineedit.setCursorPosition(0)
 
     def get_text(self):
@@ -179,3 +182,46 @@ class q2date(QComboBox, Q2Widget):
             return "0000-00-00"
         else:
             return QDate.fromString(self.lineedit.text(), "dd.MM.yyyy").toString("yyyy-MM-dd")
+
+
+def extract_date(text):
+    if text == "":
+        return ""
+    splited_text = re.split(r"[/,/.\s/-]+", text.strip())
+
+    today = datetime.date.today()
+    month = None
+    year = None
+    day = 1
+    if len(splited_text) >= 1:  # day
+        if len(splited_text[0]) == 4:
+            year = splited_text[0]
+        elif len(splited_text[0]) < 3:
+            day = splited_text[0]
+
+    if len(splited_text) > 1:
+        # if month > int(spl[1]):
+        #     year = year - 1
+        month = int(splited_text[1])
+        if month > today.month and len(splited_text) < 3 and year is None:
+            year = today.year - 1
+
+    if len(splited_text) > 2:
+        if len(splited_text[2]) == 4:
+            year = splited_text[2]
+        elif len(splited_text[2]) < 3 and len(splited_text[0]) == 4:
+            day = splited_text[2]
+        else:
+            day = splited_text[0]
+    if year is None and len(splited_text) == 3:
+        if len(splited_text[2]) == 1:
+            year = int(splited_text[2]) + today.year // 10 * 10
+        else:
+            year = int(splited_text[2]) + 2000
+
+    if year is None:
+        year = today.year if month != 12 else (today.year - 1)
+    if month is None:
+        month = (today.month - 1) if today.month > 1 else 12
+    date = datetime.date(day=int(day), month=int(month), year=int(year))
+    return date.strftime("%d-%m-%Y")
