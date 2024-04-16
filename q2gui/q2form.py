@@ -941,6 +941,7 @@ class Q2Form:
         tag="",
         eat_enter=None,
         hotkey="",
+        style="",
         **args,
     ):
         """Adds a new control(widget) into the form

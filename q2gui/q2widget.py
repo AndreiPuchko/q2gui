@@ -46,6 +46,8 @@ class Q2Widget:
             self.set_maximum_width(max_width)
         if max_width:
             self.set_maximum_len(max_width)
+        if self.meta.get("style"):
+            self.set_style_sheet(self.meta["style"])
 
         self.set_alignment(self.meta.get("alignment", 7))
 

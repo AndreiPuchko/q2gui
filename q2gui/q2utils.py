@@ -14,6 +14,9 @@
 
 from decimal import Decimal
 import datetime
+import hashlib
+import secrets
+import binascii
 
 
 def is_sub_list(sublst, lst):
@@ -58,3 +61,63 @@ def set_dict_default(_dict, _key, _value):
 
     if not _dict.get(_key):
         _dict[_key] = _value
+
+
+class Q2Crypto:
+    def __init__(self, pin, lenght=256):
+        self._pin = pin
+        self.pin = [x for x in hashlib.shake_256(self._pin.encode()).hexdigest(lenght // 2)]
+
+    def encrypt(self, text):
+        if not isinstance(text, str):
+            return None
+        text = binascii.hexlify((text + chr(1) + self._pin).encode())
+        step = max(len(self.pin) // max(len(text), 1), 1)
+        crypted = self.pin[:]
+        r = 0
+        for x in range(len(text)):
+            r += secrets.randbelow(step) + 1
+            if r >= len(crypted):
+                raise BaseException("Cryptgraphy Error - given text to long")
+            while True:
+                if chr(text[x]) != crypted[r]:
+                    break
+                else:
+                    r += 1
+            crypted[r] = chr(text[x])
+        return "".join(crypted)
+
+    def _decrypt(self, crypted):
+        if len(crypted) != len(self.pin):
+            return None
+        rez = []
+        for x in range(len(self.pin)):
+            if self.pin[x] != crypted[x]:
+                rez.append(crypted[x])
+        rez = ("".join(rez)).encode()
+        try:
+            return binascii.unhexlify(rez).decode()
+        except Exception as errow:
+            return None
+
+    def decrypt(self, crypted):
+        if not isinstance(crypted, str):
+            return None
+        rez = self._decrypt(crypted)
+        if rez is not None:
+            if rez.endswith(chr(1) + self._pin):
+                rez = rez[: -(len(self._pin) + 1)]
+            else:
+                return None
+        return rez
+
+    def check_pin(self, crypted):
+        if not isinstance(crypted, str):
+            return None
+        rez = self._decrypt(crypted)
+        if rez is not None:
+            if rez.endswith(chr(1) + self._pin):
+                return True
+            else:
+                return None
+        return rez

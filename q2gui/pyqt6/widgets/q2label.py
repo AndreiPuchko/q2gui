@@ -15,7 +15,6 @@
 import sys
 
 
-
 from PyQt6.QtWidgets import QLabel
 from PyQt6.QtCore import Qt
 
@@ -37,7 +36,9 @@ horizontal_align_dict = {
 
 class q2label(QLabel, Q2Widget):
     def __init__(self, meta={}):
-        super().__init__({"label": meta.get("label", ""), "dblclick": meta.get("dblclick")})
+        super().__init__(
+            {"label": meta.get("label", ""), "dblclick": meta.get("dblclick"), "style": meta.get("style")}
+        )
         # super().__init__(meta)
         self.set_text(self.meta["label"])
         # self.setWordWrap(True)

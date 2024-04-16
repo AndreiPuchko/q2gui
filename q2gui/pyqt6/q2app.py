@@ -640,6 +640,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.on_start()
 
     def keyboard_modifiers(self):
+        self.process_events()
         modifiers = QApplication.keyboardModifiers()
         rez = []
         if modifiers == Qt.KeyboardModifier.ShiftModifier:

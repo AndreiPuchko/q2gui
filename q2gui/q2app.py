@@ -350,6 +350,7 @@ class Q2Controls(list):
         tag="",
         eat_enter=None,
         hotkey="",
+        style="",
         **args,
     ):
         meta = locals().copy()
