@@ -187,6 +187,8 @@ class q2date(QComboBox, Q2Widget):
 def extract_date(text):
     if text == "":
         return ""
+    elif text == "0000-00-00":
+        return text
     splited_text = re.split(r"[/,/.\s/-]+", text.strip())
 
     today = datetime.date.today()
