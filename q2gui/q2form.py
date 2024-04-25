@@ -1460,6 +1460,8 @@ class Q2FormWindow:
                 widget2add.form_is_active = True
             else:
                 widget2add = meta.get("widget")
+            if not hasattr(widget2add, "meta"):
+                setattr(widget2add, "meta", meta)
         else:  # Special cases
             if column[:2] in ("/h", "/v", "/f"):  # frame
                 control = "frame"

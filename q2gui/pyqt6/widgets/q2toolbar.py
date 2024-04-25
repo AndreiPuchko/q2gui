@@ -140,13 +140,35 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button_action.setMenu(tool_bar_qt_actions)
         # self.set_font(q2app.q2_app.q2style.font_name, q2app.q2_app.q2style.font_size*2)
 
+        background_control = q2app.q2_app.q2style.get_styles()["background_control"]
+        toolbutton_background = q2app.q2_app.q2style.get_styles()["toolbutton_background"]
+        background_menu_selection = q2app.q2_app.q2style.get_styles()["background_menu_selection"]
+        font_size = q2app.q2_app.q2style.font_size
+        font_name = q2app.q2_app.q2style.font_name
+        color = q2app.q2_app.q2style.get_styles()["color"]
+
         self.main_button_action.menu().setStyleSheet(
-            """
-                                QMenu {border:1px solid palette(Mid);font-size:%spt; font-family:'%s'}
-                                QMenu::separator {height: 1px;background: palette(Mid);}
-                        """ % (q2app.q2_app.q2style.font_size, q2app.q2_app.q2style.font_name)
+            f"""
+                QMenu {{
+                        border:1px solid palette(Mid);
+                        color: black;
+                        background-color: {background_control};
+                        font-size:{font_size}pt;
+                        font-family:'{font_name}'
+                        }}
+                QMenu::separator {{height: 1px;background: {color};}}
+                QMenu{{
+                    border:1px solid {color};
+                }}
+                QMenu::item, QMenu:disabled
+                    {{
+                        color: black;
+                        background-color: {toolbutton_background};
+                        selection-color: palette(HighlightedText);
+                        selection-background-color: {background_menu_selection};
+                    }}
+                """
         )
-        
         self.main_button.addWidget(self.main_button_action)
 
         # self.main_button_action.setStyleSheet("""

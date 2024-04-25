@@ -148,7 +148,7 @@ class Q2Style(q2style.Q2Style):
 
                 QToolButton
                 {{
-                    color: palette(Text);
+                    color: black;
                     background-color: {toolbutton_background};
                     border: None;
                     {border_radius}
@@ -255,7 +255,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                     alternate-background-color:{background_control};
                     background-color:{background};
-                    gridline-color: palette(mid);
+                    gridline-color: gray;
                     }}
 
                 QHeaderView::section, QTableView:focus
@@ -312,17 +312,17 @@ class Q2Style(q2style.Q2Style):
                     }}
 
                 QMenu{{
-                    border:1px solid palette(Mid);
+                    border:1px solid {color};
                 }}
                 QMenu::separator {{
                     height: 1px;
-                    background: palette(Mid);
+                    background: {color};
                 }}
 
                 QMenu::item, QMenu:disabled
                     {{
-                        color: palette(Text);
-                        background-color: palette(Window);
+                        color: black;
+                        background-color: {toolbutton_background};
                         selection-color: palette(HighlightedText);
                         selection-background-color: {background_menu_selection};
                     }}
@@ -367,15 +367,9 @@ class Q2Style(q2style.Q2Style):
                     }}
                 q2text[readOnly="true"]
                     {{
-                        color:{color_selection};
-                        background-color:silver;
+                        color:black;
+                        background-color:rgb(194, 206, 219);
                     }}
-                QToolButton
-                    {{
-                        background:palette(Button);
-                        color: palette(Text);
-                    }}
-                QToolButton:hover {{background:palette(Mid)}}
                 q2frame#grb {{margin:2px}}
             """
             % locals()

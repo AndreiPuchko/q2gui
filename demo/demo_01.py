@@ -42,7 +42,7 @@ class DemoApp(Q2App):
         self.add_menu("Documents|Business", None)
         self.add_menu("Help|About", lambda: q2Mess("""About q2gui<br>
             <a href="https://github.com/AndreiPuchko/q2gui">Open GitHub!</a> """))
-        self.add_menu("File|Quit", self.close, toolbar="*")
+        self.add_menu("File|Quit", self.close, toolbar="*", icon="exit.png")
 
     def sheet_form(self):
         form = Q2Form("Sheet Form")

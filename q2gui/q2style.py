@@ -55,11 +55,11 @@ class Q2Style:
             "color_focus": "#FFF",
             "border_focus": "1px solid yellow",
             # general border
-            "border": "1px solid palette(Mid)",
+            "border": "1px solid #CCC",
             # actice window border
             "border_radius": "border-radius: 0.25ex;",
             "padding": "0px",
-            "toolbutton_background": "palette(Mid)",
+            "toolbutton_background": "silver",
             "margin": "0px",
         }
 
@@ -89,8 +89,8 @@ class Q2Style:
                 "color_focus": "#000",
                 "border_focus": "1px solid blue",
                 # general border
-                "border": "1px solid palette(Mid)",
-                "toolbutton_background": "palette(Button)",
+                "border": "1px solid #333",
+                "toolbutton_background": "#dae7f0",
             }
         )
         if q2widget:
