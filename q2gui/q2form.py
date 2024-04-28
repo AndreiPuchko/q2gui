@@ -151,7 +151,7 @@ class Q2Form:
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
         if self.model.refreshed:
-            self.form_refresh()
+        #     self.form_refresh()
             self.model.refreshed = False
 
     def form_refresh(self):
@@ -1302,7 +1302,7 @@ class Q2FormWindow:
         # place child forms
         if self.q2_form.max_child_level:
             for action in self.q2_form.actions:
-                if action.get("child_form"):
+                if action.get("child_form") and not action.get("child_noshow"):
                     tmp_grid_form.add_control("/t", action.get("text", "="), stretch=1)
                     #  create child form!
                     action["child_form_object"] = action.get("child_form")()

@@ -104,6 +104,7 @@ class q2RadioButton(QRadioButton):
         self.radio = radio
         self.toggled.connect(self.value_changed)
         self.setContentsMargins(0, 0, 0, 0)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def keyPressEvent(self, ev: QKeyEvent) -> None:
         if ev.key() == Qt.Key.Key_Down:

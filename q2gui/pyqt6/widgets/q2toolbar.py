@@ -167,6 +167,10 @@ class q2toolbar(QFrame, Q2Widget):
                         selection-color: palette(HighlightedText);
                         selection-background-color: {background_menu_selection};
                     }}
+                QMenu::item:disabled
+                    {{
+                        color: gray;
+                    }}
                 """
         )
         self.main_button.addWidget(self.main_button_action)
@@ -198,42 +202,34 @@ class q2toolbar(QFrame, Q2Widget):
         self.set_background_color()
 
     def set_background_color(self):
-        color_mode = q2app.q2_app.q2style.get_color_mode()
-        if color_mode == "dark":
-            background_color = (
-                QColor(q2app.q2_app.q2style.get_styles()["background_control"]).lighter(200).name()
-            )
-        elif color_mode == "light":
-            background_color = QColor(q2app.q2_app.q2style.get_styles()["background_control"]).name()
-        else:
-            background_color = "white"
-
+        _background_color = QColor(q2app.q2_app.q2style.get_styles()["toolbutton_background"]).name()
+        hover_color = QColor(q2app.q2_app.q2style.get_styles()["background_menu_selection"]).name()
+        disabled_background_color = QColor(q2app.q2_app.q2style.get_styles()["background_disabled"]).name()
         for action in self.toolBarPanel.actions():
-            color = background_color
+            base_background_color = _background_color
             object_name = action.objectName()
             if object_name == "edit":
                 object_name = "#41a7fa"
             elif object_name == "select":
                 object_name = "#74d484"
+
             if object_name:
                 tmp_color = QColor(object_name).lighter(140).name()
                 if tmp_color != "#000000":
-                    color = tmp_color
-            hover_color = QColor(color).darker(150).name()
+                    base_background_color = tmp_color
             action_widget = self.toolBarPanel.widgetForAction(action)
             if action_widget is None:
                 continue
             action_widget.setStyleSheet(
-                """QToolButton {background: %s; margin: 0 2; color:black}
-                    QToolButton:hover {background: %s}
-                    QToolButton:disabled {background: %s}
+                f"""QToolButton {{background: {base_background_color}; margin: 0 2; color:black}}
+                    QToolButton:hover {{background: {hover_color}}}
+                    QToolButton:disabled {{background: {disabled_background_color}}}
                     """
-                % (color, hover_color, background_color)
             )
-            if len(action.objectName()) == 1:
-                action_widget.setText(action.objectName())
-            elif action.property("unicode_icon"):
-                action_widget.setText(action.property("unicode_icon"))
+            # if len(action.objectName()) == 1:
+            #     action_widget.setText(action.objectName())
+            # elif action.property("unicode_icon"):
+            #     action_widget.setText(action.property("unicode_icon"))
 
     def set_context_menu(self, widget):
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)

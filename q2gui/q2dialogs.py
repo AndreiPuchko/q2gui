@@ -28,12 +28,14 @@ def center_window(form: Q2Form):
     form.form_stack[0].set_position(int(w * 0.25), int(h * 0.15))
 
 
-def q2Mess(mess="", title="Message"):
+def q2Mess(mess="", title="Message", html=True):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.add_control("/v")
     if isinstance(mess, dict) or isinstance(mess, list):
         mess = "<pre>" + json.dumps(mess, indent=2) + "</pre>"
+    elif html is not True:
+        mess = "<pre>" + mess + "</pre>"
     form.add_control("mess", control="text", data=f"{mess}", readonly=True)
     if form.add_control("/h"):
         form.add_control("/s")
