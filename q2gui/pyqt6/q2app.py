@@ -28,6 +28,8 @@ from PyQt6.QtWidgets import (
     QTabBar,
     QSplitter,
     QMdiArea,
+    QMdiSubWindow,
+    QHBoxLayout,
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF
@@ -192,10 +194,26 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.tab_focus_widget = {}
             self.tabBar().setObjectName("main_tab_bar")
 
+            self.corner_widget = QWidget()
+            self.corner_widget.setLayout(QHBoxLayout())
+
             self.closeButton = QToolButton(self)
             self.closeButton.setText("❌")
+            self.closeButton.setContentsMargins(0, 0, 0, 0)
             self.closeButton.clicked.connect(self.closeSubWindow)
-            self.setCornerWidget(self.closeButton)
+
+            self.restore_button = QToolButton(self)
+            self.restore_button.setText("🗗")
+            self.restore_button.setContentsMargins(0, 0, 0, 0)
+            self.restore_button.clicked.connect(self.show_mdi_normal)
+            self.show_mdi_normal_button(False)
+
+            self.corner_widget.layout().setContentsMargins(0, 0, 0, 0)
+            self.corner_widget.layout().setAlignment(Qt.AlignmentFlag.AlignRight)
+            self.corner_widget.layout().addWidget(self.restore_button)
+            self.corner_widget.layout().addWidget(self.closeButton)
+            self.setCornerWidget(self.corner_widget)
+
             self.currentChanged.connect(self.restore_tab_focus_widget)
 
         def hide(self) -> None:
@@ -229,6 +247,14 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             elif self.count() > 2:  # close tab if them >2
                 self.setCurrentIndex(currentTabIndex - 1)
                 self.removeTab(currentTabIndex)
+
+        def show_mdi_normal(self):
+            self.currentWidget().activeSubWindow().showNormal()
+            self.currentWidget().activeSubWindow().setWindowFlag(Qt.WindowType.FramelessWindowHint, False)
+
+        def show_mdi_normal_button(self, mode=False):
+            self.restore_button.setVisible(mode)
+            1 == 1
 
         def get_subwindow_count(self):
             return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
@@ -352,8 +378,19 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def eventFilter(self, obj, ev: QEvent):
         if ev.type() == QEvent.Type.Close:
+            if not obj.isEnabled():
+                ev.ignore()
+                return True
+            obj.heap.will_be_closed = True
             if obj.heap.prev_mdi_window:
                 obj.heap.prev_mdi_window.setEnabled(True)
+                # self.q2_tabwidget.show_mdi_normal_button(obj.heap.prev_mdi_window.isMaximized())
+                # obj.heap.prev_mdi_window.setWindowFlag(
+                #     Qt.WindowType.FramelessWindowHint, obj.heap.prev_mdi_window.isMaximized()
+                # )
+            else:
+                self.q2_tabwidget.show_mdi_normal_button(False)
+
             if obj.heap.prev_focus_widget is not None and not isinstance(obj.heap.prev_focus_widget, QTabBar):
                 try:
                     obj.heap.prev_focus_widget.setFocus()
@@ -368,6 +405,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_tabbar(False)
         elif ev.type() == QEvent.Type.Show:
             obj.activateWindow()
+            obj.setWindowFlag(Qt.WindowType.FramelessWindowHint, obj.isMaximized())
+            self.q2_tabwidget.show_mdi_normal_button(obj.isMaximized())
             if hasattr(obj, "on_activate"):
                 obj.on_activate()
 
@@ -380,11 +419,30 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def show_form(self, form=None, modal="modal"):
         form.heap = q2app.Q2Heap()
         form.heap.modal = modal
+        form.heap.will_be_closed = False
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         form.heap.prev_focus_widget = QApplication.focusWidget()
         form.heap.prev_tabbar_text = self.get_tabbar_text()
 
-        self.q2_tabwidget.currentWidget().addSubWindow(form)
+        w: QMdiSubWindow = self.q2_tabwidget.currentWidget().addSubWindow(form)
+        w.setWindowIcon(self.windowIcon())
+        tmp_icon = QPixmap(1, 1)
+        tmp_icon.fill(Qt.GlobalColor.transparent)
+        w.setWindowIcon(QIcon(tmp_icon))
+
+        def wc():
+            if w.isMaximized() and not form.heap.will_be_closed:
+                w.setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
+                self.q2_tabwidget.show_mdi_normal_button(True)
+            else:
+                w.setWindowFlag(Qt.WindowType.FramelessWindowHint, False)
+                w.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
+                self.q2_tabwidget.show_mdi_normal_button(False)
+            w.update()
+            self.process_events()
+
+        w.windowStateChanged.connect(wc)
+
         form.installEventFilter(self)
         self.subwindow_count_changed()
 
@@ -486,6 +544,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def get_clipboard_text(self):
         return QApplication.clipboard().text()
+
+    def set_clipboard_text(self, text):
+        return QApplication.clipboard().setText(text)
 
     def set_style_sheet(self, style=None):
         if os.path.isfile(self.style_file):

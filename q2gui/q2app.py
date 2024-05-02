@@ -654,6 +654,9 @@ class Q2App:
     def get_clipboard_text(self):
         pass
 
+    def set_clipboard_text(self):
+        pass
+
     def lock(self):
         pass
 
