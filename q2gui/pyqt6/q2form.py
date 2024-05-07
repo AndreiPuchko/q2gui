@@ -201,7 +201,8 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             self.escape_enabled = False
 
         self.shown = True
-        self.restore_geometry(q2app.q2_app.settings)
+        if hasattr(q2app.q2_app, "settings"):
+            self.restore_geometry(q2app.q2_app.settings)
 
         # if self.mode == "form":
         #     self.parent().setWindowFlag(Qt.WindowMaximizeButtonHint, False)

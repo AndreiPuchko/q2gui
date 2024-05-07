@@ -50,8 +50,10 @@ class Q2Form:
         self.controls = q2app.Q2Controls()
         self.system_controls = q2app.Q2Controls()
         self.model = None
-        self.db = q2app.q2_app.db
+        self.db = None
         self.q2_app = q2app.q2_app
+        if hasattr(self.q2_app, "db"):
+            self.db = q2app.q2_app.db
         self._model_record = {}  # contains the data of the currently edited record
 
         # Shortcuts to elements
@@ -1627,9 +1629,12 @@ class Q2FormWindow:
             self.q2_form.form_stack.pop()
         self.save_splitters()
         self.save_grid_columns()
-        self.save_geometry(q2app.q2_app.settings)
+        if hasattr(q2app.q2_app, "settings"):
+            self.save_geometry(q2app.q2_app.settings)
 
     def save_splitters(self):
+        if not hasattr(q2app.q2_app, "settings"):
+            return
         for x in self.get_splitters():
             q2app.q2_app.settings.set(
                 self.window_title,
