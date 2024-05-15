@@ -76,7 +76,7 @@ class Q2Style(q2style.Q2Style):
                         background-color:{background_focus};
                         border: {border_focus};
                     }}
-                QTabBar::tab:selected
+                QTabBar::tab:selected, QTabBar::tab:selected:disabled
                     {{
                         color: {color_focus};
                         background-color: {background_selected_item};
@@ -88,7 +88,7 @@ class Q2Style(q2style.Q2Style):
                         border: none;
                         padding:0px 0.3em;
                     }}
-                    
+
                 QRadioButton:checked {{
                         color: {color_focus};
                         background-color: {background_selected_item};
@@ -103,15 +103,17 @@ class Q2Style(q2style.Q2Style):
 
                 QTabBar::tab
                     {{
-                        padding:0.1em 0.3em;
-                        margin-top: 0.3em;
+                        padding:0.4em 0.3em;
+                        margin:0 20px;
                         border-bottom-right-radius: 0;
                         border-bottom-left-radius: 0;
+                        border-bottom: 0;
                     }}
 
                 q2tab::pane{{
                     background:{background_selected_item};
                     border: {border};
+                    margin: 0 0 0.3em;
                     {border_radius}
                 }}
 
@@ -369,6 +371,7 @@ class Q2Style(q2style.Q2Style):
                     {{
                         background-color:{background_disabled}
                     }}
+                QTabBar:disabled {{background:transparent}}
                 q2text[readOnly="true"]
                     {{
                         color:black;
