@@ -217,13 +217,21 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.currentChanged.connect(self.restore_tab_focus_widget)
 
         def hide(self) -> None:
-            self.tabBar().hide()
-            self.closeButton.hide()
+            self.tabBar().setDisabled(True)
+            self.tabBar().setTabVisible(self.tabBar().count()-1, False)
+            # self.tabBar().hide()
+            # self.closeButton.hide()
             # return super().hide()
 
         def show(self) -> None:
+            self.tabBar().setEnabled(True)
+            self.tabBar().setTabVisible(self.tabBar().count()-1, True)
+            self.setUpdatesEnabled(False)
+            self.tabBar().hide()
             self.tabBar().show()
-            self.closeButton.show()
+            self.setUpdatesEnabled(True)
+            # self.tabBar().show()
+            # self.closeButton.show()
             # return super().show()
 
         def save_tab_focus_widget(self, widget):
@@ -254,12 +262,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         def show_mdi_normal_button(self, mode=False):
             self.restore_button.setVisible(mode)
-            1 == 1
 
         def get_subwindow_count(self):
             return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
 
-        def addTab(self, widget=None, label="New Tab"):
+        def addTab(self, widget=None, label=" = "):
             if not widget:
                 widget = QMdiArea(self)
                 self.set_tab_background(widget)
@@ -617,7 +624,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.q2_tabwidget.hide()
 
     def is_tabbar_visible(self):
-        return self.q2_tabwidget.tabBar().isVisible()
+        return self.q2_tabwidget.tabBar().isEnabled()
+        # return self.q2_tabwidget.tabBar().isVisible()
 
     def get_tabbar_text(self):
         return self.q2_tabwidget.tabBar().tabText(self.q2_tabwidget.currentIndex())
@@ -634,7 +642,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def set_tabbar_text(self, text=""):
         # text = text.strip().split("\n")[0][:50]
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)
-        self.q2_tabwidget.tabBar().update()
+        self.setUpdatesEnabled(False)
+        self.q2_tabwidget.tabBar().hide()
+        self.q2_tabwidget.tabBar().show()
+        self.setUpdatesEnabled(True)
 
     def show_statusbar(self, mode=True):
         q2app.Q2App.show_statusbar(self)

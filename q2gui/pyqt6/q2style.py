@@ -79,9 +79,17 @@ class Q2Style(q2style.Q2Style):
                 QTabBar::tab:selected, QTabBar::tab:selected:disabled
                     {{
                         color: {color_focus};
-                        background-color: {background_selected_item};
+                        background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                           stop: 0 {background_selected_item}
+                                           stop: 0.9 {background_selected_item}
+                                           stop: 1 {background}
+                                    );
                         border-bottom: None;
                         min-height:1.2em;
+                    }}
+                QTabBar::tab:focus
+                    {{
+                        background-color: {background_focus};
                     }}
                 QRadioButton
                     {{
@@ -104,10 +112,9 @@ class Q2Style(q2style.Q2Style):
                 QTabBar::tab
                     {{
                         padding:0.4em 0.3em;
-                        margin:0 20px;
+                        margin: 0 1px 0 0;
                         border-bottom-right-radius: 0;
                         border-bottom-left-radius: 0;
-                        border-bottom: 0;
                     }}
 
                 q2tab::pane{{
@@ -203,25 +210,18 @@ class Q2Style(q2style.Q2Style):
                         alignment: center;
                     }}
 
-                #main_tab_widget::pane
-                    {{
-                        border: none;
-                    }}
-
                 #main_tab_bar::tab:last
                     {{
                         color:white;
-                        max-height: 1em;
-                        width: 2em;
                         background:green;
+                        font-weight:bold;
+                        width: 2em;
                     }}
                 #main_tab_bar::tab:last:hover
                     {{
                         color:green;
                         background:white;
                         max-height: 1em;
-                        width: 2em;
-                        font: bold;
                     }}
                 QSplitter
                     {{
@@ -367,11 +367,15 @@ class Q2Style(q2style.Q2Style):
 
                 QMdiSubWindow:title {{height: 1.5em}}
                 QFrame:disabled,QGroupBox:disabled {{background-color:transparent}}
+
+                QTabWidget::pane {{ top: -1px;}}
                 QTabBar::tab:disabled, QTabWidget::pane:disabled
                     {{
                         background-color:{background_disabled}
                     }}
                 QTabBar:disabled {{background:transparent}}
+                QTabBar {{qproperty-drawBase: 0;}}
+                QTabBar::tab:!selected {{margin-top: 2px;}}
                 q2text[readOnly="true"]
                     {{
                         color:black;
