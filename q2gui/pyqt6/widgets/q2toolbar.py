@@ -140,49 +140,52 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button_action.setMenu(tool_bar_qt_actions)
         # self.set_font(q2app.q2_app.q2style.font_name, q2app.q2_app.q2style.font_size*2)
 
-        background_control = q2app.q2_app.q2style.get_styles()["background_control"]
-        toolbutton_background = q2app.q2_app.q2style.get_styles()["toolbutton_background"]
-        background_menu_selection = q2app.q2_app.q2style.get_styles()["background_menu_selection"]
         font_size = q2app.q2_app.q2style.font_size
         font_name = q2app.q2_app.q2style.font_name
-        color = q2app.q2_app.q2style.get_styles()["color"]
-
-        self.main_button_action.menu().setStyleSheet(
-            f"""
-                QMenu {{
-                        border:1px solid palette(Mid);
-                        color: black;
-                        background-color: {background_control};
-                        font-size:{font_size}pt;
-                        font-family:'{font_name}'
+        if q2app.q2_app.get_color_mode() != "clean":
+            background_control = q2app.q2_app.q2style.get_styles()["background_control"]
+            toolbutton_background = q2app.q2_app.q2style.get_styles()["toolbutton_background"]
+            background_menu_selection = q2app.q2_app.q2style.get_styles()["background_menu_selection"]
+            color = q2app.q2_app.q2style.get_styles()["color"]
+            self.main_button_action.menu().setStyleSheet(
+                f"""
+                    QMenu {{
+                            border:1px solid palette(Mid);
+                            color: black;
+                            background-color: {background_control};
+                            font-size:{font_size}pt;
+                            font-family:'{font_name}'
+                            }}
+                    QMenu::separator {{height: 1px;background: {color};}}
+                    QMenu{{
+                        border:1px solid {color};
+                    }}
+                    QMenu::item, QMenu:disabled
+                        {{
+                            color: black;
+                            background-color: {toolbutton_background};
+                            selection-color: palette(HighlightedText);
+                            selection-background-color: {background_menu_selection};
                         }}
-                QMenu::separator {{height: 1px;background: {color};}}
-                QMenu{{
-                    border:1px solid {color};
-                }}
-                QMenu::item, QMenu:disabled
-                    {{
-                        color: black;
-                        background-color: {toolbutton_background};
-                        selection-color: palette(HighlightedText);
-                        selection-background-color: {background_menu_selection};
-                    }}
-                QMenu::item:disabled
-                    {{
-                        color: gray;
-                    }}
-                """
-        )
-        self.main_button.addWidget(self.main_button_action)
+                    QMenu::item:disabled
+                        {{
+                            color: gray;
+                        }}
+                    """
+            )
+        else:
+            self.main_button_action.menu().setStyleSheet(
+                f"""
+                    QMenu {{
+                            border:1px solid palette(Mid);
+                            color: black;
+                            font-size:{font_size}pt;
+                            font-family:'{font_name}'
+                            }}
+                    """
+            )
 
-        # self.main_button_action.setStyleSheet("""
-        #             QToolButton
-        #             {
-        #                 background:palette(Button);
-        #                 color: palette(Text);
-        #             }
-        #             QToolButton:hover {background:palette(Mid)}
-        #             """)
+        self.main_button.addWidget(self.main_button_action)
 
         self.layout().addWidget(self.main_button)
         if not self.show_main_button:
@@ -202,11 +205,21 @@ class q2toolbar(QFrame, Q2Widget):
         self.set_background_color()
 
     def set_background_color(self):
-        _background_color = QColor(q2app.q2_app.q2style.get_styles()["toolbutton_background"]).name()
-        hover_color = QColor(q2app.q2_app.q2style.get_styles()["background_menu_selection"]).name()
-        disabled_background_color = QColor(q2app.q2_app.q2style.get_styles()["background_disabled"]).name()
+        if q2app.q2_app.get_color_mode() != "clean":
+            disabled_background_color = QColor(
+                q2app.q2_app.q2style.get_styles()["background_disabled"]
+            ).name()
+            background_color = QColor(q2app.q2_app.q2style.get_styles()["toolbutton_background"]).name()
+            hover_color = QColor(q2app.q2_app.q2style.get_styles()["background_menu_selection"]).name()
+        else:
+            disabled_background_color = "palette(window)"
+            background_color = "palette(window)"
+            hover_color = "palette(active)"
         for action in self.toolBarPanel.actions():
-            base_background_color = _background_color
+            action_widget = self.toolBarPanel.widgetForAction(action)
+            if action_widget is None:
+                continue
+            base_background_color = background_color
             object_name = action.objectName()
             if object_name == "edit":
                 object_name = "#41a7fa"
@@ -217,19 +230,12 @@ class q2toolbar(QFrame, Q2Widget):
                 tmp_color = QColor(object_name).lighter(140).name()
                 if tmp_color != "#000000":
                     base_background_color = tmp_color
-            action_widget = self.toolBarPanel.widgetForAction(action)
-            if action_widget is None:
-                continue
             action_widget.setStyleSheet(
                 f"""QToolButton {{background: {base_background_color}; margin: 0 2; color:black}}
                     QToolButton:hover {{background: {hover_color}}}
                     QToolButton:disabled {{background: {disabled_background_color}}}
                     """
             )
-            # if len(action.objectName()) == 1:
-            #     action_widget.setText(action.objectName())
-            # elif action.property("unicode_icon"):
-            #     action_widget.setText(action.property("unicode_icon"))
 
     def set_context_menu(self, widget):
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)

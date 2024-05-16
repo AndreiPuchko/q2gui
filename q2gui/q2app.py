@@ -547,6 +547,9 @@ class Q2App:
     def set_color_mode(self, color_mode=None):
         self.q2style.set_color_mode(self, color_mode)
 
+    def get_color_mode(self):
+        return self.q2style.get_color_mode()
+
     def set_font(self, font_name, font_size):
         pass
 

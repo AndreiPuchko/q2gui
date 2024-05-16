@@ -23,7 +23,7 @@ load_q2engine(globals(), "PyQt6")
 class DemoApp(Q2App):
     def on_start(self):
         # self.sheet_form()
-        self.show_tabbar(False)
+        # self.show_tabbar(False)
         self.set_color_mode("light")
         self.first_form()
 
