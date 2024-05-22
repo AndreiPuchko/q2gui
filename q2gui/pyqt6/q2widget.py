@@ -191,7 +191,7 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             "maximum": QSizePolicy.Policy.Maximum,
             "preffered": QSizePolicy.Policy.Preferred,
             "expanding": QSizePolicy.Policy.Expanding,
-            "minimalexpanding": QSizePolicy.Policy.MinimumExpanding,
+            "minimumexpanding": QSizePolicy.Policy.MinimumExpanding,
             "ignored": QSizePolicy.Policy.Ignored,
         }
 
