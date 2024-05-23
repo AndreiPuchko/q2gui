@@ -26,6 +26,7 @@ import io
 import time
 import os
 import codecs
+import logging
 
 
 q2_app = None
@@ -481,7 +482,10 @@ class Q2Stdout:
         if self.q2_app.dev_mode and hasattr(self.q2_app.stdout_widget, "write"):
             self.q2_app.stdout_widget.write(output)
         else:
-            sys.__stdout__.write(output)
+            try:
+                sys.__stdout__.write(output)
+            except Exception as e:
+                logging.warning(f"{e}")
 
     def flush(self):
         sys.__stdout__.flush()
