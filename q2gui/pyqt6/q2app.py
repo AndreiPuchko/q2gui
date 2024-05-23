@@ -168,7 +168,11 @@ class Q2Toolbars:
         return self.visible
 
     def isEnabled(self):
-        return max([self.toolbars[x].isEnabled() for x in self.toolbars])
+        toolbars_flag = [self.toolbars[x].isEnabled() for x in self.toolbars]
+        if toolbars_flag:
+            return max(toolbars_flag)
+        else:
+            return False
 
     def hide(self):
         for x in self.toolbars:
