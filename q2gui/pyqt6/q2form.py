@@ -62,6 +62,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         self.heap.prev_mdi_window = None
         self.heap.prev_focus_widget = None
         self.heap.prev_tabbar_text = ""
+        self.about_to_close = False
 
     def restore_geometry(self, settings):
         paw = self.parent()
@@ -219,6 +220,8 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
             self.q2_form.after_grid_show()
 
     def mdi_subwindow_state_changed(self):
+        if self.about_to_close:
+            return
         if self.isMaximized():
             self.parent().setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
             q2app.q2_app.q2_tabwidget.show_mdi_normal_button(True)
@@ -280,7 +283,10 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                     pass
             elif hasattr(self.heap.prev_mdi_window, "setFocus"):
                 self.heap.prev_mdi_window.setFocus()
+        else:
+            q2app.q2_app.q2_tabwidget.show_mdi_normal_button(False)
         q2app.q2_app.set_tabbar_text(self.heap.prev_tabbar_text)
+        self.about_to_close = True
         if event:
             event.accept()
 
