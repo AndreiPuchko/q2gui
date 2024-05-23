@@ -13,7 +13,7 @@
 #    limitations under the License.
 
 
-from PyQt6.QtWidgets import QDialog, QMdiSubWindow, QApplication
+from PyQt6.QtWidgets import QDialog, QMdiSubWindow, QApplication, QTabBar
 from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QKeySequence, QKeyEvent
 
@@ -57,6 +57,11 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         self.setObjectName("q2form")
         self.layout().setContentsMargins(2, 2, 2, 2)
         self.layout().setSpacing(0)
+        self.heap = q2app.Q2Heap()
+        self.heap.modal = None
+        self.heap.prev_mdi_window = None
+        self.heap.prev_focus_widget = None
+        self.heap.prev_tabbar_text = ""
 
     def restore_geometry(self, settings):
         paw = self.parent()
@@ -175,37 +180,13 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         if self not in self.q2_form.form_stack:
             self.q2_form.form_stack.append(self)
 
-        # if not self.q2_form.i_am_child:
-        #     for widget_name in self.widgets:
-        #         widget = self.widgets[widget_name]
-        #         if widget.focusPolicy() == Qt.FocusPolicy.NoFocus:
-        #             continue
-        #         if hasattr(widget, "isReadOnly") and widget.isReadOnly():
-        #             continue
-        #         if widget.isEnabled():
-        #             widget.setFocus()
-        #             break
-
         if event:
             event.accept()
 
         self.q2_form.form_is_active = True
-        # if self.mode == "form":
-        #     self.q2_form.form_is_active = True
-        #     if self.q2_form.before_form_show() is False:
-        #         # self.close()
-        #         self.q2_form.close()
-        #         return
-
-        if not isinstance(self.parent(), QMdiSubWindow):
-            self.escape_enabled = False
-
         self.shown = True
         if hasattr(q2app.q2_app, "settings"):
             self.restore_geometry(q2app.q2_app.settings)
-
-        # if self.mode == "form":
-        #     self.parent().setWindowFlag(Qt.WindowMaximizeButtonHint, False)
 
         if hasattr(self.parent(), "setWindowFlag"):
             self.parent().setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
@@ -219,11 +200,32 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                 )
         if self.q2_form.maximized:
             self.showMaximized()
+
+        self.activateWindow()
+
+        if not isinstance(self.parent(), QMdiSubWindow):
+            self.escape_enabled = False
+        else:
+            self.parent().windowStateChanged.connect(self.mdi_subwindow_state_changed)
+            self.mdi_subwindow_state_changed()
+
+        if hasattr(self, "on_activate"):
+            self.on_activate()
+
         if self.mode == "form":
             self.q2_form.after_form_show()
             self.q2_form.show_()
         elif self.mode == "grid":
             self.q2_form.after_grid_show()
+
+    def mdi_subwindow_state_changed(self):
+        if self.isMaximized():
+            self.parent().setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
+            q2app.q2_app.q2_tabwidget.show_mdi_normal_button(True)
+        else:
+            self.parent().setWindowFlag(Qt.WindowType.FramelessWindowHint, False)
+            self.parent().setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
+            q2app.q2_app.q2_tabwidget.show_mdi_normal_button(False)
 
     def keyPressEvent(self, event: QEvent):
         key = event.key()
@@ -265,6 +267,20 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         super().close()
         self.q2_form._close()
         self.q2_form.form_is_active = False
+        if self.heap.prev_mdi_window:
+            self.heap.prev_mdi_window.setEnabled(True)
+            # else:
+            #     q2app.q2_app.q2_tabwidget.show_mdi_normal_button(False)
+            if self.heap.prev_focus_widget is not None and not isinstance(
+                self.heap.prev_focus_widget, QTabBar
+            ):
+                try:
+                    self.heap.prev_focus_widget.setFocus()
+                except Exception:
+                    pass
+            elif hasattr(self.heap.prev_mdi_window, "setFocus"):
+                self.heap.prev_mdi_window.setFocus()
+        q2app.q2_app.set_tabbar_text(self.heap.prev_tabbar_text)
         if event:
             event.accept()
 

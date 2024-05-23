@@ -292,11 +292,11 @@ class Q2Style(q2style.Q2Style):
                         border: 1px solid gray;
                     }}
 
-                QToolButton
+/*                QToolButton
                     {{
                         min-height: 1.2em;
                         min-width: 1.2em;
-                    }}
+                    }}*/
 
                 #radio, q2check
                     {{
@@ -382,6 +382,7 @@ class Q2Style(q2style.Q2Style):
                         background-color:rgb(194, 206, 219);
                     }}
                 q2frame#grb {{margin:2px}}
+                QToolButton#qt_toolbar_ext_button {{background:cyan}}
             """
             % locals()
         )

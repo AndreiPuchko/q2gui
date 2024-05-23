@@ -57,7 +57,6 @@ class q2toolbar(QFrame, Q2Widget):
         self.show_main_button = actions.show_main_button
         self.show_actions = actions.show_actions
         tool_bar_qt_actions = QMenu()
-        # tool_bar_qt_actions.setStyleSheet("border:1px solid red")
         cascade_action = {"": tool_bar_qt_actions}
 
         for action in action_list:
@@ -138,7 +137,6 @@ class q2toolbar(QFrame, Q2Widget):
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.main_button_action.setMenu(tool_bar_qt_actions)
-        # self.set_font(q2app.q2_app.q2style.font_name, q2app.q2_app.q2style.font_size*2)
 
         font_size = q2app.q2_app.q2style.font_size
         font_name = q2app.q2_app.q2style.font_name
@@ -246,15 +244,12 @@ class q2toolbar(QFrame, Q2Widget):
             self.hide()
             return
         button_height = self.main_button.sizeHint().height()
-        self.toolBarPanel.setMaximumHeight(button_height)
         self.setFixedHeight(button_height + 1)
         for x in self.toolBarPanel.actions():
             action_widget = self.toolBarPanel.widgetForAction(x)
             if isinstance(action_widget, QToolButton):
                 if action_widget.icon().availableSizes() == []:
-                    # no icon
                     font = action_widget.font()
-                    # font.setPointSize(font.pointSize()+1)
                     font.setWeight(QFont.Weight.Medium)
                     action_widget.setFont(font)
                     action_widget.setFixedHeight(button_height)

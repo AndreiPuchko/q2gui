@@ -699,6 +699,9 @@ class Q2App:
     def is_menubar_visible(self):
         pass
 
+    def is_menubar_enabled(self):
+        pass
+
     def show_toolbar(self, mode=True):
         pass
 
@@ -711,14 +714,27 @@ class Q2App:
     def is_toolbar_visible(self):
         pass
 
+    def is_toolbar_enabled(self):
+        pass
+
     def disable_toolbar(self, mode=True):
+        pass
+
+    def enable_toolbar(self, mode=True):
+        self.disable_toolbar(not mode)
         pass
 
     def disable_menubar(self, mode=True):
         pass
 
+    def enable_menubar(self, mode=True):
+        self.disable_menubar(not mode)
+
     def disable_tabbar(self, mode=True):
         pass
+
+    def enable_tabbar(self, mode=True):
+        self.disable_tabbar(not mode)
 
     def show_tabbar(self, mode=True):
         pass
@@ -739,6 +755,9 @@ class Q2App:
             self.show_tabbar(True)
 
     def is_tabbar_visible(self):
+        pass
+
+    def is_tabbar_enabled(self):
         pass
 
     def show_statusbar(self, mode=True):

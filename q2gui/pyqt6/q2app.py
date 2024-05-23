@@ -167,6 +167,9 @@ class Q2Toolbars:
     def isVisible(self):
         return self.visible
 
+    def isEnabled(self):
+        return max([self.toolbars[x].isEnabled() for x in self.toolbars])
+
     def hide(self):
         for x in self.toolbars:
             self.toolbars[x].hide()
@@ -218,14 +221,14 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         def hide(self) -> None:
             self.tabBar().setDisabled(True)
-            self.tabBar().setTabVisible(self.tabBar().count()-1, False)
+            self.tabBar().setTabVisible(self.tabBar().count() - 1, False)
             # self.tabBar().hide()
             # self.closeButton.hide()
             # return super().hide()
 
         def show(self) -> None:
             self.tabBar().setEnabled(True)
-            self.tabBar().setTabVisible(self.tabBar().count()-1, True)
+            self.tabBar().setTabVisible(self.tabBar().count() - 1, True)
             self.setUpdatesEnabled(False)
             self.tabBar().hide()
             self.tabBar().show()
@@ -388,35 +391,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if not obj.isEnabled():
                 ev.ignore()
                 return True
-            obj.heap.will_be_closed = True
-            if obj.heap.prev_mdi_window:
-                obj.heap.prev_mdi_window.setEnabled(True)
-                # self.q2_tabwidget.show_mdi_normal_button(obj.heap.prev_mdi_window.isMaximized())
-                # obj.heap.prev_mdi_window.setWindowFlag(
-                #     Qt.WindowType.FramelessWindowHint, obj.heap.prev_mdi_window.isMaximized()
-                # )
-            else:
-                self.q2_tabwidget.show_mdi_normal_button(False)
-
-            if obj.heap.prev_focus_widget is not None and not isinstance(obj.heap.prev_focus_widget, QTabBar):
-                try:
-                    obj.heap.prev_focus_widget.setFocus()
-                except Exception:
-                    pass
-            elif obj.heap.prev_mdi_window and hasattr(obj.heap.prev_mdi_window, "setFocus"):
-                obj.heap.prev_mdi_window.setFocus()
-            self.set_tabbar_text(obj.heap.prev_tabbar_text)
-            if obj.heap.modal == "super":  # real modal dialog
-                self.disable_toolbar(False)
-                self.disable_menubar(False)
-                self.disable_tabbar(False)
-        elif ev.type() == QEvent.Type.Show:
-            obj.activateWindow()
-            obj.setWindowFlag(Qt.WindowType.FramelessWindowHint, obj.isMaximized())
-            self.q2_tabwidget.show_mdi_normal_button(obj.isMaximized())
-            if hasattr(obj, "on_activate"):
-                obj.on_activate()
-
         return super().eventFilter(obj, ev)
 
     def moveEvent(self, ev):
@@ -424,31 +398,17 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return super().moveEvent(ev)
 
     def show_form(self, form=None, modal="modal"):
-        form.heap = q2app.Q2Heap()
+        # form.heap = q2app.Q2Heap()
         form.heap.modal = modal
-        form.heap.will_be_closed = False
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         form.heap.prev_focus_widget = QApplication.focusWidget()
         form.heap.prev_tabbar_text = self.get_tabbar_text()
 
-        w: QMdiSubWindow = self.q2_tabwidget.currentWidget().addSubWindow(form)
-        w.setWindowIcon(self.windowIcon())
+        form_mdi_subwindow: QMdiSubWindow = self.q2_tabwidget.currentWidget().addSubWindow(form)
+        form_mdi_subwindow.setWindowIcon(self.windowIcon())
         tmp_icon = QPixmap(1, 1)
         tmp_icon.fill(Qt.GlobalColor.transparent)
-        w.setWindowIcon(QIcon(tmp_icon))
-
-        def wc():
-            if w.isMaximized() and not form.heap.will_be_closed:
-                w.setWindowFlag(Qt.WindowType.FramelessWindowHint, True)
-                self.q2_tabwidget.show_mdi_normal_button(True)
-            else:
-                w.setWindowFlag(Qt.WindowType.FramelessWindowHint, False)
-                w.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
-                self.q2_tabwidget.show_mdi_normal_button(False)
-            w.update()
-            self.process_events()
-
-        w.windowStateChanged.connect(wc)
+        form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
 
         form.installEventFilter(self)
         self.subwindow_count_changed()
@@ -458,14 +418,21 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         self.set_tabbar_text(form.window_title)
 
-        if modal == "super":  # real modal dialog
-            self.disable_toolbar(True)
-            self.disable_menubar(True)
-            self.disable_tabbar(True)
         if modal == "":  # mdiarea normal window
             form.show()
         else:
+            if modal == "super":  # real modal dialog
+                form.heap.prev_toolbar_enabled = self.is_toolbar_enabled()
+                form.heap.prev_menubar_enabled = self.is_menubar_enabled()
+                form.heap.prev_tabbar_enabled = self.is_tabbar_enabled()
+                self.disable_toolbar(True)
+                self.disable_menubar(True)
+                self.disable_tabbar(True)
             form.exec()
+            if modal == "super":  # real modal dialog
+                self.enable_toolbar(form.heap.prev_toolbar_enabled)
+                self.enable_menubar(form.heap.prev_menubar_enabled)
+                self.enable_tabbar(form.heap.prev_tabbar_enabled)
         self.subwindow_count_changed()
 
     def dpi(self):
@@ -597,6 +564,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def is_menubar_visible(self):
         return QMainWindow.menuBar(self).isVisible()
 
+    def is_menubar_enabled(self):
+        return QMainWindow.menuBar(self).isEnabled()
+
     def show_toolbar(self, mode=True):
         q2app.Q2App.show_toolbar(self)
         if mode:
@@ -616,6 +586,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def is_toolbar_visible(self):
         return self.q2_toolbar.isVisible()
 
+    def is_toolbar_enabled(self):
+        return self.q2_toolbar.isEnabled()
+
     def show_tabbar(self, mode=True):
         q2app.Q2App.show_tabbar(self)
         if mode:
@@ -625,7 +598,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def is_tabbar_visible(self):
         return self.q2_tabwidget.tabBar().isEnabled()
-        # return self.q2_tabwidget.tabBar().isVisible()
+
+    def is_tabbar_enabled(self):
+        return self.q2_tabwidget.tabBar().isEnabled()
 
     def get_tabbar_text(self):
         return self.q2_tabwidget.tabBar().tabText(self.q2_tabwidget.currentIndex())
