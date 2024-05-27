@@ -205,7 +205,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.corner_widget.setLayout(QHBoxLayout())
 
             self.closeButton = QToolButton(self)
-            self.closeButton.setText("❌")
+            self.closeButton.setText("🗙")
+            self.closeButton.setObjectName("tab_bar_close_button")
             self.closeButton.setContentsMargins(0, 0, 0, 0)
             self.closeButton.clicked.connect(self.closeSubWindow)
 

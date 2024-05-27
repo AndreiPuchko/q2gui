@@ -383,6 +383,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 q2frame#grb {{margin:2px}}
                 QToolButton#qt_toolbar_ext_button {{background:cyan}}
+                QToolButton#tab_bar_close_button:hover {{background:tomato}}
             """
             % locals()
         )
