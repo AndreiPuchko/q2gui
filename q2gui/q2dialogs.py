@@ -194,7 +194,6 @@ class Q2WaitForm:
             self.wait_window.s.value = self.worker_thread.value
 
         thread_time = int(self.worker_thread.time())
-        # print(self.worker_thread.time())
         sec = thread_time % 60
         min = (thread_time - sec) % 3600
         hours = thread_time - min * 3600 - sec
@@ -277,22 +276,31 @@ class Q2WaitShow:
         self.mess = mess
         self.interval = 0.5 if max_range > 100 or max_range == 0 else 0
 
+        self.i_am_first_wait = True
+        self.window_size = None
+        self.main_wait_widget = None
+        self.widget_stack = []
+        self.widget_height = []
+
+        self.prev_q2_form = q2app.q2_app.get_current_q2_form()
+        if self.prev_q2_form and self.prev_q2_form.name == "Wait...":
+            self.i_am_first_wait = False
+
         self.wait_window = Q2Form("Wait...")
         self.wait_window.do_not_save_geometry = True
         self.wait_window.add_control("mess", label=self.mess, control="label", alignment=5)
-        steps_count_separator = ">"
+        steps_count_separator = "⇒"
 
-        if self.wait_window.add_control("/h"):
+        self.wait_window.add_control("/")
+        if self.wait_window.add_control("/h", tag="bar"):
             self.wait_window.add_control("progressbar", "", control="progressbar")
             self.wait_window.add_control("value", "", control="label")
             self.wait_window.add_control("", steps_count_separator, control="label")
             self.wait_window.add_control("max", "", control="label")
             self.wait_window.add_control("time", "", control="label")
         self.wait_window.add_control("/")
-
-        q2app.q2_app.disable_toolbar(True)
-        q2app.q2_app.disable_menubar(True)
-        q2app.q2_app.disable_tabbar(True)
+        # self.wait_window.add_control("/s")
+        self.bar_count = 1
 
         self.show()
         self.start_time = time.time()
@@ -303,7 +311,7 @@ class Q2WaitShow:
         self.wait_window.w.progressbar.set_min(self.value)
         self.wait_window.s.min = 0
         self.wait_window.w.progressbar.set_max(max_range)
-        self.wait_window.s.max = max_range if max_range else ""
+        self.wait_window.s.max = max_range if max_range else "?"
         q2app.q2_app.process_events()
         self.last_focus_widget = q2app.q2_app.focus_widget()
         self.wait_window.after_form_closed = self.wait_windows_after_form_closed
@@ -345,31 +353,61 @@ class Q2WaitShow:
             q2app.q2_app.process_events()
 
     def show(self):
-        q2app.q2_app.disable_current_form()
-        self.wait_window.show_mdi_form()
-        q2app.q2_app.process_events()
-        w = q2app.q2_app.get_size()[0]
-        fh = self.wait_window.form_stack[0].get_size()[1]
-        self.wait_window.form_stack[0].set_size(int(w * 0.9), fh)
-        left, top = self.wait_window.form_stack[0].center_pos()
-        self.wait_window.form_stack[0].set_position(left, top)
+        if self.i_am_first_wait:
+            q2app.q2_app.disable_toolbar(True)
+            q2app.q2_app.disable_menubar(True)
+            q2app.q2_app.disable_tabbar(True)
+            q2app.q2_app.disable_current_form()
+            self.wait_window.show_mdi_form()
+            q2app.q2_app.process_events()
+            w = q2app.q2_app.get_size()[0]
+            self.main_wait_widget = self.wait_window.form_stack[-1]
+            h = self.main_wait_widget.get_size()[1]
+            self.main_wait_widget.set_size(int(w * 0.9), h)
 
-        if hasattr(self.wait_window.prev_form, "name") and self.wait_window.prev_form.name == "Wait...":
-            mo_h = self.wait_window.prev_form.form_stack[0].get_size()[1]
-            self.wait_window.form_stack[0].hide_border()
-            self.wait_window.form_stack[0].move_window(0, mo_h)
+            left, top = self.main_wait_widget.center_pos()
+            self.main_wait_widget.set_position(left, top)
 
+            q2app.q2_app.process_events()
+            self.window_size = self.main_wait_widget.get_size()
+            self.main_wait_widget.heap.q2wait = self
+            self.main_wait_widget.heap.q2wait.widget_stack.append(self.wait_window.w.bar)
+            self.main_wait_widget.heap.q2wait.widget_height.append(self.window_size[1])
+        else:
+            self.main_wait_widget = self.prev_q2_form.form_stack[-1]
+            
+            self.wait_window.form_stack.append(self.wait_window.get_form_widget())
+            self.main_wait_widget.heap.q2wait.widget_stack[-1].add_widget_below(
+                self.wait_window.form_stack[-1]
+            )
+            q2app.q2_app.process_events()
+
+            self.main_wait_widget.heap.q2wait.widget_stack.append(self.wait_window.form_stack[-1])
+            self.main_wait_widget.heap.q2wait.widget_height.append(
+                self.wait_window.form_stack[-1].sizeHint().height()
+            )
+            self.main_wait_widget.set_size(
+                self.main_wait_widget.heap.q2wait.window_size[0],
+                sum(self.main_wait_widget.heap.q2wait.widget_height),
+            )
         q2app.q2_app.process_events()
 
     def close(self):
-        if not self.interrupted:
-            self.wait_window.close()
-            q2app.q2_app.disable_current_form(False)
-            if hasattr(self.last_focus_widget, "set_focus"):
-                self.last_focus_widget.set_focus()
-        q2app.q2_app.disable_toolbar(False)
-        q2app.q2_app.disable_menubar(False)
-        q2app.q2_app.disable_tabbar(False)
+        if self.i_am_first_wait:
+            if not self.interrupted:
+                self.wait_window.close()
+                q2app.q2_app.disable_current_form(False)
+                if hasattr(self.last_focus_widget, "set_focus"):
+                    self.last_focus_widget.set_focus()
+            q2app.q2_app.disable_toolbar(False)
+            q2app.q2_app.disable_menubar(False)
+            q2app.q2_app.disable_tabbar(False)
+        else:
+            self.wait_window.form_stack[-1].remove()
+            self.main_wait_widget.heap.q2wait.widget_stack.pop()
+            self.main_wait_widget.heap.q2wait.widget_height.pop()
+            q2app.q2_app.process_events()
+
         q2app.q2_app.process_events()
         return self.value, time.time() - self.start_time
 

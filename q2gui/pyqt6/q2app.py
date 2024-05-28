@@ -408,6 +408,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         form.heap.prev_focus_widget = QApplication.focusWidget()
         form.heap.prev_tabbar_text = self.get_tabbar_text()
+        prev_q2_form = self.get_current_q2_form()
+        if form.q2_form.prev_form is None and prev_q2_form:
+            form.q2_form.prev_form = prev_q2_form
 
         form_mdi_subwindow: QMdiSubWindow = self.q2_tabwidget.currentWidget().addSubWindow(form)
         form_mdi_subwindow.setWindowIcon(self.windowIcon())
@@ -442,6 +445,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def dpi(self):
         return self.physicalDpiX()
+
+    def get_current_q2_form(self):
+        if self.q2_tabwidget.currentWidget().activeSubWindow() is None:
+            return None
+        active_widget = self.q2_tabwidget.currentWidget().activeSubWindow().widget()
+        if hasattr(active_widget, "q2_form"):
+            return active_widget.q2_form
 
     def disable_current_form(self, mode=True):
         if self.q2_tabwidget.currentWidget().subWindowList():
