@@ -249,6 +249,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             if self.currentIndex() == self.count() - 1:
                 self.addTab()
                 return
+            show_mdi_normal_button = False
+            if self.currentWidget().activeSubWindow():
+                if self.currentWidget().activeSubWindow().isMaximized():
+                    show_mdi_normal_button = True
+            self.show_mdi_normal_button(show_mdi_normal_button)
             focus_widget = self.tab_focus_widget.get(self.currentIndex(), self)
             if focus_widget:
                 try:
