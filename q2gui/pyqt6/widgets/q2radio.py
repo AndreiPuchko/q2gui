@@ -41,6 +41,8 @@ class q2radio(QGroupBox, Q2Widget):
         self.button_list[0].setChecked(True)
         if meta.get("data") is not None:
             self.set_text(meta.get("data"))
+        if self.meta.get("readonly"):
+            self.set_readonly(self.meta.get("readonly"))
 
     def can_get_focus(self):
         return True
@@ -66,6 +68,9 @@ class q2radio(QGroupBox, Q2Widget):
                 else:
                     index = 0
             self.button_list[index].setChecked(True)
+
+    def setReadOnly(self, arg):
+        self.set_disabled(arg)
 
     def get_current_index(self):
         index_list = [x for x in range(len(self.button_list)) if self.button_list[x].isChecked()]
