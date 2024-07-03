@@ -33,7 +33,7 @@ def q2Mess(mess="", title="Message", html=True):
     form.do_not_save_geometry = True
     form.add_control("/v")
     if isinstance(mess, dict) or isinstance(mess, list):
-        mess = "<pre>" + json.dumps(mess, indent=2) + "</pre>"
+        mess = "<pre>" + json.dumps(mess, indent=2, ensure_ascii=False) + "</pre>"
     elif html is not True:
         mess = "<pre>" + mess + "</pre>"
     form.add_control("mess", control="text", data=f"{mess}", readonly=True)
@@ -375,7 +375,7 @@ class Q2WaitShow:
             self.main_wait_widget.heap.q2wait.widget_height.append(self.window_size[1])
         else:
             self.main_wait_widget = self.prev_q2_form.form_stack[-1]
-            
+
             self.wait_window.form_stack.append(self.wait_window.get_form_widget())
             self.main_wait_widget.heap.q2wait.widget_stack[-1].add_widget_below(
                 self.wait_window.form_stack[-1]

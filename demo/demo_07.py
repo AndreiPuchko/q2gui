@@ -137,7 +137,7 @@ class DemoApp(Q2App):
         self.set_color_mode("light")
         self.create_database()
 
-        self.add_menu("File|About", lambda: q2Mess("First application!"))
+        self.add_menu("File|About", lambda: q2Mess({1:"йцукен"}))
         self.add_menu("File|-", None)
         self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), toolbar=1)
         self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), toolbar=1)
