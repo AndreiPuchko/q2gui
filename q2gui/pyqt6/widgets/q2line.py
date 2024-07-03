@@ -30,7 +30,7 @@ class q2line(QLineEdit, Q2Widget):
             self.setEchoMode(self.EchoMode.Password)
         self.TS = " "  # thousands separator
         self.DS = "."  # decimal separator
-        self.setStyleSheet("QLineEdit { qproperty-cursorPosition: 0; }")
+
         if self.meta.get("num"):
             self.declen = int_(self.meta.get("datadec", 0))
             if self.meta.get("pic") == "F":  # financial
@@ -40,6 +40,8 @@ class q2line(QLineEdit, Q2Widget):
             self.textChanged.connect(self.format_decimal)
             self.cursorPositionChanged.connect(self.track_cursor)
             self.textChanged.emit("")
+        else:
+            self.setStyleSheet("QLineEdit { qproperty-cursorPosition: 0; }")
 
     def set_maximum_len(self, length):
         declen = int_(self.meta.get("datadec", 0))
@@ -74,9 +76,10 @@ class q2line(QLineEdit, Q2Widget):
         text = self.text()
         self.blockSignals(True)
         cursor_pos = self.cursorPosition()
-
         if cursor_pos == 0 and len(text) > 0 and text[0] == "-":
             cursor_pos = 1
+        if text == "." and self.declen > 0:
+            cursor_pos = 0
 
         cursor_pos_right = len(text) - cursor_pos
 
