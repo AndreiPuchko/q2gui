@@ -45,7 +45,7 @@ def num(tonum):
 
 
 def today():
-    return datetime.date.today()
+    return f"{datetime.date.today()}"
 
 
 class dotdict(dict):
