@@ -15,7 +15,7 @@
 
 from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import QTextEdit
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import QSize, Qt
 import webbrowser
 
 from q2gui.pyqt6.q2widget import Q2Widget
@@ -44,9 +44,10 @@ class q2text(QTextEdit, Q2Widget):
 
     def keyPressEvent(self, ev):
         if self.is_readonly():
-            ev.ignore()
-        else:
-            return super().keyPressEvent(ev)
+            if ev.key() == Qt.Key.Key_PageDown:  # propagate to parent - to close form
+                ev.ignore()
+                return
+        return super().keyPressEvent(ev)
 
     def showEvent(self, ev):
         self.updateGeometry()
