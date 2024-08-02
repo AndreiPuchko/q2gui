@@ -508,8 +508,12 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             return QIcon()
         elif self.get_icon(icon_text):
             return QIcon(self.get_icon(icon_text))
+        # Icon not found - create empty one
         tmp_icon = self.get_icon(q2app.GRID_ACTION_ICON)
-        icon_size = QIcon(tmp_icon).availableSizes()[0].width()
+        if tmp_icon:
+            icon_size = QIcon(tmp_icon).availableSizes()[0].width()
+        else:
+            icon_size = 24
         font = QFont("Arial")
         font.setWeight(QFont.Weight.Bold)
         font.setPixelSize(icon_size)
