@@ -382,6 +382,10 @@ class Q2Controls(list):
             meta["control"] = "date"
             meta["datalen"] = 16
 
+        if meta.get("datatype", "").lower() == "time":
+            meta["control"] = "time"
+            meta["datalen"] = 10
+
         if meta.get("column").startswith("/"):
             meta["control"] = ""
         elif not meta.get("control") and not meta.get("widget") and meta.get("column"):
@@ -459,6 +463,7 @@ class Q2Settings:
 
     def get(self, section="", key="", defaultValue=""):
         section = self.prepSection(section)
+        key = self.prepSection(key)
         try:
             return self.config.get(section, key)
         except Exception:
@@ -468,6 +473,7 @@ class Q2Settings:
         if section == "":
             return
         section = self.prepSection(section)
+        key = self.prepSection(key)
         value = "%(value)s" % locals()
         if not self.config.has_section(section):
             self.config.add_section(section)

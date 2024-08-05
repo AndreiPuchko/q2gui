@@ -23,6 +23,7 @@ from q2gui.pyqt6.widgets import (
     q2list,
     q2spin,
     q2doublespin,
+    q2time,
 )
 
 
@@ -51,4 +52,5 @@ from q2gui.pyqt6.widgets import (
     q2list,
     q2spin,
     q2doublespin,
+    q2time,
 )

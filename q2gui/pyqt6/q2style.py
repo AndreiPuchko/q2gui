@@ -36,6 +36,7 @@ class Q2Style(q2style.Q2Style):
             "QToolButton",
             "q2spin",
             "q2doublespin",
+            "q2time",
             "QTabBar::tab",
             "QRadioButton",
             "#radio",

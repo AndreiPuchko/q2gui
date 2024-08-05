@@ -117,7 +117,7 @@ class DemoApp(Q2App):
     def first_form(self):
         form = Q2Form("First form ever333")
         form.init_size = [80, 80]
-        form.add_control(column="p33", label="Label",  datatype="int", data=0)
+        form.add_control(column="p33", label="Time",  datatype="time", data="07:05:00")
         form.add_control(label="Label")
         form.add_control(
             column="p2", label="just label", datatype="num", datalen=15, datadec=2, data="-250.12", pic="F"
