@@ -263,8 +263,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
         def closeSubWindow(self):
             currentTabIndex = self.currentIndex()
-            if self.currentWidget().activeSubWindow():
-                self.currentWidget().activeSubWindow().close()
+            # print(self.currentWidget().subWindowList(), self.currentWidget().activeSubWindow())
+            # if self.currentWidget().activeSubWindow():
+            #     self.currentWidget().activeSubWindow().close()
+            if wlist := self.currentWidget().subWindowList():
+                wlist[-1].close()
             elif self.count() > 2:  # close tab if them >2
                 self.setCurrentIndex(currentTabIndex - 1)
                 self.removeTab(currentTabIndex)

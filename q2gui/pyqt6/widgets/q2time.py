@@ -32,9 +32,15 @@ class q2time(QTimeEdit, Q2Widget):
         self.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.PlusMinus)
 
     def set_text(self, text):
-        self.setTime(QTime.fromString(text, "HH:mm:ss"))
+        if text.count(":") == 2:
+            self.setTime(QTime.fromString(text, "HH:mm:ss"))
+        elif text.count(":") == 1:
+            self.setTime(QTime.fromString(text, "HH:mm"))
+        else:
+            self.setTime(QTime.fromString(text, "HH"))
 
     def get_text(self):
+        print(self.text())
         return self.text()
 
     def keyPressEvent(self, ev):
