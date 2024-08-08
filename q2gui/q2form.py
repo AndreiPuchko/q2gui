@@ -112,8 +112,17 @@ class Q2Form:
     def enable_action(self, text="", mode=True):
         self.actions.set_enabled(text, mode)
 
-    def run(self):
+    def run(self, order="", where=""):
         if self.model:
+            need_refresh = False
+            if order:
+                need_refresh = True
+                self.model.set_order(order)
+            if where:
+                need_refresh = True
+                self.model.set_where(where)
+            if need_refresh:
+                self.model.refresh()
             self.show_mdi_modal_grid()
         else:
             self.show_mdi_modal_form()
