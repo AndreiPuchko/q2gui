@@ -763,6 +763,7 @@ class Q2Form:
             where_dict = {}
 
         if self.current_row >= 0:
+            self.model.refresh_record(self.current_row)
             self._model_record = dict(self.model.get_record(self.current_row))
             for x in self._model_record:
                 if x not in self.crud_form.widgets:
@@ -1243,6 +1244,7 @@ class Q2FormWindow:
             text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
             worker=self.q2_form.grid_data_bulk_update,
             icon=q2app.ACTION_TOOLS_BULK_UPDATE_ICON,
+            eof_disabled=1,
         )
 
         actions.add_action(
@@ -1250,7 +1252,8 @@ class Q2FormWindow:
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print", worker=self.q2_form.grid_print, icon="⎙"
+            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print", worker=self.q2_form.grid_print, icon="⎙",
+            eof_disabled=1,
         )
 
         actions.add_action(
@@ -1755,6 +1758,7 @@ class Q2ModelData:
         self.q2_form = q2_form
 
     def __getattr__(self, name):
+        self.q2_form.model.refresh_record(self.q2_form.current_row)
         datadic = self.q2_form.model.get_record(self.q2_form.current_row)
         return datadic.get(name, "")
 

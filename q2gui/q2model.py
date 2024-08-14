@@ -212,6 +212,9 @@ class Q2Model:
         else:
             return self.records[row]
 
+    def refresh_record(self, row):
+        pass
+
     def _get_related(self, value, meta, do_not_show_value=False, reset_cache=False):
         if meta.get("num") and num(value) == 0:
             return ""
@@ -420,6 +423,9 @@ class Q2CursorModel(Q2Model):
 
     def get_record(self, row):
         return self.cursor.record(row)
+
+    def refresh_record(self, row):
+        self.cursor.refresh_record(row)
 
     def seek_row(self, row_dict):
         if self.row_count() > 10000:
