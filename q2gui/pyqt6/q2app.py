@@ -194,14 +194,14 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         def __init__(self, parent):
             super().__init__(parent)
             self.main_window: Q2App = parent
-            self.addTab(QWidget(), "+")
+            self.addTab(QWidget(self), "+")
             self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
             self.setObjectName("main_tab_widget")
             self.prev_index = None
             self.tab_focus_widget = {}
             self.tabBar().setObjectName("main_tab_bar")
 
-            self.corner_widget = QWidget()
+            self.corner_widget = QWidget(self)
             self.corner_widget.setLayout(QHBoxLayout())
 
             self.closeButton = QToolButton(self)
@@ -262,15 +262,15 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     pass
 
         def closeSubWindow(self):
+            # print(">", len(set(self.main_window.QApplication.allWidgets())))
             currentTabIndex = self.currentIndex()
-            # print(self.currentWidget().subWindowList(), self.currentWidget().activeSubWindow())
-            # if self.currentWidget().activeSubWindow():
-            #     self.currentWidget().activeSubWindow().close()
             if wlist := self.currentWidget().subWindowList():
                 wlist[-1].close()
             elif self.count() > 2:  # close tab if them >2
                 self.setCurrentIndex(currentTabIndex - 1)
-                self.removeTab(currentTabIndex)
+                # self.removeTab(currentTabIndex)
+                self.widget(currentTabIndex).deleteLater()
+            # print(">>", len(set(self.main_window.QApplication.allWidgets())))
 
         def show_mdi_normal(self):
             self.currentWidget().activeSubWindow().showNormal()
@@ -290,9 +290,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 widget.setOption(QMdiArea.AreaOption.DontMaximizeSubWindowOnActivation)
                 widget.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                 widget.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                widget.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
 
             self.insertTab(self.count() - 1, widget, label)
             self.setCurrentIndex(self.count() - 2)
+            self.currentWidget().setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
             if self.count() > 1:
                 self.main_window.on_new_tab()
 

@@ -1584,6 +1584,7 @@ class Q2FormWindow:
                         widget.get_check().set_focus()
                     break
         self.q2_form.q2_app.show_form(self, modal)
+        # print(">>", len(set(self.q2_form.q2_app.QApplication.allWidgets())))
 
     def get_controls_list(self, name: str):
         return [self.widgets[x] for x in self.widgets if type(self.widgets[x]).__name__ == name]

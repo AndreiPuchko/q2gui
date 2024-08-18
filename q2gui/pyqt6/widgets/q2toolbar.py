@@ -39,7 +39,7 @@ class q2toolbar(QFrame, Q2Widget):
         if tmp_icon:
             self.icon_size = QIcon(tmp_icon).availableSizes()[0].width()
 
-        self.toolBarPanel = QToolBar()
+        self.toolBarPanel = QToolBar(self)
         self.toolBarPanel.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         action_list = []
         if isinstance(meta.get("actions"), Q2Actions):
@@ -56,8 +56,8 @@ class q2toolbar(QFrame, Q2Widget):
 
         self.show_main_button = actions.show_main_button
         self.show_actions = actions.show_actions
-        tool_bar_qt_actions = QMenu()
-        cascade_action = {"": tool_bar_qt_actions}
+        self.tool_bar_qt_actions = QMenu(self)
+        self.cascade_action = {"": self.tool_bar_qt_actions}
 
         for action in action_list:
             if action.get("text", "").startswith("/"):
@@ -68,13 +68,13 @@ class q2toolbar(QFrame, Q2Widget):
                 action_key = "|".join(action_text_list[:x])
                 action_text = action_text_list[x]
                 if action_text == "-":
-                    action["engineAction"] = cascade_action[action_key].addSeparator()
+                    action["engineAction"] = self.cascade_action[action_key].addSeparator()
                 else:
                     if x + 1 == len(action_text_list) and (
                         action.get("worker") or (action.get("child_where") and action.get("child_form"))
                     ):  # real action
-                        action["engineAction"] = cascade_action[action_key].addAction(action_text)
-                        action["parent_action"] = cascade_action[action_key]
+                        action["engineAction"] = self.cascade_action[action_key].addAction(action_text)
+                        action["parent_action"] = self.cascade_action[action_key]
                         action["parent_action_text"] = action_key
 
                         action["_set_visible_parent_action"] = lambda mode=True, act=action[
@@ -118,25 +118,25 @@ class q2toolbar(QFrame, Q2Widget):
                         )
                     else:  # cascade
                         subMenu = "|".join(action_text_list[: x + 1])
-                        if subMenu not in cascade_action:
-                            cascade_action[subMenu] = cascade_action[action_key].addMenu(
+                        if subMenu not in self.cascade_action:
+                            self.cascade_action[subMenu] = self.cascade_action[action_key].addMenu(
                                 f"{action_text}  {'' if '|' in subMenu else '  '}"
                             )
                             if action.get("icon", ""):
-                                cascade_action[subMenu].setIcon(
+                                self.cascade_action[subMenu].setIcon(
                                     q2app.q2_app.get_engine_icon(action.get("icon", ""))
                                 )
 
-        self.main_button = QToolBar()
+        self.main_button = QToolBar(self)
 
-        self.main_button_action = QToolButton()
+        self.main_button_action = QToolButton(self)
         self.main_button_action.setText(GRID_ACTION_TEXT)
 
         self.main_button_action.setIcon(q2app.q2_app.get_engine_icon(GRID_ACTION_ICON))
 
         self.main_button_action.setToolTip(self.meta.get("mess", ""))
         self.main_button_action.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-        self.main_button_action.setMenu(tool_bar_qt_actions)
+        self.main_button_action.setMenu(self.tool_bar_qt_actions)
 
         font_size = q2app.q2_app.q2style.font_size
         font_name = q2app.q2_app.q2style.font_name
@@ -190,7 +190,7 @@ class q2toolbar(QFrame, Q2Widget):
             self.main_button.setVisible(False)
 
         self.toolBarPanel.addSeparator()
-        self.toolBarPanel.addActions(tool_bar_qt_actions.actions())
+        self.toolBarPanel.addActions(self.tool_bar_qt_actions.actions())
 
         for x in self.toolBarPanel.actions():
             action_widget = self.toolBarPanel.widgetForAction(x)

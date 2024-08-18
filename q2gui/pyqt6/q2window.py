@@ -53,7 +53,8 @@ def layout(arg="h"):
     return layout
 
 
-class Q2Frame(q2window.Q2Frame, QWidget):
+class Q2Frame(q2window.Q2Frame):
+    
     def set_mode(self, mode="v"):
         self.splitter = None
         super().set_mode(mode=mode)

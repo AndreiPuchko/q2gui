@@ -1,5 +1,6 @@
 """Shows the possibilities of combining several forms into one
 """
+
 if __name__ == "__main__":
     import sys
 
@@ -20,12 +21,13 @@ load_q2engine(globals(), "PyQt6")
 class DemoApp(Q2App):
     def on_start(self):
         # self.show_complex_form()
-        self.show_form1()
+        self.show_form3()
         # self.show_grid_form()
 
     def on_init(self):
         self.add_menu("File|First", self.show_form1, toolbar="*")
         self.add_menu("File|Second", self.show_form2, toolbar="*")
+        self.add_menu("File|Third", self.show_form3, toolbar="*")
         self.add_menu("File|Grid", self.show_grid_form, toolbar="*")
         self.add_menu("File|Complex", self.show_complex_form, toolbar="*")
         self.add_menu("File|-")
@@ -134,6 +136,17 @@ class DemoApp(Q2App):
 
     def show_form2(self):
         self.describe_form2().show_mdi_modal_form()
+
+    def describe_form3(self):
+        form = Q2Form("Second form")
+        form.add_control("/")
+        form.add_control("input", "Input", data="123")
+        return form
+
+    def show_form3(self):
+        form = self.describe_form3()
+        form.show_mdi_modal_form()
+        # print(form.s.input)
 
     def describe_complex_form(self):
         form = Q2Form("Complex form")

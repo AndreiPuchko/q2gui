@@ -51,8 +51,9 @@ class Q2Form(q2form.Q2Form):
 class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
     def __init__(self, q2_form: Q2Form, title=""):
         super().__init__(q2_form, title)
-        # title = title if title else q2_form.title
-        Q2QtWindow.__init__(self, self.title)
+        title = title if title else q2_form.title
+        # Q2QtWindow.__init__(self, self.title)
+        self.set_title(title)
         self._widgets_package = q2gui.pyqt6.widgets
         self.setObjectName("q2form")
         self.layout().setContentsMargins(2, 2, 2, 2)
