@@ -56,7 +56,7 @@ class q2toolbar(QFrame, Q2Widget):
 
         self.show_main_button = actions.show_main_button
         self.show_actions = actions.show_actions
-        self.tool_bar_qt_actions = QMenu(self)
+        self.tool_bar_qt_actions = QMenu()
         self.cascade_action = {"": self.tool_bar_qt_actions}
 
         for action in action_list:

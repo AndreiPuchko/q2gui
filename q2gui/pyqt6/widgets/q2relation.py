@@ -33,7 +33,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def __init__(self, meta):
         super().__init__(meta)
         Q2Frame.__init__(self, "h")
-        self.meta = meta
+        # self.meta = meta
 
         self.get = q2line(meta)
         self.filter_string = ""

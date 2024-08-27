@@ -54,7 +54,11 @@ def layout(arg="h"):
 
 
 class Q2Frame(q2window.Q2Frame):
-    
+    def __init__(self, mode="v"):
+        super().__init__(mode)
+        self.setMaximumWidth(99999)
+        self.setMaximumHeight(99999)
+
     def set_mode(self, mode="v"):
         self.splitter = None
         super().set_mode(mode=mode)
