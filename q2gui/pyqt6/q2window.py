@@ -13,7 +13,15 @@
 #    limitations under the License.
 
 
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFormLayout, QGridLayout, QApplication
+from PyQt6.QtWidgets import (
+    QWidget,
+    QHBoxLayout,
+    QVBoxLayout,
+    QFormLayout,
+    QGridLayout,
+    QApplication,
+    QWIDGETSIZE_MAX,
+)
 from PyQt6.QtCore import Qt
 from q2gui import q2window
 
@@ -56,8 +64,8 @@ def layout(arg="h"):
 class Q2Frame(q2window.Q2Frame):
     def __init__(self, mode="v"):
         super().__init__(mode)
-        self.setMaximumWidth(99999)
-        self.setMaximumHeight(99999)
+        self.setMaximumWidth(QWIDGETSIZE_MAX)
+        self.setMaximumHeight(QWIDGETSIZE_MAX)
 
     def set_mode(self, mode="v"):
         self.splitter = None
