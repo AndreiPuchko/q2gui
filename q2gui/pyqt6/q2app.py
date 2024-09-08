@@ -16,7 +16,7 @@
 # from q2gui import q2form
 
 import os
-
+import time
 from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
@@ -446,7 +446,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_toolbar(True)
                 self.disable_menubar(True)
                 self.disable_tabbar(True)
-            form.exec()
+            form.show()
+            while form.not_closed:
+                time.sleep(0.005)
+                self.process_events()
+           
             if modal == "super":  # real modal dialog
                 self.enable_toolbar(form.heap.prev_toolbar_enabled)
                 self.enable_menubar(form.heap.prev_menubar_enabled)

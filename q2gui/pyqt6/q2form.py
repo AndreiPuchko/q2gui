@@ -270,6 +270,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
     def closeEvent(self, event=None):
         super().close()
         self.q2_form._close()
+        self.not_closed = False
         self.q2_form.form_is_active = False
         if self.heap.prev_mdi_window:
             self.heap.prev_mdi_window.setEnabled(True)

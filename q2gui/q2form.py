@@ -186,8 +186,8 @@ class Q2Form:
 
     def close(self):
         if self.form_stack:
-            self.last_closed_form = self.form_stack[-1]
-            self.save_closed_form_text()
+            # self.last_closed_form = self.form_stack[-1]
+            # self.save_closed_form_text()
             self.form_stack[-1].close()
             # self.q2_app.process_events()
 
@@ -198,7 +198,7 @@ class Q2Form:
             if hasattr(self.last_closed_form.widgets[x], "get_text")
         }
 
-    def _close(self):
+    def _close(self, q2form_window=None):
         if self._in_close_flag:
             return
         self._in_close_flag = True
@@ -206,7 +206,8 @@ class Q2Form:
             self.last_closed_form = self.form_stack[-1]
             self.form_stack[-1].save_splitters()
             self.save_closed_form_text()
-        self.after_form_closed()
+        if q2form_window is not None and q2form_window.is_crud is None:
+            self.after_form_closed()
         self._in_close_flag = False
 
     def show_form(self, title="", modal="modal"):
@@ -689,6 +690,7 @@ class Q2Form:
             self.after_crud_save()
             if close_form:
                 self.close()
+                self.crud_form = None
 
     def prepare_copy_children_data(self):
         self.copy_records = {}
@@ -743,6 +745,7 @@ class Q2Form:
         self.crud_mode = mode
         self.add_crud_buttons(mode)
         self.crud_form = self._Q2FormWindow_class(self, f"{self.title}.[{mode}]")
+        self.crud_form.is_crud = True
         self.crud_form.build_form()
         self.set_crud_form_data(mode)
         self.crud_form.show_form(modal=modal)
@@ -1171,6 +1174,8 @@ class Q2FormWindow:
         self.hotkey_widgets = {}
         self.grid_actions = q2app.Q2Actions()
         self._in_close_flag = None
+        self.is_crud = None
+        self.not_closed = True
 
     def on_activate(self):
         if self.mode == "grid":
@@ -1644,6 +1649,9 @@ class Q2FormWindow:
         self.save_grid_columns()
         if hasattr(q2app.q2_app, "settings"):
             self.save_geometry(q2app.q2_app.settings)
+        self.q2_form._close(self)
+        if self.is_crud:
+            self.q2_form.crud_form = None
 
     def save_splitters(self):
         if not hasattr(q2app.q2_app, "settings"):
