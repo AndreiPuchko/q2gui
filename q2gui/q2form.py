@@ -770,8 +770,12 @@ class Q2Form:
             self._model_record = dict(self.model.get_record(self.current_row))
             for x in self._model_record:
                 if x not in self.crud_form.widgets:
+                    if mode == NEW:
+                        self._model_record[x] = ""
                     continue
                 if self.c.__getattr__(x) is None:
+                    if mode == NEW:
+                        self._model_record[x] = ""
                     continue
                 if self.c.__getattr__(x)["check"]:
                     if self.c.__getattr__(x)["num"]:
@@ -784,6 +788,7 @@ class Q2Form:
                 if mode == NEW:
                     if x not in where_dict:
                         self.crud_form.widgets[x].set_text("")
+                        self._model_record[x] = ""
                 else:
                     self.crud_form.widgets[x].set_text(self._model_record[x])
 
