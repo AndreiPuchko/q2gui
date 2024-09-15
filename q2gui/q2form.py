@@ -186,8 +186,8 @@ class Q2Form:
 
     def close(self):
         if self.form_stack:
-            # self.last_closed_form = self.form_stack[-1]
-            # self.save_closed_form_text()
+            self.last_closed_form = self.form_stack[-1]
+            self.save_closed_form_text()
             self.form_stack[-1].close()
             # self.q2_app.process_events()
 
