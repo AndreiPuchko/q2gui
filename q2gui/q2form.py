@@ -1119,8 +1119,8 @@ class Q2Form:
         if control1 is None:
             if column in mem_widgets:
                 control1 = column
-            elif column + "1" in mem_widgets:
-                control1 = column + "1"
+            elif column + "____1" in mem_widgets:
+                control1 = column + "____1"
         if control1 not in mem_widgets:
             return ""
 
@@ -1132,8 +1132,8 @@ class Q2Form:
         num_control = self.controls.c.__getattr__(control1).get("num")
         control1_value = self.s.__getattr__(control1)
         if control2 is None:
-            if control1.endswith("1"):
-                control2 = control1[:-1] + "2"
+            if control1.endswith("____1"):
+                control2 = control1[:-5] + "____2"
                 control2_value = self.s.__getattr__(control2)
             else:
                 control2_value = None
@@ -1147,12 +1147,12 @@ class Q2Form:
             if control2_value:
                 control2_value = num(control2_value)
 
-        if (control1_value and control2_value is None) or control1_value == control2_value:
+        if (control2_value is None) or control1_value == control2_value:
             if date_control or num_control:
                 return f"{column} = '{control1_value}'"
             else:
                 return f"{column} like '%{control1_value}%'"
-        elif control1_value and not control2_value:
+        elif (control1_value and not control2_value) or (control2_value and control1_value > control2_value):
             return f"{column} >= '{control1_value}'"
         elif not control1_value and control2_value:
             return f"{column} <= '{control2_value}'"
