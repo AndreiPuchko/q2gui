@@ -773,6 +773,16 @@ class Q2Form:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
+                if mode in (NEW, COPY) and x == "seq":
+                    self.crud_form.widgets[x].set_text(self.model.get_next_sequence(x, self._model_record[x]))
+                if (
+                    self.controls.c.__getattr__(x)["pk"]
+                    and mode in (NEW, COPY)
+                    and not self.controls.c.__getattr__(x)["ai"]
+                ):
+                    # for new record - get next primary key
+                    self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
+                
                 if self.c.__getattr__(x) is None:
                     if mode == NEW:
                         self._model_record[x] = ""
@@ -786,21 +796,11 @@ class Q2Form:
                         self.crud_form.widgets[x].check.set_checked(True)
                         # self.crud_form.widgets[x].check.set_text("*")
                 if mode == NEW:
-                    if x not in where_dict:
+                    if x not in where_dict and x != "seq" and not self.controls.c.__getattr__(x)["pk"]:
                         self.crud_form.widgets[x].set_text("")
                         self._model_record[x] = ""
                 else:
                     self.crud_form.widgets[x].set_text(self._model_record[x])
-
-                if mode in (NEW, COPY) and x == "seq":
-                    self.crud_form.widgets[x].set_text(self.model.get_next_sequence(x, self._model_record[x]))
-                if (
-                    self.controls.c.__getattr__(x)["pk"]
-                    and mode in (NEW, COPY)
-                    and not self.controls.c.__getattr__(x)["ai"]
-                ):
-                    # for new record - get next primary key
-                    self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
         # take care about PK and filters
         for x in self.controls.get_names():
             if x not in self.crud_form.widgets:
@@ -1262,7 +1262,9 @@ class Q2FormWindow:
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print", worker=self.q2_form.grid_print, icon="⎙",
+            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
+            worker=self.q2_form.grid_print,
+            icon="⎙",
             eof_disabled=1,
         )
 

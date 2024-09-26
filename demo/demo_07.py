@@ -132,11 +132,12 @@ def load_mock_data(db: Q2Db):
 
 
 class DemoApp(Q2App):
-    def on_init(self):
-        # super().on_init()
+    def __init__(self, title=""):
+        super().__init__(title)
         self.set_color_mode("light")
-        self.create_database()
 
+    def on_init(self):
+        self.create_database()
         self.add_menu("File|About", lambda: q2Mess({1:"йцукен"}))
         self.add_menu("File|-", None)
         self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), toolbar=1)
@@ -182,6 +183,7 @@ class DemoApp(Q2App):
             "Orders", child_form=self.form_orders, child_where="customer_id={customer_id}", hotkey="F2"
         )
         form.max_child_level = 2
+        form.filter_form = True
         return form
 
     def customers(self):
