@@ -764,6 +764,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def close(self):
         self.closing = True
         self.q2_toolbar.clear()
+        self.save_geometry(self.settings)
         super().close()
         QApplication._mw_count -= 1
         QMainWindow.close(self)
