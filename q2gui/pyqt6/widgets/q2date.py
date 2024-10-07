@@ -51,7 +51,7 @@ class q2date(QComboBox, Q2Widget):
                     if int(lt[2]) == 0:  # year
                         lt[2] = QDate.currentDate().toString("yyyy")
 
-                    if int(lt[1]) == 0:  # month
+                    if int(lt[1]) == 0 and pos != 4:  # month
                         lt[1] = QDate.currentDate().toString("MM")
                     elif int(lt[1]) > 12:
                         lt[1] = "12"
@@ -62,10 +62,8 @@ class q2date(QComboBox, Q2Widget):
                         lt[0] = "01"
                     elif int(lt[0]) < 4 and len(lt[0]) > 2:
                         lt[0] = f"{int(lt[0])}0"
-                    # else:
-                    #     lt[0] = QDate.currentDate().toString("dd")
-
-                    if pos > 4:
+                    
+                    if pos > 9:
                         mdm = QDate(int(lt[2]), int(lt[1]), 1).daysInMonth()
                         if mdm < int(lt[0]):
                             lt[0] = str(mdm)
@@ -83,7 +81,7 @@ class q2date(QComboBox, Q2Widget):
 
     def lineeditCursorPositionChanged(self, old, new):
         if old in [3, 4] and (new < 3 or new > 4):
-            self.lineedit.setText(self.fixupDay(self.lineedit.text()))
+            # self.lineedit.setText(self.fixupDay(self.lineedit.text()))
             self.lineedit.setCursorPosition(new)
         elif new == 10:
             self.lineedit.setCursorPosition(9)

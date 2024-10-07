@@ -317,6 +317,9 @@ class Q2WaitShow:
         self.wait_window.after_form_closed = self.wait_windows_after_form_closed
 
     def wait_windows_after_form_closed(self):
+        q2app.q2_app.disable_toolbar(False)
+        q2app.q2_app.disable_menubar(False)
+        q2app.q2_app.disable_tabbar(False)
         self.interrupted = True
 
     def step(self, *args):
