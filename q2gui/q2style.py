@@ -174,7 +174,7 @@ class Q2Style:
         return ""
 
     def _linux_style(self):
-        pass
+        return ""
 
     def set_style_sheet(self, q2widget=None, color_mode=None):
         if hasattr(q2widget, "set_style_sheet"):
