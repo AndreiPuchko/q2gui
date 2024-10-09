@@ -1,4 +1,4 @@
-FROM ubuntu:rolling
+FROM ubuntu:23.10
 
 ENV DEBIAN_FRONTEND=noninteractive
 
