@@ -15,7 +15,7 @@
 
 import q2gui.q2app as q2app
 from q2gui.q2model import Q2Model, Q2CursorModel
-from q2gui.q2utils import int_, num
+from q2gui.q2utils import int_, num, nums
 import re
 import html
 import json
@@ -1805,6 +1805,9 @@ class Q2PasteClipboard:
             waitbar.step(1000)
             for col in row:
                 if col in source_map:
+                    col_def = self.q2_form.c.__getattr__(source_map[col])
+                    if col_def.get("num") and int_(col_def.get("datadec")) > 0 and "," in row[col]:
+                        row[col] = nums(row[col])
                     self.q2_form.s.__setattr__(source_map[col], row[col])
             self.q2_form.crud_save(close_form=False)
             self.q2_form.before_form_show()

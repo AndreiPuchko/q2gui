@@ -17,6 +17,7 @@ import datetime
 import hashlib
 import secrets
 import binascii
+import re
 
 
 def is_sub_list(sublst, lst):
@@ -42,6 +43,22 @@ def num(tonum):
         return Decimal(f"{tonum}")
     except Exception:
         return 0
+
+
+def nums(number_str):
+    number_str = f"{number_str}"
+    decimal_sep_pos = max(number_str.rfind(","), number_str.rfind("."))
+
+    if decimal_sep_pos == -1:
+        return number_str
+
+    integer_part = number_str[:decimal_sep_pos]
+    decimal_part = number_str[decimal_sep_pos + 1 :]
+
+    integer_part = re.sub(r"[^0-9]", "", integer_part)
+
+    formatted_number = f"{integer_part}.{decimal_part}"
+    return formatted_number
 
 
 def today():
