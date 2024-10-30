@@ -401,12 +401,12 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         if action:
             action.setEnabled(True)
 
-    def eventFilter(self, obj, ev: QEvent):
-        if ev.type() == QEvent.Type.Close:
-            if not obj.isEnabled():
-                ev.ignore()
-                return True
-        return super().eventFilter(obj, ev)
+    # def eventFilter(self, obj, ev: QEvent):
+    #     if ev.type() == QEvent.Type.Close:
+    #         if not obj.isEnabled():
+    #             ev.ignore()
+    #             return True
+    #     return super().eventFilter(obj, ev)
 
     def moveEvent(self, ev):
         self.q2_toolbar.move(ev.pos(), ev.oldPos())
@@ -428,7 +428,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         tmp_icon.fill(Qt.GlobalColor.transparent)
         form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
 
-        form.installEventFilter(self)
+        # form.installEventFilter(self)
         self.subwindow_count_changed()
 
         if modal != "" and form.heap.prev_mdi_window:  # mdiarea normal window

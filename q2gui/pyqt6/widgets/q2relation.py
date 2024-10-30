@@ -184,12 +184,12 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def is_enabled(self):
         return self.get.is_enabled()
 
-    def mousePressEvent(self, a0: QMouseEvent | None) -> None:
+    def mousePressEvent(self, ev: QMouseEvent):
         if not self.is_enabled():
             self.set_disabled()
             if hasattr(self.check, "set_focus"):
                 self.check.set_focus()
-        return super().mousePressEvent(a0)
+        return super().mousePressEvent(ev)
 
 
 class q2_realtion_lookup(q2lookup):
