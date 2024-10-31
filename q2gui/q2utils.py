@@ -53,9 +53,10 @@ def nums(number_str):
         return number_str
 
     integer_part = number_str[:decimal_sep_pos]
-    decimal_part = number_str[decimal_sep_pos + 1 :]
+    decimal_part = number_str[decimal_sep_pos + 1:]
 
-    integer_part = re.sub(r"[^0-9]", "", integer_part)
+    integer_part = re.sub(r"[^0-9-]", "", integer_part)
+    integer_part = re.sub(r"(?<!^)-", "", integer_part)
 
     formatted_number = f"{integer_part}.{decimal_part}"
     return formatted_number
