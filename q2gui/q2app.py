@@ -444,10 +444,17 @@ class Q2Settings:
         if isinstance(self.filename, io.StringIO):
             self.config.read_file(self.filename)
         else:
-            # self.config.read(self.filename)
             if not os.path.isfile(self.filename):
                 self.write()
-            self.config.read_file(codecs.open(self.filename, "r", "utf8"))
+            try:
+                self.config.read_file(codecs.open(self.filename, "r", "utf8"))
+            except Exception as read_error:
+                logging.error(f"Error reading {self.filename}:\n{read_error}")
+                self.fix_ini_headers()
+                self.config.read_file(codecs.open(self.filename, "r", "utf8"))
+            except Exception as recovery_error:
+                logging.error(f"Error while trying recover {self.filename}:\n{recovery_error}")
+                raise
 
     def write(self):
         if self.filename == "none":
@@ -478,6 +485,17 @@ class Q2Settings:
         if not self.config.has_section(section):
             self.config.add_section(section)
         self.config.set(section, key, value)
+
+    def fix_ini_headers(self):
+        with open(self.filename, "r", encoding="utf-8") as file:
+            content = file.read()
+
+        # fix section headers with sections with hyphens
+        pattern = r"\[(.+?)\n\.(.*?)\]"
+        fixed_content = re.sub(pattern, r"[\1 \2]", content)
+
+        with open(self.filename, "w", encoding="utf-8") as file:
+            file.write(fixed_content)
 
 
 class Q2Stdout:
