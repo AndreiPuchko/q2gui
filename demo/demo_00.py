@@ -1,6 +1,6 @@
-if __name__ == "__main__":
-    import sys
+import sys
 
+if __name__ == "__main__":
     sys.path.insert(0, ".")
 
 import importlib
@@ -12,7 +12,8 @@ load_q2engine(globals(), "PyQt6")
 
 
 class DemoApp(Q2App):
-    def on_init(self):
+    def __init__(self, title=""):
+        super().__init__(title)
         self.hide_tabbar()
         self.hide_toolbar()
         self.hide_statusbar()
@@ -43,7 +44,6 @@ class DemoApp(Q2App):
                     control="list",
                     pic=";".join(self.launch_data.keys()),
                     valid=self.set_description,
-                    dblclick=self.launcher,
                     stretch=1,
                 )
                 self.form.add_control(
@@ -58,11 +58,11 @@ class DemoApp(Q2App):
         self.form.add_control("/s")
         self.form.add_control("run", "Run", control="button", valid=self.launcher)
         self.form.add_control("/s")
-        self.form.add_control("quit", "Quit", control="button", valid=self.form.close)
+        self.form.add_control("quit", "Quit", control="button", valid=self.close)
         self.form.add_control("/s")
         self.form.after_form_show = self.after_form_show
+        self.form.after_form_closed = self.close
         self.form.run()
-        self.close()
 
     def launcher(self):
         py = self.launch_data[self.form.s.app_list]
