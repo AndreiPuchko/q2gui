@@ -33,6 +33,7 @@ from PyQt6.QtWidgets import (
 )
 
 from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF
+from PyQt6.QtTest import QTest
 from PyQt6.QtGui import (
     QFontMetrics,
     QIcon,
@@ -742,6 +743,72 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self._wait_for_show()
         if len(QApplication.allWindows()) == 1:
             QApplication.instance().exec()
+
+    def click_menu(self, *path):
+        menu_paths = []
+        menu_tree = {}
+
+        def build_menu_tree():
+            """Builds a tree representation of the menu system."""
+
+            def build_menu_items(menu, path):
+                items = {}
+                for action in menu.actions():
+                    if action.isSeparator():
+                        continue
+                    if action.menu():  # Nested menu
+                        _path = path[:]
+                        _path.append(action.text())
+                        items[action.text()] = {
+                            "menu": action.menu(),
+                            "items": build_menu_items(action.menu(), _path),
+                        }
+                    else:  # Regular action
+                        items[action.text()] = {}
+                        menu_paths.append(path + [action.text()])
+                return items
+
+            for menu_action in self.menuBar().actions():
+                menu = menu_action.menu()
+                if menu:
+                    menu_tree[menu_action.text()] = {
+                        "menu": menu,
+                        "items": build_menu_items(menu, [menu_action.text()]),
+                    }
+
+        def click_menubar():
+            for menubar_action in self.menuBar().actions():
+                if menubar_action.text() == path[0]:
+                    break
+            menu_rect = self.menuBar().actionGeometry(menubar_action)
+            menu_center = QPoint(menu_rect.x() + 2, menu_rect.y() + 2)
+            QTest.mouseClick(self.menuBar(), Qt.LeftButton, pos=menu_center)
+            QApplication.processEvents()
+            menu = menu_tree[path[0]]
+            return menu
+
+        def click_submenu(menu, submenu_text):
+            if menu is None:
+                return menu
+            for action in menu["menu"].actions():
+                if action.text() == submenu_text:
+                    menu_rect = menu["menu"].actionGeometry(action)
+                    menu_center = QPoint(
+                        menu_rect.x() + menu_rect.width() // 2, menu_rect.y() + menu_rect.height() // 2
+                    )
+                    QTest.mouseClick(menu["menu"], Qt.LeftButton, pos=menu_center)
+                    QApplication.processEvents()
+                    if menu["items"][submenu_text]:
+                        QTest.qWait(100)
+                    return menu["items"][submenu_text]
+
+        build_menu_tree()
+        if list(path) in menu_paths:
+            menu = click_menubar()
+            for submenu in path[1:]:
+                if menu:
+                    menu = click_submenu(menu, submenu)
+        QApplication.processEvents()
 
     def add_new_tab(self):
         self.q2_tabwidget.addTab()
