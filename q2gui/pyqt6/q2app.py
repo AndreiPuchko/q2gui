@@ -32,7 +32,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
 )
 
-from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF
+from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF, QPoint
 from PyQt6.QtTest import QTest
 from PyQt6.QtGui import (
     QFontMetrics,
@@ -782,7 +782,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     break
             menu_rect = self.menuBar().actionGeometry(menubar_action)
             menu_center = QPoint(menu_rect.x() + 2, menu_rect.y() + 2)
-            QTest.mouseClick(self.menuBar(), Qt.LeftButton, pos=menu_center)
+            QTest.mouseClick(self.menuBar(), Qt.MouseButton.LeftButton, pos=menu_center)
             QApplication.processEvents()
             menu = menu_tree[path[0]]
             return menu
@@ -796,7 +796,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     menu_center = QPoint(
                         menu_rect.x() + menu_rect.width() // 2, menu_rect.y() + menu_rect.height() // 2
                     )
-                    QTest.mouseClick(menu["menu"], Qt.LeftButton, pos=menu_center)
+                    QTest.mouseClick(menu["menu"], Qt.MouseButton.LeftButton, pos=menu_center)
                     QApplication.processEvents()
                     if menu["items"][submenu_text]:
                         QTest.qWait(100)

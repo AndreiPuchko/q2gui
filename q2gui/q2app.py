@@ -828,3 +828,6 @@ class Q2App:
 
     def run(self):
         self.build_menu()
+
+    def click_submenu(menu, submenu_text):
+        pass
