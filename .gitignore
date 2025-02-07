@@ -6,3 +6,4 @@ temp/*
 build
 dist
 q2gui.ini
+.vscode/*
