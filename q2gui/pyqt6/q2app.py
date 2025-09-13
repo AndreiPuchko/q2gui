@@ -25,14 +25,13 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QFileDialog,
     QTabWidget,
-    QTabBar,
     QSplitter,
     QMdiArea,
     QMdiSubWindow,
     QHBoxLayout,
 )
 
-from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF, QPoint
+from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF, QPoint, QEventLoop
 from PyQt6.QtTest import QTest
 from PyQt6.QtGui import (
     QFontMetrics,
@@ -447,11 +446,17 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_toolbar(True)
                 self.disable_menubar(True)
                 self.disable_tabbar(True)
+            # form.show()
+            # while form.not_closed:
+            #     time.sleep(0.005)
+            #     self.process_events()
+
+            loop = QEventLoop()
+            form.destroyed.connect(loop.quit)
             form.show()
-            while form.not_closed:
-                time.sleep(0.005)
-                self.process_events()
-           
+            if loop:
+                loop.exec()  # blocks until form is destroyed
+
             if modal == "super":  # real modal dialog
                 self.enable_toolbar(form.heap.prev_toolbar_enabled)
                 self.enable_menubar(form.heap.prev_menubar_enabled)

@@ -64,8 +64,8 @@ class Q2Model:
         return row in self.hidden_rows
 
     def get_records(self):
-        for x in range(self.row_count):
-            yield self.records(x)
+        for x in range(self.row_count()):
+            yield self.records[x]
 
     def get_row(self, row_number):
         return self.get_record(row_number)

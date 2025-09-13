@@ -8,8 +8,8 @@
             "name": "Python: Current File",
             "type": "debugpy",
             "request": "launch",
-            // "program": "demo/demo.py",
-            "program": "${file}",
+            "program": "demo/demo.py",
+            // "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
