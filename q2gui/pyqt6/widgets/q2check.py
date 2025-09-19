@@ -44,7 +44,7 @@ class q2check(QCheckBox, Q2Widget):
                 if x.meta.get("valid"):
                     x.meta.get("valid")()
         if self.meta.get("changed"):
-            self.meta["changed"]("*" if self.isChecked() else "")
+            self.meta["changed"]()
         self.valid()
 
     def add_managed_widget(self, widget):

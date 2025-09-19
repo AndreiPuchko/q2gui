@@ -38,12 +38,12 @@ class q2color(QFrame, Q2Widget, Q2Frame):
             {
                 "label": "",
                 "valid": self.choose_color,
-                # "when": self.when,
                 "form": self.meta["form"],
             }
         )
         self.btn.setFixedSize(20, 20)
         # --- Line ---
+        self.meta_changed = self.meta.get("changed")
         self.meta["changed"] = self.line_changed
         self.line = q2line(meta)
 
@@ -57,7 +57,7 @@ class q2color(QFrame, Q2Widget, Q2Frame):
 
     # --- Logic ---
     def _update_button_color(self):
-        self.btn.add_style_sheet(f"background-color:{self.line.get_text()}")
+        self.btn.set_style_sheet(f"background-color:{self.line.get_text()}")
 
     def choose_color(self):
         new_color = QColorDialog.getColor(QColor(self.line.get_text()), self, "Select Color")
@@ -65,6 +65,8 @@ class q2color(QFrame, Q2Widget, Q2Frame):
             self.set_color(new_color)
 
     def line_changed(self, text):
+        if self.meta_changed:
+            self.meta_changed()
         color = QColor(text.strip())
         if color.isValid():
             self._update_button_color()
