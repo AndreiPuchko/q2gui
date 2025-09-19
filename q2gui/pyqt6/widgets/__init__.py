@@ -24,6 +24,7 @@ from q2gui.pyqt6.widgets import (
     q2spin,
     q2doublespin,
     q2time,
+    q2color,
 )
 
 
@@ -53,4 +54,5 @@ from q2gui.pyqt6.widgets import (
     q2spin,
     q2doublespin,
     q2time,
+    q2color,
 )
