@@ -338,6 +338,7 @@ class Q2Controls(list):
         when=None,
         show=None,
         valid=None,
+        changed=None,
         dblclick=None,
         readonly=None,
         disabled=None,

@@ -72,7 +72,11 @@ class q2code(QsciScintilla, Q2Widget):
         self.__markOccurrencesTimer.setSingleShot(True)
         self.__markOccurrencesTimer.setInterval(500)
         self.__markOccurrencesTimer.timeout.connect(self.__markOccurrences)
-        self.textChanged.connect(self.valid)
+        if self.meta.get("valid"):
+            self.textChanged.connect(self.valid)
+        # if self.meta.get("changed"):
+        #     self.textChanged.connect(self.meta.get("changed"))
+        
         # self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.editor_panel = q2editor_panel(self)
         # self.create_context_menu()

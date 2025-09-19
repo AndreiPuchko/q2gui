@@ -35,6 +35,13 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
             self.setObjectName(self.meta.get("tag"))
         if self.meta.get("dblclick") and hasattr(self, "doubleClicked"):
             self.doubleClicked.connect(self.meta.get("dblclick"))
+        if self.meta.get("changed"):
+            if hasattr(self, "textChanged"):
+                self.textChanged.connect(self.meta.get("changed"))
+            elif hasattr(self, "valueChanged"):
+                self.valueChanged.connect(self.meta.get("changed"))
+            elif hasattr(self, "stateChanged"):
+                self.stateChanged.connect(self.meta.get("changed"))
 
     def apply_meta_margins(self):
         meta_margins = self.meta.get("margins")

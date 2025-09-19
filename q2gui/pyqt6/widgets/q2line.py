@@ -24,6 +24,10 @@ class q2line(QLineEdit, Q2Widget):
     def __init__(self, meta={}):
         self.formatstring = None
         super().__init__(meta)
+
+        # if self.meta.get("changed"):
+        #     self.textChanged.connect(self.meta.get("changed"))
+
         self.last_text_len = 0
         self.last_cur_pos = 0
         if self.meta.get("pic") == "*":

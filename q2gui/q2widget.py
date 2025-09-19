@@ -256,6 +256,7 @@ class Q2Widget:
         when=None,
         show=None,
         valid=None,
+        changed=None,
         dblclick=None,
         readonly=None,
         disabled=None,

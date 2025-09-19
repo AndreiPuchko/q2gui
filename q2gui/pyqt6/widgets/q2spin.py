@@ -29,6 +29,8 @@ class q2spin(QSpinBox, Q2Widget):
         self.set_text(meta.get("data"))
         if self.meta.get("valid"):
             self.valueChanged.connect(self.meta.get("valid"))
+        if self.meta.get("changed"):
+            self.valueChanged.connect(self.meta.get("changed"))
         self.set_fixed_height()
 
     def set_text(self, text):
