@@ -850,7 +850,7 @@ class Q2Form:
         child_form.model.set_where(self.get_where_for_child(action))
         child_form.model.refresh()
         child_form.show_mdi_modal_grid()
-        self.refresh()
+        # self.refresh()
 
     def get_where_for_child(self, action):
         if self.current_row >= 0 and self.model.row_count() > 0:
