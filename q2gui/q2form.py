@@ -162,7 +162,7 @@ class Q2Form:
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
         if self.model.refreshed:
-        #     self.form_refresh()
+            #     self.form_refresh()
             self.model.refreshed = False
 
     def form_refresh(self):
@@ -782,7 +782,7 @@ class Q2Form:
                 ):
                     # for new record - get next primary key
                     self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
-                
+
                 if self.c.__getattr__(x) is None:
                     if mode == NEW:
                         self._model_record[x] = ""
@@ -1049,6 +1049,42 @@ class Q2Form:
         file += "" if file.lower().endswith(filetype) else filetype
         return file
 
+    def hidden_row_hide(self):
+        self.hidden_row_toggle("*")
+
+    def hidden_row_show(self):
+        self.hidden_row_toggle("")
+
+    def hidden_row_toggle(self, status):
+        selected_rows = self.get_grid_selected_rows()
+        if selected_rows:
+            pk = self.model.get_meta_primary_key()
+            waitbar = None
+            if len(selected_rows) > 10:
+                waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_HIDING, len(selected_rows))
+            for row in selected_rows:
+                if waitbar:
+                    waitbar.step(1000)
+                dic = {pk: self.model.get_record(row)[pk]}
+                dic["q2_hidden"] = status
+                self.model.update(dic, self.current_row, refresh=False)
+            self.set_grid_index(self.current_row)
+            self.model.refresh()
+            if waitbar:
+                waitbar.close()
+
+    def hidden_row_show_not_hidden(self):
+        self.model.set_hidden_row_status("show_not_hidden")
+        self.refresh()
+
+    def hidden_row_show_all(self):
+        self.model.set_hidden_row_status("show_all")
+        self.refresh()
+
+    def hidden_row_show_hidden(self):
+        self.model.set_hidden_row_status("show_hidden")
+        self.refresh()
+
     def grid_data_export(self):
         file, filetype = q2app.q2_app.get_save_file_dialoq(
             q2app.MESSAGE_GRID_DATA_EXPORT_TITLE, filter="CSV (*.csv);;JSON(*.json)"
@@ -1223,6 +1259,44 @@ class Q2FormWindow:
             hotkey=q2app.ACTION_LAST_ROW_HOTKEY,
             eof_disabled=1,
         )
+        # HIIDEN rows menu
+        if hasattr(self.q2_form.model, "check_db_column") and self.q2_form.model.check_db_column("q2_hidden"):
+            actions.add_action(text="-")
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT,
+                icon=q2app.ACTION_HIDDEN_ROW_ICON,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_HIDE_ROW_TEXT,
+                icon=q2app.ACTION_HIDE_ROW_ICON,
+                worker=self.q2_form.hidden_row_hide,
+                eof_disabled=1,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_ROW_TEXT,
+                icon=q2app.ACTION_SHOW_ROW_ICON,
+                worker=self.q2_form.hidden_row_show,
+                eof_disabled=1,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|-",
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_NOTHIDDEN_TEXT,
+                icon=q2app.ACTION_SHOW_NOTHIDDEN_ICON,
+                worker=self.q2_form.hidden_row_show_not_hidden,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_ALL_TEXT,
+                icon=q2app.ACTION_SHOW_ALL_ICON,
+                worker=self.q2_form.hidden_row_show_all,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_HIDDEN_TEXT,
+                icon=q2app.ACTION_SHOW_HIDDEN_ICON,
+                worker=self.q2_form.hidden_row_show_hidden,
+            )
+
         actions.add_action(text="-")
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT,
@@ -1518,7 +1592,7 @@ class Q2FormWindow:
             label2add = self._get_widget("check", "check")(
                 {"label": meta["label"] if meta["control"] != "check" else "Turn on", "stretch": 0}
             )
-            
+
             label2add.add_managed_widget(widget2add)
             if not meta.get("data"):
                 widget2add.set_disabled()

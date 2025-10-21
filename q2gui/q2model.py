@@ -304,6 +304,7 @@ class Q2Model:
         """search for text in column, return list of [row, value]"""
         cond_list = self.parse_lookup_text(text)
         rez = []
+        model_value = None
         for x in range(self.row_count()):
             cond_result = True
             for cond in cond_list:
@@ -317,7 +318,7 @@ class Q2Model:
                     cond_result = False
                 elif operator == "-" and value in model_value.upper():
                     cond_result = False
-            if cond_result:
+            if cond_result and model_value:
                 rez.append([x, model_value])
         return rez
 
@@ -543,3 +544,10 @@ class Q2CursorModel(Q2Model):
 
     def get_records(self):
         return self.cursor.records()
+
+    def check_db_column(self, column):
+        db: Q2Db = self.cursor.q2_db
+        return db.db_schema.get_schema_table_attr(self.cursor.table_name, column)
+
+    def set_hidden_row_status(self, status=""):
+        self.cursor.set_hidden_row_status(status)

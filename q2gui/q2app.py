@@ -40,6 +40,24 @@ REMOVE_RECORD_ERROR_TEXT = "Remove record error"
 DATE_FORMAT_STRING = "%d.%m.%Y"
 
 
+ACTION_HIDDEN_ROW_TEXT = "Hidden rows"
+ACTION_HIDDEN_ROW_ICON = "eye.svg"
+
+ACTION_HIDE_ROW_TEXT = "Hide row"
+ACTION_HIDE_ROW_ICON = "list-minus.svg"
+
+ACTION_SHOW_ROW_TEXT = "Show row"
+ACTION_SHOW_ROW_ICON = "list-plus.svg"
+
+ACTION_SHOW_NOTHIDDEN_TEXT = "Show not hidden"
+ACTION_SHOW_NOTHIDDEN_ICON = "list-chevrons-down-up.svg"
+
+ACTION_SHOW_ALL_TEXT = "Show all"
+ACTION_SHOW_ALL_ICON = "list-chevrons-up-down.svg"
+
+ACTION_SHOW_HIDDEN_TEXT = "Show hidden"
+ACTION_SHOW_HIDDEN_ICON = "eye-off.svg"
+
 ACTION_VIEW_TEXT = "View"
 ACTION_VIEW_ICON = "row-view.png"
 ACTION_VIEW_HOTKEY = "F12"
@@ -126,7 +144,8 @@ FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 25
 
 MESSAGE_SORTING = "Sorting..."
-MESSAGE_ROWS_REMOVING = "Rows removing"
+MESSAGE_SORTING = "Sorting..."
+MESSAGE_ROWS_HIDING = "Toggle hide/show rows"
 
 MESSAGE_GRID_DATA_EXPORT_TITLE = "Export data"
 MESSAGE_GRID_DATA_EXPORT_WAIT = "Export data to: %s"
