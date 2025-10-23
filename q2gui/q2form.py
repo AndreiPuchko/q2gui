@@ -1260,7 +1260,11 @@ class Q2FormWindow:
             eof_disabled=1,
         )
         # HIIDEN rows menu
-        if hasattr(self.q2_form.model, "check_db_column") and self.q2_form.model.check_db_column("q2_hidden"):
+        if (
+            hasattr(self.q2_form.model, "check_db_column")
+            and self.q2_form.model.check_db_column("q2_hidden")
+            and not self.q2_form.model.readonly
+        ):
             actions.add_action(text="-")
             actions.add_action(
                 text=q2app.ACTION_HIDDEN_ROW_TEXT,

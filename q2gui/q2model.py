@@ -397,12 +397,12 @@ class Q2CursorModel(Q2Model):
     def __init__(self, cursor: Q2Cursor = None):
         super().__init__()
         self.last_order_text = ""
-        self.set_cursor(cursor)
 
         self.readonly = False
         self.delete_enabled = False
         self.insert_enabled = False
         self.update_enabled = False
+        self.set_cursor(cursor)
         self.where_text = self.cursor.where
         self.order_text = self.cursor.order
 
@@ -412,6 +412,8 @@ class Q2CursorModel(Q2Model):
         last_order_text, last_order_text = self.last_order_text, ""
         if self.last_order_text:
             self.set_order(last_order_text)
+        self.readonly = False if self.cursor.table_name else True
+        # print(self.cursor.table_name, "--", self.cursor.sql, self.readonly)
 
     def get_table_name(self):
         if self.cursor.table_name:
