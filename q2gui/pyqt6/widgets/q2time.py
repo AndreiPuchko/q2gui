@@ -40,7 +40,6 @@ class q2time(QTimeEdit, Q2Widget):
             self.setTime(QTime.fromString(text, "HH"))
 
     def get_text(self):
-        print(self.text())
         return self.text()
 
     def keyPressEvent(self, ev):

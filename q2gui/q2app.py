@@ -40,7 +40,7 @@ REMOVE_RECORD_ERROR_TEXT = "Remove record error"
 DATE_FORMAT_STRING = "%d.%m.%Y"
 
 
-ACTION_HIDDEN_ROW_TEXT = "Hidden rows"
+ACTION_HIDDEN_ROW_TEXT = "Rows"
 ACTION_HIDDEN_ROW_ICON = "eye.svg"
 
 ACTION_HIDE_ROW_TEXT = "Hide row"
@@ -104,6 +104,9 @@ ACTION_LAST_ROW_HOTKEY = "Ctrl+Down"
 ACTION_TOOLS_TEXT = "Tools"
 ACTION_TOOLS_ICON = "tools.png"
 
+ACTION_TOOLS_COLOR_TEXT = "Set color"
+# ACTION_TOOLS_ICON = "tools.png"
+
 ACTION_TOOLS_EXPORT_TEXT = "Export"
 ACTION_TOOLS_EXPORT_ICON = "export.png"
 
@@ -146,6 +149,7 @@ GRID_COLUMN_WIDTH = 25
 MESSAGE_SORTING = "Sorting..."
 MESSAGE_SORTING = "Sorting..."
 MESSAGE_ROWS_HIDING = "Toggle hide/show rows"
+MESSAGE_ROWS_COLOR = "Colorizing rows"
 
 MESSAGE_GRID_DATA_EXPORT_TITLE = "Export data"
 MESSAGE_GRID_DATA_EXPORT_WAIT = "Export data to: %s"

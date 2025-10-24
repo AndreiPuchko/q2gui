@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
     QSizePolicy,
     QVBoxLayout,
 )
-from PyQt6.QtGui import QKeyEvent, QPalette, QPainter, QFontMetrics
+from PyQt6.QtGui import QKeyEvent, QPalette, QPainter, QFontMetrics, QColor
 
 from PyQt6.QtCore import (
     Qt,
@@ -85,6 +85,26 @@ class q2grid(QTableView):
                     return QVariant(self.q2_model.data(index.row(), index.column()))
             elif role == Qt.ItemDataRole.TextAlignmentRole:
                 return QVariant(q2_align[str(self.q2_model.alignment(index.column()))])
+            elif (
+                role == Qt.ItemDataRole.BackgroundRole
+                and self.q2_model.q2_bcolor
+                and (color := int_(self.q2_model.get_record(index.row()).get("q2_bcolor", 0))) != 0
+            ):
+                if index.row() in self.q2_model.q2_bcolors:
+                    _color = self.q2_model.q2_bcolors[index.row()]
+                else:
+                    self.q2_model.q2_bcolors[index.row()] = _color = f"#{color:06x}"
+                return QColor(_color)
+            elif (
+                role == Qt.ItemDataRole.ForegroundRole
+                and self.q2_model.q2_fcolor
+                and (color := int_(self.q2_model.get_record(index.row()).get("q2_fcolor", 0))) != 0
+            ):
+                if index.row() in self.q2_model.q2_fcolors:
+                    _color = self.q2_model.q2_fcolors[index.row()]
+                else:
+                    self.q2_model.q2_fcolors[index.row()] = _color = f"#{color:06x}"
+                return QColor(_color)
             elif role == Qt.ItemDataRole.CheckStateRole:
                 if control == "check":
                     if self.q2_model.data(index.row(), index.column()):

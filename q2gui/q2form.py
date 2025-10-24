@@ -1068,8 +1068,8 @@ class Q2Form:
                 dic = {pk: self.model.get_record(row)[pk]}
                 dic["q2_hidden"] = status
                 self.model.update(dic, self.current_row, refresh=False)
-            self.set_grid_index(self.current_row)
             self.model.refresh()
+            self.set_grid_index(self.current_row)
             if waitbar:
                 waitbar.close()
 
@@ -1126,6 +1126,69 @@ class Q2Form:
         else:
             _count, _time = waitbar.close()
             self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_IMPORT_DONE % (_count, _time))
+
+    def set_grid_row_colors(self):
+        selected_rows = self.get_grid_selected_rows()
+        if selected_rows:
+            _form: Q2Form = self.q2_app.Q2Form(q2app.ACTION_TOOLS_COLOR_TEXT)
+            _form.add_control("/v")
+            q2_bcolor = self.r.__getattr__("q2_bcolor")
+            _bcolor = f"#{int_(q2_bcolor):06x}"
+            q2_fcolor = self.r.__getattr__("q2_fcolor")
+            _fcolor = f"#{int_(q2_fcolor):06x}"
+            _form.add_control("fcolor", _("Font color"), control="color", data=_fcolor, datalen=20)
+            _form.add_control("bcolor", _("Background color"), control="color", data=_bcolor, datalen=20)
+
+            def reset_colors():
+                _form.s.fcolor = "#000000"
+                _form.s.bcolor = "#000000"
+
+            _form.add_control(
+                "reset_colors", _("Reset colors"), datalen=15, control="button", valid=reset_colors
+            )
+            _form.ok_button = True
+            _form.cancel_button = True
+            _form.init_size = [300, 300]
+
+            def colors_valid():
+                not_valid = False
+                color = _form.s.fcolor
+                _form.s.fcolor = "#000000"
+                _form.s.fcolor = color
+                if color != _form.s.fcolor:
+                    self._q2dialogs.q2Mess(_("Foreground color is not valid! "))
+                    not_valid = True
+
+                color = _form.s.bcolor
+                _form.s.bcolor = "#000000"
+                _form.s.bcolor = color
+                if color != _form.s.bcolor:
+                    self._q2dialogs.q2Mess(_("Background color is not valid! "))
+                    not_valid = True
+
+                return not not_valid
+
+            _form.valid = colors_valid
+            _form.run()
+            if _form.ok_pressed:
+                pk = self.model.get_meta_primary_key()
+                waitbar = None
+                if len(selected_rows) > 10:
+                    waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_COLOR, len(selected_rows))
+                for row in selected_rows:
+                    if waitbar:
+                        waitbar.step(1000)
+                    dic = {pk: self.model.get_record(row)[pk]}
+                    _form.s.fcolor = _form.s.fcolor if _form.s.fcolor else "0"
+                    _form.s.bcolor = _form.s.bcolor if _form.s.bcolor else "0"
+
+                    dic["q2_fcolor"] = int(_form.s.fcolor.lstrip("#"), 16)
+                    dic["q2_bcolor"] = int(_form.s.bcolor.lstrip("#"), 16)
+                    self.model.update(dic, self.current_row, refresh=False)
+                self.model.refresh()
+                self.set_grid_index(self.current_row)
+                if waitbar:
+                    waitbar.close()
 
     def grid_data_paste_clipboard(self):
         Q2PasteClipboard(self)
@@ -1260,16 +1323,34 @@ class Q2FormWindow:
             eof_disabled=1,
         )
         # HIIDEN rows menu
-        if (
+
+        show_color_menu = (
+            hasattr(self.q2_form.model, "check_db_column")
+            and self.q2_form.model.check_db_column("q2_bcolor")
+            and not self.q2_form.model.readonly
+        )
+
+        show_hide_menu = (
             hasattr(self.q2_form.model, "check_db_column")
             and self.q2_form.model.check_db_column("q2_hidden")
             and not self.q2_form.model.readonly
-        ):
+        )
+
+        if show_color_menu or show_hide_menu:
             actions.add_action(text="-")
             actions.add_action(
                 text=q2app.ACTION_HIDDEN_ROW_TEXT,
                 icon=q2app.ACTION_HIDDEN_ROW_ICON,
             )
+        if show_color_menu:
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_TOOLS_COLOR_TEXT,
+                worker=self.q2_form.set_grid_row_colors,
+            )
+            actions.add_action(
+                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|-",
+            )
+        if show_hide_menu:
             actions.add_action(
                 text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_HIDE_ROW_TEXT,
                 icon=q2app.ACTION_HIDE_ROW_ICON,
@@ -1905,7 +1986,7 @@ class Q2PasteClipboard:
         )
 
     def show_main_form(self):
-        self.main_form = self.q2_form.__class__(q2app.PASTE_CLIPBOARD_TITLE)
+        self.main_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_TITLE)
         self.main_form.add_control("/v")
         self.main_form.add_control(
             "first_row_is_header", q2app.PASTE_CLIPBOARD_FIRST_ROW, control="check", data="*"
@@ -1981,7 +2062,7 @@ class Q2PasteClipboard:
         return rez & 0xFFFFFFFF
 
     def load_target(self):
-        self.target_form = self.q2_form.__class__(q2app.PASTE_CLIPBOARD_TARGET)
+        self.target_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_TARGET)
         self.target_data = []
         target_hash_string = ""
         for x in self.q2_form.controls:
@@ -2011,7 +2092,7 @@ class Q2PasteClipboard:
     def load_source(self):
         self.source_data = [{"column": x} for x in self.clipboard_headers]
         self.source_hash = self.myhash(",".join(self.clipboard_headers))
-        self.source_form = self.q2_form.__class__(q2app.PASTE_CLIPBOARD_SOURCE)
+        self.source_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_SOURCE)
 
         self.source_form.set_model(Q2Model())
         self.source_form.model.set_records(self.source_data)
@@ -2031,7 +2112,7 @@ class Q2PasteClipboard:
                 continue
             self.data_data.append(row_dic)
 
-        self.data_form = self.q2_form.__class__(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA)
+        self.data_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA)
         for col in self.clipboard_headers:
             self.data_form.add_control(col, col)
 

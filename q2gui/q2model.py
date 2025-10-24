@@ -56,6 +56,10 @@ class Q2Model:
         self.filterable = False
 
         self.data_changed = False
+        self.q2_bcolor = False
+        self.q2_fcolor = False
+        self.q2_bcolors = {}
+        self.q2_fcolors = {}
 
         self.order_text = ""
         self.where_text = ""
@@ -405,6 +409,7 @@ class Q2CursorModel(Q2Model):
         self.set_cursor(cursor)
         self.where_text = self.cursor.where
         self.order_text = self.cursor.order
+        self.check_q2_colors()
 
     def set_cursor(self, cursor):
         self.cursor: Q2Cursor = cursor
@@ -441,6 +446,14 @@ class Q2CursorModel(Q2Model):
     def refresh(self):
         super().refresh()
         self.cursor.refresh()
+        self.check_q2_colors()
+
+    def check_q2_colors(self):
+        self.q2_bcolors = {}
+        self.q2_fcolors = {}
+        if self.row_count():
+            self.q2_bcolor = "q2_bcolor" in (rec := self.get_record(0))
+            self.q2_fcolor = "q2_fcolor" in rec
 
     def get_uniq_value(self, column, value):
         return self.cursor.get_uniq_value(column, value)
