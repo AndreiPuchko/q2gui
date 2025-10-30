@@ -18,5 +18,6 @@
     "python.analysis.extraPaths": [
         "../q2db"
     ],
+    "svg.preview.background": "transparent",
 
 }
