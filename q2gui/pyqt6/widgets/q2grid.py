@@ -84,7 +84,9 @@ class q2grid(QTableView):
                 else:
                     return QVariant(self.q2_model.data(index.row(), index.column()))
             elif role == Qt.ItemDataRole.TextAlignmentRole:
-                return QVariant(q2_align[str(self.q2_model.alignment(index.column()))])
+                return QVariant(
+                    Qt.AlignmentFlag.AlignVCenter | q2_align[str(self.q2_model.alignment(index.column()))]
+                )
             elif (
                 role == Qt.ItemDataRole.BackgroundRole
                 and self.q2_model.q2_bcolor
