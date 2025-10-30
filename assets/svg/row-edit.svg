@@ -1,0 +1,7 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path stroke-width="2" d="m20 18v4h-16v-20h12l4 4" />
+    <path
+        d="M20 12a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+    <path d="M7 19h2" />
+</svg>

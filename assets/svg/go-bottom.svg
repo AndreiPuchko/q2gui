@@ -1,0 +1,7 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
+    <path d="M5 20h14" />
+    <path d="m18 12-6 6 -6 -6" />
+    <path d="M12 4v13" />
+</svg>
