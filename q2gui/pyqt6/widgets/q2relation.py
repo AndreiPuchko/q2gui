@@ -56,13 +56,6 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
                             border-radius:0;
                             border-bottom:1px solid gray""")
         self.to_form = None
-        if self.meta.get("to_form"):
-            if isinstance(self.meta.get("to_form"), Q2Form):
-                self.to_form: Q2Form = self.meta.get("to_form")
-            else:
-                self.to_form: Q2Form = self.meta.get("to_form")()
-            # self.to_form.max_child_level = 0
-            self.to_form.title += " ."
 
         self.add_widget(self.get)
         self.add_widget(self.button)
@@ -77,6 +70,13 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         # self.get.setDisabled(True)
         # self.button.setDisabled(True)
         # self.get_valid()
+        if self.meta.get("to_form"):
+            if isinstance(self.meta.get("to_form"), Q2Form):
+                self.to_form: Q2Form = self.meta.get("to_form")
+            else:
+                self.to_form: Q2Form = self.meta.get("to_form")()
+            # self.to_form.max_child_level = 0
+            self.to_form.title += " ."
 
     def show_related_form(self):
         if isinstance(self.to_form, Q2Form):
