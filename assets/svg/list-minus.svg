@@ -1,6 +1,9 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path d="M5 20h14" />
-    <path d="m18 12-6 6 -6 -6" />
-    <path d="M12 4v13" />
+  <path d="M3 2h8" />
+  <path d="M3 7h8" />
+  <path d="M3 12h8" />
+  <path d="M3 17h8" />
+  <path d="M3 22h8" />
+  <path d="M21 12h-6" />
 </svg>

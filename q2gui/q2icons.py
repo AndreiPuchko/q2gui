@@ -7,13 +7,11 @@ icons['arrow-down'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="n
 
 icons['arrow-up'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <path d="m5 12 7-7 7 7 h-5 v8 h-4 v-8 h-5" />
 </svg>'''
 
 icons['bulk-update'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <path d="m3 5 h 16"/>
     <path d="m3 8 h 12"/>
     <path d="m3 11 h 10"/>
@@ -64,9 +62,24 @@ icons['export'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
     <path d="m7 8 5 -5 5 5" />
 </svg>'''
 
+icons['eye-off'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+  <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+  <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+  <path d="m2 2 20 20" />
+</svg>
+'''
+
+icons['eye'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+  <circle cx="12" cy="12" r="3" />
+</svg>
+'''
+
 icons['go-bottom'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <path d="M5 20h14" />
     <path d="m18 12-6 6 -6 -6" />
     <path d="M12 4v13" />
@@ -89,7 +102,6 @@ icons['go-top'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
 
 icons['go-up'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <path d="m5 12 7-7 7 7" />
     <path d="M12 19V5" />
 </svg>'''
@@ -114,6 +126,52 @@ icons['info'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" s
     <path d="M12 8h.01" />
     <circle cx="12" cy="12" r="10" />
 </svg>'''
+
+icons['list-chevrons-down-up'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M3 2h8" />
+  <path d="M3 7h8" />
+  <path d="M3 12h8" />
+  <path d="M3 17h8" />
+  <path d="M3 22h8" />
+  <path d="m15 5 3 3 3-3" />
+  <path d="m15 19 3-3 3 3" />
+</svg>'''
+
+icons['list-chevrons-up-down'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M3 2h8" />
+  <path d="M3 7h8" />
+  <path d="M3 12h8" />
+  <path d="M3 17h8" />
+  <path d="M3 22h8" />
+  <path d="m15 8 3-3 3 3" />
+  <path d="m15 16 3 3 3-3" />
+</svg>
+'''
+
+icons['list-minus'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M3 2h8" />
+  <path d="M3 7h8" />
+  <path d="M3 12h8" />
+  <path d="M3 17h8" />
+  <path d="M3 22h8" />
+  <path d="M21 12h-6" />
+</svg>
+'''
+
+icons['list-plus'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+  <path d="M3 2h8" />
+  <path d="M3 7h8" />
+  <path d="M3 12h8" />
+  <path d="M3 17h8" />
+  <path d="M3 22h8" />
+  <path d="M18 9v6" />
+  <path d="M21 12h-6" />
+</svg>
+'''
 
 icons['lock'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
@@ -159,7 +217,6 @@ icons['print'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
 
 icons['q2gui'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     >
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <rect x="11" y="13" width="5.5" height="5.5" transform="rotate(-135, 10, 12)" fill="black"/>
     <rect x="11" y="13" width="5.5" height="5.5" transform="rotate(45, 10, 12)" fill="black"/>
     <rect x="11.4" y="14" width="5.5" height="5.5" transform="rotate(-45, 9.4, 12)" fill="black"/>
@@ -188,7 +245,6 @@ icons['row-edit'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="non
 
 icons['row-new'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path stroke="red" stroke-width="1" d="m 0 0 h24 v24 h-24 v-24" />
     <path stroke-width="2" d="m20 18v4h-16v-20h12l4 4v12" />
 </svg>'''
 
