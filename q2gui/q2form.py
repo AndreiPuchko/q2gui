@@ -1348,6 +1348,7 @@ class Q2FormWindow:
                 text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_TOOLS_COLOR_TEXT,
                 icon=q2app.ACTION_TOOLS_COLOR_ICON,
                 worker=self.q2_form.set_grid_row_colors,
+                eof_disabled=1,
             )
             actions.add_action(
                 text=q2app.ACTION_HIDDEN_ROW_TEXT + "|-",
