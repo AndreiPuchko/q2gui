@@ -41,7 +41,7 @@ DATE_FORMAT_STRING = "%d.%m.%Y"
 
 
 ACTION_HIDDEN_ROW_TEXT = "Rows"
-ACTION_HIDDEN_ROW_ICON = "eye.svg"
+ACTION_HIDDEN_ROW_ICON = "eye-off.svg"
 
 ACTION_HIDE_ROW_TEXT = "Hide row"
 ACTION_HIDE_ROW_ICON = "list-minus.svg"
@@ -56,7 +56,7 @@ ACTION_SHOW_ALL_TEXT = "Show all"
 ACTION_SHOW_ALL_ICON = "list-chevrons-up-down.svg"
 
 ACTION_SHOW_HIDDEN_TEXT = "Show hidden"
-ACTION_SHOW_HIDDEN_ICON = "eye-off.svg"
+ACTION_SHOW_HIDDEN_ICON = "eye.svg"
 
 ACTION_VIEW_TEXT = "View"
 ACTION_VIEW_ICON = "row-view.png"
@@ -104,8 +104,8 @@ ACTION_LAST_ROW_HOTKEY = "Ctrl+Down"
 ACTION_TOOLS_TEXT = "Tools"
 ACTION_TOOLS_ICON = "tools.png"
 
-ACTION_TOOLS_COLOR_TEXT = "Set color"
-# ACTION_TOOLS_ICON = "tools.png"
+ACTION_TOOLS_COLOR_TEXT = "Set colors"
+ACTION_TOOLS_COLOR_ICON = "color"
 
 ACTION_TOOLS_EXPORT_TEXT = "Export"
 ACTION_TOOLS_EXPORT_ICON = "export.png"

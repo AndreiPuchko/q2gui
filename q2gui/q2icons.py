@@ -12,14 +12,12 @@ icons['arrow-up'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="non
 
 icons['bulk-update'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
-    <path d="m3 5 h 16"/>
-    <path d="m3 8 h 12"/>
-    <path d="m3 11 h 10"/>
-    <path d="m3 14 h 8"/>
-    <path d="m3 17 h 7"/>
-    <path d="m3 20 h 16"/>
-    <path
-        d="M21 12a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+  <path d="M2 2h8" />
+  <path d="M2 7h8" />
+  <path d="M2 12h8" />
+  <path d="M2 17h8" />
+  <path d="M2 22h8" />    <path
+        d="M21.5 12a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
 
 </svg>'''
 
