@@ -157,7 +157,8 @@ class Q2Form:
             self.refresh_children()
         else:
             self._q2dialogs.q2working(
-                lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing...")
+                # lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing...")
+                lambda: (self.model.refresh(),), _("Refreshing...")
             )
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
@@ -1345,6 +1346,7 @@ class Q2FormWindow:
         if show_color_menu:
             actions.add_action(
                 text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_TOOLS_COLOR_TEXT,
+                icon=q2app.ACTION_TOOLS_COLOR_ICON,
                 worker=self.q2_form.set_grid_row_colors,
             )
             actions.add_action(
@@ -1424,7 +1426,7 @@ class Q2FormWindow:
         actions.add_action(
             text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
             worker=self.q2_form.grid_print,
-            icon="⎙",
+            icon="print",
             eof_disabled=1,
         )
 
