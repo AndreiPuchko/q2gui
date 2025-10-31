@@ -138,10 +138,10 @@ class DemoApp(Q2App):
 
     def on_init(self):
         self.create_database()
-        self.add_menu("File|About", lambda: q2Mess({1:"йцукен"}))
+        self.add_menu("File|About", lambda: q2Mess({1: "йцукен"}))
         self.add_menu("File|-", None)
-        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), toolbar=1)
-        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), toolbar=1)
+        self.add_menu("File|Dark Mode", lambda: self.set_color_mode("dark"), icon="moon", toolbar=1)
+        self.add_menu("File|Light Mode", lambda: self.set_color_mode("light"), icon="sun", toolbar=1)
         self.add_menu("File|Clean Mode", lambda: self.set_color_mode("clean"), toolbar=1)
         self.add_menu("File|-")
         self.add_menu("File|Exit", self.close, toolbar=1, icon="exit.png")
@@ -154,8 +154,8 @@ class DemoApp(Q2App):
         # def on_start(self):
         # self.form_order_lines().run()
         # self.orders()
-        self.customers()
-        # self.filter_orders()
+        # self.customers()
+        self.filter_orders()
         # self.products()
         # self.show_sales()
         pass
@@ -279,7 +279,7 @@ class DemoApp(Q2App):
             to_column="customer_id",
             to_form=self.form_customers,
             related="name",
-            data=3,
+            # data=3,
             check="*",
         )
 
@@ -292,6 +292,7 @@ class DemoApp(Q2App):
             to_column="product_id",
             to_form=self.form_products,
             related="name",
+            data=3,
             check="*",
         )
 

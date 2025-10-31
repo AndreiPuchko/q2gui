@@ -31,7 +31,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
 )
 
-from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF, QPoint, QEventLoop
+from PyQt6.QtCore import QEvent, Qt, QCoreApplication, QTimer, QRectF, QPoint, QEventLoop, QByteArray
 from PyQt6.QtTest import QTest
 from PyQt6.QtGui import (
     QFontMetrics,
@@ -45,6 +45,7 @@ from PyQt6.QtGui import (
     QPixmap,
     QPainter,
 )
+from PyQt6.QtSvg import QSvgRenderer
 
 from q2gui.pyqt6.q2window import Q2QtWindow
 from q2gui.pyqt6.q2style import Q2Style
@@ -55,6 +56,7 @@ from q2gui.q2utils import int_
 
 
 import q2gui.q2app as q2app
+from q2gui.q2icons import icons
 
 
 class stdout_widget(q2frame):
@@ -205,13 +207,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.corner_widget.setLayout(QHBoxLayout())
 
             self.closeButton = QToolButton(self)
-            self.closeButton.setText("🗙")
+            self.closeButton.setIcon(self.main_window.get_engine_icon("close"))
             self.closeButton.setObjectName("tab_bar_close_button")
             self.closeButton.setContentsMargins(0, 0, 0, 0)
             self.closeButton.clicked.connect(self.closeSubWindow)
 
             self.restore_button = QToolButton(self)
-            self.restore_button.setText("🗗")
+            self.restore_button.setIcon(self.main_window.get_engine_icon("restore"))
             self.restore_button.setContentsMargins(0, 0, 0, 0)
             self.restore_button.clicked.connect(self.show_mdi_normal)
             self.show_mdi_normal_button(False)
@@ -519,34 +521,53 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.addActions(self.menuBar().actions())
 
     def get_engine_icon(self, icon_text):
-        if icon_text is None:
+        if not icon_text:
             return QIcon()
-        elif self.get_icon(icon_text):
-            return QIcon(self.get_icon(icon_text))
-        # Icon not found - create empty one
+
         tmp_icon = self.get_icon(q2app.GRID_ACTION_ICON)
         if tmp_icon:
             icon_size = QIcon(tmp_icon).availableSizes()[0].width()
         else:
             icon_size = 24
+
+        if (_icon_key := icon_text.split(".")[0]) in icons:
+            return self.make_svg_icon(icons[_icon_key], icon_size)
+        elif _icon := self.get_icon(icon_text):
+            return QIcon(self.get_icon(_icon))
+        else:
+            return self.make_text_icon(icon_text[0], icon_size)
+
+    def make_text_icon(self, icon_text, icon_size=24):
+        pix = QPixmap(icon_size, icon_size)
+        pix.fill(Qt.GlobalColor.transparent)
         font = QFont("Arial")
         font.setWeight(QFont.Weight.Bold)
         font.setPixelSize(icon_size)
+        painter = QPainter(pix)
+        painter.setFont(font)
+        painter.drawText(
+            QRectF(0, 0, icon_size, icon_size),
+            Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignHCenter,
+            icon_text[:1],
+        )
+        painter.end()
+        return QIcon(pix)
 
-        if len(icon_text) == 1:
-            pix = QPixmap(icon_size, icon_size)
-            pix.fill(Qt.GlobalColor.transparent)
-            painter = QPainter(pix)
-            painter.setFont(font)
-            painter.drawText(
-                QRectF(0, 0, icon_size, icon_size),
-                Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignHCenter,
-                icon_text[:1],
-            )
-            del painter
-            return QIcon(pix)
-        else:
-            return QIcon()
+    def make_svg_icon(self, svg_text, size=24):
+        # if mode == "dark":
+        #     c = "#ffffff"
+        # else:
+        #     color = "#000000"
+        # if mode == "dark":
+        #     svg_text = svg_text.replace('stroke="black"', 'stroke="red"')
+        renderer = QSvgRenderer(QByteArray(svg_text.encode("utf-8")))
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        target_rect = QRectF(0, 1, size, size)
+        renderer.render(painter, target_rect)
+        painter.end()
+        return QIcon(pixmap)
 
     def set_color_mode(self, color_mode=None):
         q2app.Q2App.set_color_mode(self, color_mode)
@@ -588,7 +609,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def set_icon(self, icon_path):
         self.icon = icon_path
-        self.setWindowIcon(QIcon(self.icon))
+        # self.setWindowIcon(QIcon(self.icon))
+        self.setWindowIcon(self.get_engine_icon("q2gui"))
 
     def process_events(self):
         QApplication.processEvents()

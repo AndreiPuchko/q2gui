@@ -188,8 +188,9 @@ class Q2Style(q2style.Q2Style):
                     {{
                         subcontrol-origin: relative ;
                         subcontrol-position: center bottom;
-                        bottom:  -0.3ex;
+                        bottom:  -0.7ex;
                         left:  0.1ex;
+                        color: green;
                     }}
                 q2button
                     {{

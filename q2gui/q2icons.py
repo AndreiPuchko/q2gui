@@ -31,7 +31,7 @@ icons['chart'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
 
 icons['close'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round"
     stroke-linejoin="round">
-    <path d="M4 4 L20 20 M 4 20 L20 4" rx="2" ry="2" fill="none" />
+    <path d="M5 5 L21 21 M 5 21 L21 5" rx="2" ry="2" fill="none" />
 </svg>'''
 
 icons['color'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
@@ -215,6 +215,7 @@ icons['print'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
 
 icons['q2gui'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     >
+    <rect stroke="white" fill="white" stroke-width="1" x="1" y="1" width="22" height="22" rx="100" ry="100" />
     <rect x="11" y="13" width="5.5" height="5.5" transform="rotate(-135, 10, 12)" fill="black"/>
     <rect x="11" y="13" width="5.5" height="5.5" transform="rotate(45, 10, 12)" fill="black"/>
     <rect x="11.4" y="14" width="5.5" height="5.5" transform="rotate(-45, 9.4, 12)" fill="black"/>
@@ -226,6 +227,12 @@ icons['refresh'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none
     <path d="M21 3v5h-5" />
 </svg>
 '''
+
+icons['restore'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <rect x="4" y="11" width="11" height="11" rx="0" ry="0" />
+    <path d="M8 10 V6 H20 V18 H16" rx="2" ry="2" fill="none" />
+</svg>'''
 
 icons['row-copy'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">

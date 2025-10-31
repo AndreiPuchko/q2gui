@@ -1198,7 +1198,7 @@ class Q2Form:
         Q2BulkUpdate(self)
 
     def grid_print(self):
-        self._q2dialogs.q2mess("Must to be implemented")
+        self._q2dialogs.q2mess("Must be implemented")
 
     def grid_data_info(self):
         columns = self.model.columns
