@@ -1149,7 +1149,6 @@ class Q2Form:
             )
             _form.ok_button = True
             _form.cancel_button = True
-            _form.init_size = [300, 300]
 
             def colors_valid():
                 not_valid = False
