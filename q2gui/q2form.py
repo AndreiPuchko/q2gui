@@ -1949,7 +1949,15 @@ class Q2PasteClipboard:
     def __init__(self, q2_form: Q2Form):
         self.q2_form = q2_form
         self.cliptext = q2app.q2_app.get_clipboard_text()
-        self.clipboard_headers = self.cliptext.split("\n")[0].split("\t")
+        try:
+            self.data_data = json.loads(self.cliptext)
+            if isinstance(self.data_data, list) and len(self.data_data):
+                self.clipboard_headers = [x for x in self.data_data[0].keys()]
+            else:
+                raise Exception("")
+        except Exception as e:
+            self.clipboard_headers = self.cliptext.split("\n")[0].split("\t")
+            self.load_csv_data()
         self.load_target()
         self.load_source()
         self.load_data()
@@ -2069,15 +2077,18 @@ class Q2PasteClipboard:
         target_hash_string = ""
         for x in self.q2_form.controls:
             if x["migrate"]:
-                target_hash_string += x.get("column")
+                target_column = x.get("column")
+                target_hash_string += target_column
                 self.target_data.append(
                     {
                         "target_column": f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
-                        + f'({self.q2_form.model.get_table_name()}.{x.get("column")})',
-                        "_target_column": x.get("column"),
-                        "source_column": "",
+                        + f"({self.q2_form.model.get_table_name()}.{target_column})",
+                        "_target_column": target_column,
+                        "source_column": target_column if target_column in self.clipboard_headers else "",
                     },
                 )
+                if target_column in self.clipboard_headers:
+                    self.clipboard_headers[self.clipboard_headers.index(target_column)] = ""
         self.target_hash = self.myhash(target_hash_string)
 
         self.target_form.set_model(Q2Model())
@@ -2090,11 +2101,13 @@ class Q2PasteClipboard:
         )
         self.target_form.grid_double_clicked = self.move_it
         self.target_form.i_am_child = 1
+        self.target_form.add_action("Swap", self.move_it)
+        self.target_form.no_view_action = 1
 
     def load_source(self):
         self.source_data = [{"column": x} for x in self.clipboard_headers]
         self.source_hash = self.myhash(",".join(self.clipboard_headers))
-        self.source_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_SOURCE)
+        self.source_form: Q2Form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_SOURCE)
 
         self.source_form.set_model(Q2Model())
         self.source_form.model.set_records(self.source_data)
@@ -2103,8 +2116,10 @@ class Q2PasteClipboard:
         )
         self.source_form.grid_double_clicked = self.move_it
         self.source_form.i_am_child = 1
+        self.source_form.no_view_action = 1
+        self.source_form.add_action("Swap", self.move_it)
 
-    def load_data(self):
+    def load_csv_data(self):
         self.data_data = []
         for cliptext_row in self.cliptext.split("\n")[1:]:
             row_dic = {}
@@ -2114,6 +2129,7 @@ class Q2PasteClipboard:
                 continue
             self.data_data.append(row_dic)
 
+    def load_data(self):
         self.data_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA)
         for col in self.clipboard_headers:
             self.data_form.add_control(col, col)
