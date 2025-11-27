@@ -42,7 +42,7 @@ def num(tonum):
     try:
         return Decimal(f"{tonum}")
     except Exception:
-        return 0
+        return Decimal(0)
 
 
 def nums(number_str):
