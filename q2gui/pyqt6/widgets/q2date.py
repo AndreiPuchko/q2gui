@@ -62,7 +62,7 @@ class q2date(QComboBox, Q2Widget):
                         lt[0] = "01"
                     elif int(lt[0]) < 4 and len(lt[0]) > 2:
                         lt[0] = f"{int(lt[0])}0"
-                    
+
                     if pos > 9:
                         mdm = QDate(int(lt[2]), int(lt[1]), 1).daysInMonth()
                         if mdm < int(lt[0]):
@@ -177,7 +177,7 @@ class q2date(QComboBox, Q2Widget):
 
     def get_text(self):
         if self.lineedit.text() == "..":
-            return "0000-00-00"
+            return "0001-01-01"
         else:
             return QDate.fromString(self.lineedit.text(), "dd.MM.yyyy").toString("yyyy-MM-dd")
 
@@ -185,7 +185,7 @@ class q2date(QComboBox, Q2Widget):
 def extract_date(text):
     if text == "":
         return ""
-    elif text == "0000-00-00":
+    elif text in ("0000-00-00", "0001-01-01"):
         return "  .  .    "
     splited_text = re.split(r"[/,/.\s/-]+", text.strip())
 
