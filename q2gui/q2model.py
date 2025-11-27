@@ -247,6 +247,7 @@ class Q2Model:
             meta = self.meta[col]
             if meta.get("relation"):
                 value = self._get_related(value, meta)
+                skip_format = True
             elif meta.get("show"):
                 value = meta.get("show")(mode="grid", row=row)
             elif self.is_strign_for_num(meta):
@@ -259,6 +260,7 @@ class Q2Model:
                     value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATE_FORMAT_STRING)
                 except Exception:
                     value = ""
+
             if meta.get("num") and skip_format is False:  # Numeric value
                 if num(value) == 0:  # do not show zero
                     value = ""
