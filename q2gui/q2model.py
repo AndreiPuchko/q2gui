@@ -254,17 +254,18 @@ class Q2Model:
                     value = 1
                 tmp_list = meta.get("pic").split(";")
                 value = tmp_list[int(num(value)) - 1] if int(num(value)) - 1 < len(tmp_list) else "****"
-            elif meta.get("num") and skip_format is False:  # Numeric value
-                if num(value) == 0:  # do not show zero
-                    value = ""
-                elif meta.get("pic") == "F":  # financial format
-                    format_string = q2app.FINANCIAL_FORMAT % meta.get("datadec", 0)
-                    value = format_string.format(num(value))
             elif meta["datatype"] == "date":
                 try:
                     value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATE_FORMAT_STRING)
                 except Exception:
                     value = ""
+            if meta.get("num") and skip_format is False:  # Numeric value
+                if num(value) == 0:  # do not show zero
+                    value = ""
+                elif meta.get("pic") == "F":  # financial format
+                    format_string = q2app.FINANCIAL_FORMAT % meta.get("datadec", 0)
+                    value = format_string.format(num(value)).replace(",", " ")
+
             return value
 
     def is_strign_for_num(self, meta):
