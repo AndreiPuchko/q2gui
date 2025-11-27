@@ -157,8 +157,7 @@ class Q2Form:
             self.refresh_children()
         else:
             self._q2dialogs.q2working(
-                # lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing...")
-                lambda: (self.model.refresh(),), _("Refreshing...")
+                lambda: (self.model.refresh(), self.refresh_children()), _("Refreshing...")
             )
         self.q2_app.show_statusbar_mess(self.model.row_count())
         self.set_grid_index(row, col)
@@ -851,7 +850,7 @@ class Q2Form:
         child_form.model.set_where(self.get_where_for_child(action))
         child_form.model.refresh()
         child_form.show_mdi_modal_grid()
-        # self.refresh()
+        self.refresh(soft=True)
 
     def get_where_for_child(self, action):
         if self.current_row >= 0 and self.model.row_count() > 0:
@@ -1238,9 +1237,9 @@ class Q2Form:
             else:
                 control2_value = None
         if date_control:
-            if control1_value == "0000-00-00":
+            if control1_value == "0001-01-01":
                 control1_value = ""
-            if control2_value == "0000-00-00":
+            if control2_value == "0001-01-01":
                 control2_value = ""
         elif num_control:
             control1_value = num(control1_value)
@@ -1958,9 +1957,9 @@ class Q2PasteClipboard:
         except Exception as e:
             self.clipboard_headers = self.cliptext.split("\n")[0].split("\t")
             self.load_csv_data()
+        self.load_data()
         self.load_target()
         self.load_source()
-        self.load_data()
         self.load_set()
         if self.show_main_form().ok_pressed:
             self.save_set()
