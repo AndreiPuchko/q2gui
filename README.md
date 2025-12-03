@@ -1,6 +1,17 @@
 # The light Python GUI builder (currently based on PyQt6)
 Simplifying the creation of common GUI applications
 
+## Description
+q2gui is a lightweight Python GUI builder designed to simplify the creation of desktop applications using PyQt6. It provides a high-level API for building forms, menus, toolbars, tabbed interfaces, and various widgets with minimal code. Features include:
+- Dynamic menu and toolbar creation with shortcuts and icons
+- Form builder supporting labels, inputs, combo boxes, radio buttons, checkboxes, date/time pickers, and more
+- Tabbed and split layouts, frames, and groupings
+- Sheet/grid controls with customizable headers, sizes, and actions
+- Built-in support for color modes (light/dark)
+- Status bar, tool buttons, and message dialogs
+- Easy event handling and validation logic
+- Demo applications showcasing usage patterns
+
 # How to start 
 ## With PyPI package:
 ```bash
