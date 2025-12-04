@@ -34,7 +34,7 @@ class q2text(QTextEdit, Q2Widget):
         return super().mousePressEvent(e)
 
     def set_text(self, text):
-        self.setPlainText(text)
+        self.setHtml(text.replace("\n", "<br>"))
 
     def get_text(self):
         return f"{self.toPlainText()}"
