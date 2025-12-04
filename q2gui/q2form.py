@@ -1213,8 +1213,10 @@ class Q2Form:
         for x in self.form_stack:
             x.set_style_sheet(self.style_sheet)
 
-    def prepare_where(self, column=None, control1=None, control2=None):
+    def prepare_where(self, column=None, control1=None, control2=None, dev=False):
         mem_widgets = self.widgets().keys()
+        dev_lines = []
+        indent = "    "
         if control1 is None:
             if column in mem_widgets:
                 control1 = column
@@ -1223,7 +1225,7 @@ class Q2Form:
         if control1 not in mem_widgets:
             return ""
 
-        if not self.w.__getattr__(control1).is_checked():
+        if not self.w.__getattr__(control1).is_checked() and not dev:
             return ""
 
         # control_datatype = self.controls.c.__getattr__(control1)["datatype"]
@@ -1245,6 +1247,32 @@ class Q2Form:
             control1_value = num(control1_value)
             if control2_value:
                 control2_value = num(control2_value)
+
+        if dev:
+            dev_lines.append(f"if form.w.{control1}.is_checked():")
+            if control2 is None:
+                if num_control:
+                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s = {form.s.%(column)s}")""" % locals())
+                elif date_control:
+                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s = '{form.s.%(column)s}'")""" % locals())
+                else:
+                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s like '%%{form.s.%(column)s}%%'")""" % locals())
+            else:
+                if num_control:
+                    dev_lines.append("""%(indent)sif num(form.s.%(control1)s) and num(form.s.%(control2)s) == 0:""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s}")""" % locals())
+                    dev_lines.append("""%(indent)selif num(form.s.%(control1)s) == 0 and num(form.s.%(control2)s):""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s <= {form.s.%(control2)s}")""" % locals())
+                    dev_lines.append("""%(indent)selse:""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s} and %(column)s <= {form.s.%(control2)s} ")""" % locals())
+                else:
+                    dev_lines.append("""%(indent)sif form.s.%(control1)s and not form.s.%(control2)s:""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")""" % locals())
+                    dev_lines.append("""%(indent)selif not form.s.%(control1)s and form.s.%(control2)s:""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s <= '{form.s.%(control2)s}'")""" % locals())
+                    dev_lines.append("""%(indent)selse:""" % locals())
+                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}' and %(column)s <= '{form.s.%(control2)s}' ")""" % locals())
+            return dev_lines
 
         if (control2_value is None) or control1_value == control2_value:
             if date_control or num_control:
@@ -2075,7 +2103,7 @@ class Q2PasteClipboard:
         self.target_data = []
         target_hash_string = ""
         for x in self.q2_form.controls:
-            if x["migrate"]:
+            if x["migrate"] and not x.get("column", "").startswith("/"):
                 target_column = x.get("column")
                 target_hash_string += target_column
                 self.target_data.append(
