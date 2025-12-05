@@ -1672,7 +1672,7 @@ class Q2FormWindow:
                 else:
                     widget2add = meta.get("widget").get_form_widget()
                 widget2add.meta = meta
-                widget2add.form_is_active = True
+                # widget2add.form_is_active = True
             else:
                 widget2add = meta.get("widget")
             if not hasattr(widget2add, "meta"):

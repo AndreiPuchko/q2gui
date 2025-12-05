@@ -185,7 +185,8 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         if event:
             event.accept()
 
-        self.q2_form.form_is_active = True
+        # self.q2_form.form_is_active = True
+        self.form_is_active = True
         self.shown = True
         if hasattr(q2app.q2_app, "settings"):
             self.restore_geometry(q2app.q2_app.settings)
@@ -271,7 +272,8 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         super().close()
         self.q2_form._close()
         self.not_closed = False
-        self.q2_form.form_is_active = False
+        # self.q2_form.form_is_active = False
+        self.form_is_active = False
         if self.heap.prev_mdi_window:
             self.heap.prev_mdi_window.setEnabled(True)
             # else:
