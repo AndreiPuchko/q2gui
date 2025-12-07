@@ -1,6 +1,39 @@
 # --- 1. Bump version ---
-poetry version patch
-py c:\Users\andre\Desktop\dev\utils\write_version\write_version.py
+$versionFile = "pyproject.toml"
+$content = Get-Content $versionFile -Raw
+
+# Извлекаем текущую версию
+$versionMatch = [regex]::Match($content, 'version\s*=\s*"([\d\.]+)"')
+if (-not $versionMatch.Success) {
+    Write-Host "ERROR: version not found in pyproject.toml"
+    exit 1
+}
+
+$version = $versionMatch.Groups[1].Value
+$parts = $version.Split(".")
+$major = [int]$parts[0]
+$minor = [int]$parts[1]
+$patch = [int]$parts[2]
+
+# PATCH bump
+$patch++
+$newVersion = "$major.$minor.$patch"
+
+# Записываем новую версию в pyproject.toml
+$content = $content -replace 'version\s*=\s*"[\d\.]+"', "version = `"$newVersion`""
+Set-Content $versionFile $content -Encoding UTF8
+
+Write-Host "Version bumped: $version → $newVersion"
+
+# Генерация version.py в папке пакета
+$currentDir = Get-Location
+$parentFolderName = Split-Path $currentDir -Leaf
+$versionPyPath = Join-Path $parentFolderName "version.py"
+
+$versionPyContent = "__version__ = `"$newVersion`""
+Set-Content $versionPyPath $versionPyContent -Encoding UTF8
+
+Write-Host "version.py generated: $versionPyPath"
 
 # --- 2. Build & Publish to PyPI ---
 poetry build
