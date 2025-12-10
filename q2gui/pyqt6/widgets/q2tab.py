@@ -30,7 +30,7 @@ class Q2TabBar(QTabBar, Q2Widget):
 class q2tab(QTabWidget, Q2Widget, Q2Frame):
     def __init__(self, meta):
         super().__init__(meta)
-        self.setTabBar(Q2TabBar())
+        self.setTabBar(Q2TabBar(meta=meta))
         self.meta = meta
 
         self.set_tabbar_position(meta.get("alignment", 7))
