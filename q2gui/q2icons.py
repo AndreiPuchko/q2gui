@@ -44,6 +44,13 @@ icons['color'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
     <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
 </svg>'''
 
+icons['database'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+    stroke-linejoin="round">
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+    <path d="M3 12A9 3 0 0 0 21 12" />
+</svg>'''
+
 icons['exit'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
     <path stroke-width="3" d="m12.2 7.2 v.01" />
@@ -253,7 +260,7 @@ icons['row-new'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none
     <path stroke-width="2" d="m20 18v4h-16v-20h12l4 4v12" />
 </svg>'''
 
-icons['row-remove'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"
+icons['row-remove'] = '''<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="darkred" stroke-width="2" stroke-linecap="round"
     stroke-linejoin="round">
     <path stroke-width="2" d="m12 22 h-8v-20h12l4 4 v6" />
     <path d="M14 14 l7 7" />

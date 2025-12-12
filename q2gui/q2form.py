@@ -305,7 +305,7 @@ class Q2Form:
             icon=q2app.ACTION_REMOVE_ICON,
             hotkey=q2app.ACTION_REMOVE_HOTKEY,
             eof_disabled=1,
-            tag="red",
+            # tag="red",
         )
 
     def add_action_copy(self, actions=None):
