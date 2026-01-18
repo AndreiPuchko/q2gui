@@ -703,7 +703,7 @@ class Q2App:
                 if from_widget.valid() is False:
                     from_widget.set_focus()
         if _f := from_widget.meta.get("form"):
-            if _f.form_stack[-1].mode == "form":
+            if _f.form_stack and _f.form_stack[-1].mode == "form":
                 _f.form_refresh()
         if to_widget.__class__.__name__ in (
             "q2line",
