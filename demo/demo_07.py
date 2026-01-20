@@ -1,9 +1,3 @@
-if __name__ == "__main__":
-    import sys
-
-    sys.path.insert(0, ".")
-
-
 from random import randint
 from q2gui.q2dialogs import q2Mess
 
@@ -13,11 +7,7 @@ from q2db.schema import Q2DbSchema
 from q2db.db import Q2Db
 from q2db.cursor import Q2Cursor
 
-from q2gui.q2app import Q2App
-from q2gui.q2form import Q2Form
-from q2gui.q2app import load_q2engine
-
-load_q2engine(globals(), "PyQt6")
+from q2gui import Q2App, Q2Form
 
 
 class dataSchema(Q2DbSchema):
@@ -97,9 +87,9 @@ def load_mock_data(db: Q2Db):
             "customers",
             {
                 "customer_id": x,
-                "name": f"Customer {x}{str(randint(0,600)*6)}",
-                "address": f"Address {x}{str(randint(0,600)*6)}",
-                "comment": f"Comment {x}{str(randint(0,600)*6)}",
+                "name": f"Customer {x}{str(randint(0, 600) * 6)}",
+                "address": f"Address {x}{str(randint(0, 600) * 6)}",
+                "comment": f"Comment {x}{str(randint(0, 600) * 6)}",
             },
         )
     for x in range(1, product_qt):
@@ -110,7 +100,7 @@ def load_mock_data(db: Q2Db):
             {
                 "order_id": x,
                 "customer_id": randint(1, customer_qt - 1),
-                "date": f"2022-01-{randint(1,31):02}",
+                "date": f"2022-01-{randint(1, 31):02}",
             },
         )
         for y in range(1, randint(2, order_lines_qt)):
@@ -135,6 +125,7 @@ class DemoApp(Q2App):
     def __init__(self, title=""):
         super().__init__(title)
         self.set_color_mode("light")
+        # self.set_lang("ru")
 
     def on_init(self):
         self.create_database()
@@ -301,7 +292,7 @@ class DemoApp(Q2App):
             filter_list.append(f"date>='{form.s.date1}' and date<='{form.s.date2}'")
             for x in [form.w.customer_id]:
                 if x.check.is_checked():
-                    filter_list.append(f'{x.meta.get("column")} = {x.get_text()}')
+                    filter_list.append(f"{x.meta.get('column')} = {x.get_text()}")
             if form.w.product_id.check.is_checked():
                 filter_list.append(
                     f"order_id in (select order_id from order_lines where product_id = {form.s.product_id}) "

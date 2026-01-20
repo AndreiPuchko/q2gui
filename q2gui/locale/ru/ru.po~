@@ -1,0 +1,315 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-20 19:11+0100\n"
+"PO-Revision-Date: 2026-01-18 23:54+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:39
+msgid "You are about to remove current record! Are You Sure?"
+msgstr "Вы собираетесь удалить текущую запись! Вы уверены?"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:40
+#, python-format
+msgid "You are about to remove records<b>(%s)</b>! Are You Sure?"
+msgstr "Вы собираетесь удалить записи <b>(%s)</b>! Вы уверены?"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:41
+msgid "Removing records"
+msgstr "Удаление записей"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:42
+msgid "Remove record error"
+msgstr "Ошибка удаления записи"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:47
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:169
+msgid "Rows"
+msgstr "Строки"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:50
+msgid "Hide row"
+msgstr "Скрыть строку"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:53
+msgid "Show row"
+msgstr "Показать строку"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:56
+msgid "Show not hidden"
+msgstr "Показать видимые"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:59
+msgid "Show all"
+msgstr "Показать все"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:62
+msgid "Show hidden"
+msgstr "Показать скрытые"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:65
+msgid "View"
+msgstr "Просмотр"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:69
+msgid "New"
+msgstr "Создать"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:73
+msgid "Copy"
+msgstr "Копировать"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:77
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:135
+msgid "Edit"
+msgstr "Редактировать"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:81
+msgid "Remove"
+msgstr "Удалить"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:86
+msgid "First"
+msgstr "Первая"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:90
+msgid "Previous"
+msgstr "Предыдущая"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:93
+msgid "Refresh"
+msgstr "Обновить"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:97
+msgid "Renumber"
+msgstr "Перенумеровать"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:101
+msgid "Next"
+msgstr "Следующая"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:104
+msgid "Last"
+msgstr "Последняя"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:108
+msgid "Tools"
+msgstr "Инструменты"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:111
+msgid "Set colors"
+msgstr "Настроить цвета"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:114
+msgid "Export"
+msgstr "Экспорт"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:117
+msgid "Import"
+msgstr "Импорт"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:120
+msgid "Paste clipboard"
+msgstr "Вставить из буфера"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:123
+msgid "Bulk update"
+msgstr "Массовое обновление"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:126
+msgid "Info"
+msgstr "Инфо"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:129
+msgid "Select"
+msgstr "Выбрать"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:132
+msgid "Close"
+msgstr "Закрыть"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:138
+msgid "OK"
+msgstr "ОК"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:141
+msgid "Cancel"
+msgstr "Отмена"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:153
+msgid "Sorting..."
+msgstr "Сортировка..."
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:154
+msgid "Toggle hide/show rows"
+msgstr "Переключить видимость строк"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:155
+msgid "Colorizing rows"
+msgstr "Раскрашивание строк"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:157
+msgid "Export data"
+msgstr "Экспорт данных"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:158
+#, python-format
+msgid "Export data to: %s"
+msgstr "Экспорт данных в: %s"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:159
+#, python-format
+msgid "Export error: %s"
+msgstr "Ошибка экспорта: %s"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:160
+#, python-format
+msgid "Export done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
+msgstr "Экспорт завершен:<br>Строк: %(_count)s<br>Время: %(_time).2f сек."
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:162
+msgid "Import data"
+msgstr "Импорт данных"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:163
+#, python-format
+msgid "Import data to: %s"
+msgstr "Импорт данных в: %s"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:164
+#, python-format
+msgid "Import error: %s"
+msgstr "Ошибка импорта: %s"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:165
+#, python-format
+msgid "Import done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
+msgstr "Импорт завершен:<br>Строк: %(_count)s<br>Время: %(_time).2f сек."
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:167
+msgid "Table/Query"
+msgstr "Таблица/Запрос"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:168
+msgid "Query"
+msgstr "Запрос"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:170
+msgid "Order"
+msgstr "Порядок"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:171
+msgid "Filter"
+msgstr "Фильтр"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:172
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:187
+msgid "Columns"
+msgstr "Колонки"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:174
+msgid "Paste rows"
+msgstr "Вставить строки"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:175
+msgid "Paste (Clipboard)"
+msgstr "Вставить (Буфер)"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:176
+msgid "First row is a header"
+msgstr "Первая строка — заголовок"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:177
+msgid "Clipboard data"
+msgstr "Данные буфера обмена"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:178
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:186
+msgid "Target"
+msgstr "Цель"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:179
+msgid "Source"
+msgstr "Источник"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:180
+msgid "Target columns"
+msgstr "Колонки цели"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:181
+msgid "Source columns"
+msgstr "Колонки источника"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:183
+msgid "Bulk data"
+msgstr "Массовые данные"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:184
+msgid "Bulk update selected rows"
+msgstr "Обновить выбранные строки"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:185
+msgid "Bulk update rows"
+msgstr "Массовое обновление строк"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:188
+msgid "Selected"
+msgstr "Выбрано"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:190
+msgid "Do not show next errors"
+msgstr "Не показывать следующие ошибки"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:191
+#, python-format
+msgid "Copy %s?"
+msgstr "Копировать %s?"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:193
+msgid "Open file"
+msgstr "Открыть файл"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:194
+msgid "Save file"
+msgstr "Сохранить файл"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:158
+msgid "Refreshing..."
+msgstr "Обновление..."
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:403
+msgid "Renumber sequence"
+msgstr "Перенумеровать последовательность"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1139
+msgid "Font color"
+msgstr "Цвет шрифта"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1140
+msgid "Background color"
+msgstr "Цвет фона"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1147
+msgid "Reset colors"
+msgstr "Сбросить цвета"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1158
+msgid "Foreground color is not valid! "
+msgstr "Некорректный цвет текста! "
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1165
+msgid "Background color is not valid! "
+msgstr "Некорректный цвет фона! "

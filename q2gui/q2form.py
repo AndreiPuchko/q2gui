@@ -19,9 +19,14 @@ from q2gui.q2utils import int_, num, nums
 import re
 import html
 import json
-import gettext
 
-_ = gettext.gettext
+
+def _(s):
+    return s
+
+
+def tr(s):
+    return q2app.q2_app.i18n.tr(s)
 
 
 VIEW = "VIEW"
@@ -288,7 +293,7 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            text=q2app.ACTION_VIEW_TEXT,
+            text=tr(q2app.ACTION_VIEW_TEXT),
             worker=lambda: self.show_crud_form(VIEW),
             icon=q2app.ACTION_VIEW_ICON,
             hotkey=q2app.ACTION_VIEW_HOTKEY,
@@ -300,7 +305,7 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            text=q2app.ACTION_REMOVE_TEXT,
+            text=tr(q2app.ACTION_REMOVE_TEXT),
             worker=self.crud_delete,
             icon=q2app.ACTION_REMOVE_ICON,
             hotkey=q2app.ACTION_REMOVE_HOTKEY,
@@ -312,7 +317,7 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            text=q2app.ACTION_COPY_TEXT,
+            text=tr(q2app.ACTION_COPY_TEXT),
             worker=lambda: self.show_crud_form(COPY),
             icon=q2app.ACTION_COPY_ICON,
             hotkey=q2app.ACTION_COPY_HOTKEY,
@@ -323,7 +328,7 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            text=q2app.ACTION_EDIT_TEXT,
+            text=tr(q2app.ACTION_EDIT_TEXT),
             worker=lambda: self.show_crud_form(EDIT),
             icon=q2app.ACTION_EDIT_ICON,
             hotkey=q2app.ACTION_EDIT_HOTKEY,
@@ -335,7 +340,7 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            text=q2app.ACTION_NEW_TEXT,
+            text=tr(q2app.ACTION_NEW_TEXT),
             worker=lambda: self.show_crud_form(NEW),
             icon=q2app.ACTION_NEW_ICON,
             hotkey=q2app.ACTION_NEW_HOTKEY,
@@ -351,7 +356,7 @@ class Q2Form:
             "Move down", self.move_seq_down, icon="arrow-down.png", eof_disabled=1, hotkey="Ctrl+Alt+Down"
         )
         actions.add_action(
-            q2app.ACTION_RENUMBER_TEXT,
+            tr(q2app.ACTION_RENUMBER_TEXT),
             self.seq_renumber,
             icon=q2app.ACTION_RENUMBER_ICON,
             hotkey=q2app.ACTION_RENUMBER_HOTKEY,
@@ -462,7 +467,7 @@ class Q2Form:
                         self.model.set_where(filter_string)
 
                     filter_form.before_form_show = before_form_show
-                    filter_form.valid = lambda: self._q2dialogs.q2working(valid, q2app.MESSAGE_SORTING)
+                    filter_form.valid = lambda: self._q2dialogs.q2working(valid, tr(q2app.MESSAGE_SORTING))
                     filter_form.ok_button = 1
                     filter_form.cancel_button = 1
                     filter_form.add_ok_cancel_buttons()
@@ -518,7 +523,7 @@ class Q2Form:
         if self.ok_button:
             buttons.add_control(
                 column="_ok_button",
-                label=q2app.CRUD_BUTTON_OK_TEXT,
+                label=tr(q2app.CRUD_BUTTON_OK_TEXT),
                 control="button",
                 hotkey="PgDown",
                 valid=self._valid,
@@ -527,9 +532,9 @@ class Q2Form:
         if self.cancel_button:
             buttons.add_control(
                 column="_cancel_button",
-                label=q2app.CRUD_BUTTON_CANCEL_TEXT,
+                label=tr(q2app.CRUD_BUTTON_CANCEL_TEXT),
                 control="button",
-                mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
+                mess=tr(q2app.CRUD_BUTTON_CANCEL_MESSAGE),
                 valid=self.close,
                 tag="_cancel_button",
             )
@@ -565,7 +570,7 @@ class Q2Form:
             if self.a.tag("edit"):
                 buttons.add_control(
                     column="_edit_button",
-                    label=q2app.CRUD_BUTTON_EDIT_TEXT,
+                    label=tr(q2app.CRUD_BUTTON_EDIT_TEXT),
                     control="button",
                     mess=q2app.CRUD_BUTTON_EDIT_MESSAGE,
                     valid=self.crud_view_to_edit,
@@ -577,9 +582,9 @@ class Q2Form:
 
         buttons.add_control(
             column="_ok_button",
-            label=q2app.CRUD_BUTTON_OK_TEXT,
+            label=tr(q2app.CRUD_BUTTON_OK_TEXT),
             control="button",
-            mess=q2app.CRUD_BUTTON_OK_MESSAGE,
+            mess=tr(q2app.CRUD_BUTTON_OK_MESSAGE),
             disabled=True if mode is VIEW else False,
             hotkey="PgDown",
             valid=self.crud_save,
@@ -588,9 +593,9 @@ class Q2Form:
 
         buttons.add_control(
             column="_cancel_button",
-            label=q2app.CRUD_BUTTON_CANCEL_TEXT,
+            label=tr(q2app.CRUD_BUTTON_CANCEL_TEXT),
             control="button",
-            mess=q2app.CRUD_BUTTON_CANCEL_MESSAGE,
+            mess=tr(q2app.CRUD_BUTTON_CANCEL_MESSAGE),
             # valid=self.crud_close,
             valid=self.close,
             tag="_cancel_button",
@@ -617,14 +622,14 @@ class Q2Form:
     def crud_delete(self):
         selected_rows = self.get_grid_selected_rows()
         if len(selected_rows) == 1:
-            ask_text = q2app.ASK_REMOVE_RECORD_TEXT
+            ask_text = tr(q2app.ASK_REMOVE_RECORD_TEXT)
         else:
-            ask_text = q2app.ASK_REMOVE_RECORDS_TEXT % len(selected_rows)
+            ask_text = tr(q2app.ASK_REMOVE_RECORDS_TEXT) % len(selected_rows)
         waitbar = None
         if selected_rows and self._q2dialogs.q2AskYN(ask_text) == 2:
             show_error_messages = True
             if len(selected_rows) > 10:
-                waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_REMOVING, len(selected_rows))
+                waitbar = self.show_progressbar(tr(q2app.MESSAGE_ROWS_REMOVING), len(selected_rows))
             for row in selected_rows:
                 if waitbar:
                     waitbar.step(1000)
@@ -637,11 +642,11 @@ class Q2Form:
                     else:
                         if (
                             self._q2dialogs.q2AskYN(
-                                q2app.REMOVE_RECORD_ERROR_TEXT
+                                tr(q2app.REMOVE_RECORD_ERROR_TEXT)
                                 + "<br>"
                                 + self.model.get_data_error()
                                 + "<br>"
-                                + q2app.ASK_ROWS_REMOVING_ERRORS_SUPRESS
+                                + tr(q2app.ASK_ROWS_REMOVING_ERRORS_SUPRESS)
                             )
                             == 2
                         ):
@@ -700,7 +705,7 @@ class Q2Form:
                 continue
             if (
                 int_(action["child_copy_mode"]) == 1
-                and self._q2dialogs.q2AskYN(q2app.ASK_COPY_CHILD_DATA % action["text"]) != 2
+                and self._q2dialogs.q2AskYN(tr(q2app.ASK_COPY_CHILD_DATA) % action["text"]) != 2
             ):
                 continue
             self.copy_records[pos] = []
@@ -868,7 +873,9 @@ class Q2Form:
     def grid_header_clicked(self, column, direction=None):
         current_record = self.model.get_record(self.current_row)
         if self.model is not None:
-            self._q2dialogs.q2working(lambda: self.model.set_order(column, direction), q2app.MESSAGE_SORTING)
+            self._q2dialogs.q2working(
+                lambda: self.model.set_order(column, direction), tr(q2app.MESSAGE_SORTING)
+            )
             self.refresh()
             self.set_grid_index(self.model.seek_row(current_record))
 
@@ -1061,7 +1068,7 @@ class Q2Form:
             pk = self.model.get_meta_primary_key()
             waitbar = None
             if len(selected_rows) > 10:
-                waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_HIDING, len(selected_rows))
+                waitbar = self.show_progressbar(tr(q2app.MESSAGE_ROWS_HIDING), len(selected_rows))
             for row in selected_rows:
                 if waitbar:
                     waitbar.step(1000)
@@ -1087,7 +1094,7 @@ class Q2Form:
 
     def grid_data_export(self):
         file, filetype = q2app.q2_app.get_save_file_dialoq(
-            q2app.MESSAGE_GRID_DATA_EXPORT_TITLE, filter="CSV (*.csv);;JSON(*.json)"
+            tr(q2app.MESSAGE_GRID_DATA_EXPORT_TITLE), filter="CSV (*.csv);;JSON(*.json)"
         )
         if not file:
             return
@@ -1098,11 +1105,11 @@ class Q2Form:
         try:
             self.model.data_export(file, tick_callback=lambda: waitbar.step(1000))
         except Exception as e:
-            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_ERROR % (file + ": " + str(e)))
+            self._q2dialogs.q2Mess(tr(q2app.MESSAGE_GRID_DATA_EXPORT_ERROR) % (file + ": " + str(e)))
             waitbar.close()
         else:
             _count, _time = waitbar.close()
-            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_DONE % (_count, _time))
+            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_EXPORT_DONE % locals())
         waitbar.close()
 
     def grid_data(self, row, col, skip_format=False):
@@ -1110,27 +1117,28 @@ class Q2Form:
 
     def grid_data_import(self):
         file, filetype = q2app.q2_app.get_open_file_dialoq(
-            q2app.MESSAGE_GRID_DATA_IMPORT_TITLE, filter="CSV (*.csv);;JSON(*.json)"
+            tr(q2app.MESSAGE_GRID_DATA_IMPORT_TITLE), filter="CSV (*.csv);;JSON(*.json)"
         )
         if not file:
             return
         file = self.validate_impexp_file_name(file, filetype)
-        waitbar = self._q2dialogs.Q2WaitShow(q2app.MESSAGE_GRID_DATA_IMPORT_WAIT % file)
+        waitbar = self._q2dialogs.Q2WaitShow(tr(q2app.MESSAGE_GRID_DATA_IMPORT_WAIT) % file)
+        self.model.data_import(file, tick_callback=lambda: waitbar.step(1000))
         try:
             self.model.data_import(file, tick_callback=lambda: waitbar.step(1000))
         except Exception as e:
             self._q2dialogs.q2Mess(
-                q2app.MESSAGE_GRID_DATA_IMPORT_ERROR % (self.db.last_sql_error + ": " + str(e))
+                tr(q2app.MESSAGE_GRID_DATA_IMPORT_ERROR) % (self.db.last_sql_error + ": " + str(e))
             )
             waitbar.close()
         else:
             _count, _time = waitbar.close()
-            self._q2dialogs.q2Mess(q2app.MESSAGE_GRID_DATA_IMPORT_DONE % (_count, _time))
+            self._q2dialogs.q2Mess(tr(q2app.MESSAGE_GRID_DATA_IMPORT_DONE) % locals())
 
     def set_grid_row_colors(self):
         selected_rows = self.get_grid_selected_rows()
         if selected_rows:
-            _form: Q2Form = self.q2_app.Q2Form(q2app.ACTION_TOOLS_COLOR_TEXT)
+            _form: Q2Form = self.q2_app.Q2Form(tr(q2app.ACTION_TOOLS_COLOR_TEXT))
             _form.add_control("/v")
             q2_bcolor = self.r.__getattr__("q2_bcolor")
             _bcolor = f"#{int_(q2_bcolor):06x}"
@@ -1173,7 +1181,7 @@ class Q2Form:
                 pk = self.model.get_meta_primary_key()
                 waitbar = None
                 if len(selected_rows) > 10:
-                    waitbar = self.show_progressbar(q2app.MESSAGE_ROWS_COLOR, len(selected_rows))
+                    waitbar = self.show_progressbar(tr(q2app.MESSAGE_ROWS_COLOR), len(selected_rows))
                 for row in selected_rows:
                     if waitbar:
                         waitbar.step(1000)
@@ -1201,11 +1209,11 @@ class Q2Form:
     def grid_data_info(self):
         columns = self.model.columns
         self._q2dialogs.q2Mess(
-            f"{q2app.GRID_DATA_INFO_TABLE}: {self.model.get_table_name()}"
-            f"<br>{q2app.GRID_DATA_INFO_ROWS}: {self.model.row_count()}"
-            f"<br>{q2app.GRID_DATA_INFO_ORDER}: {self.model.get_order()}"
-            f"<br>{q2app.GRID_DATA_INFO_FILTER}: {html.escape(self.model.get_where())}"
-            f"<br>{q2app.GRID_DATA_INFO_COLUMNS}: {columns}"
+            f"{tr(q2app.GRID_DATA_INFO_TABLE)}: {self.model.get_table_name()}"
+            f"<br>{tr(q2app.GRID_DATA_INFO_ROWS)}: {self.model.row_count()}"
+            f"<br>{tr(q2app.GRID_DATA_INFO_ORDER)}: {self.model.get_order()}"
+            f"<br>{tr(q2app.GRID_DATA_INFO_FILTER)}: {html.escape(self.model.get_where())}"
+            f"<br>{tr(q2app.GRID_DATA_INFO_COLUMNS)}: {columns}"
         )
 
     def set_style_sheet(self, css: str):
@@ -1252,26 +1260,61 @@ class Q2Form:
             dev_lines.append(f"if form.w.{control1}.is_checked():")
             if control2 is None:
                 if num_control:
-                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s = {form.s.%(column)s}")""" % locals())
+                    dev_lines.append(
+                        """%(indent)swhere_list.append(f"%(column)s = {form.s.%(column)s}")""" % locals()
+                    )
                 elif date_control:
-                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s = '{form.s.%(column)s}'")""" % locals())
+                    dev_lines.append(
+                        """%(indent)swhere_list.append(f"%(column)s = '{form.s.%(column)s}'")""" % locals()
+                    )
                 else:
-                    dev_lines.append("""%(indent)swhere_list.append(f"%(column)s like '%%{form.s.%(column)s}%%'")""" % locals())
+                    dev_lines.append(
+                        """%(indent)swhere_list.append(f"%(column)s like '%%{form.s.%(column)s}%%'")"""
+                        % locals()
+                    )
             else:
                 if num_control:
-                    dev_lines.append("""%(indent)sif num(form.s.%(control1)s) and num(form.s.%(control2)s) == 0:""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s}")""" % locals())
-                    dev_lines.append("""%(indent)selif num(form.s.%(control1)s) == 0 and num(form.s.%(control2)s):""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s <= {form.s.%(control2)s}")""" % locals())
+                    dev_lines.append(
+                        """%(indent)sif num(form.s.%(control1)s) and num(form.s.%(control2)s) == 0:"""
+                        % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s}")"""
+                        % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)selif num(form.s.%(control1)s) == 0 and num(form.s.%(control2)s):"""
+                        % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s <= {form.s.%(control2)s}")"""
+                        % locals()
+                    )
                     dev_lines.append("""%(indent)selse:""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s} and %(column)s <= {form.s.%(control2)s} ")""" % locals())
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s} and %(column)s <= {form.s.%(control2)s} ")"""
+                        % locals()
+                    )
                 else:
-                    dev_lines.append("""%(indent)sif form.s.%(control1)s and not form.s.%(control2)s:""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")""" % locals())
-                    dev_lines.append("""%(indent)selif not form.s.%(control1)s and form.s.%(control2)s:""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s <= '{form.s.%(control2)s}'")""" % locals())
+                    dev_lines.append(
+                        """%(indent)sif form.s.%(control1)s and not form.s.%(control2)s:""" % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
+                        % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)selif not form.s.%(control1)s and form.s.%(control2)s:""" % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s <= '{form.s.%(control2)s}'")"""
+                        % locals()
+                    )
                     dev_lines.append("""%(indent)selse:""" % locals())
-                    dev_lines.append("""%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}' and %(column)s <= '{form.s.%(control2)s}' ")""" % locals())
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}' and %(column)s <= '{form.s.%(control2)s}' ")"""
+                        % locals()
+                    )
             return dev_lines
 
         if (control2_value is None) or control1_value == control2_value:
@@ -1318,32 +1361,32 @@ class Q2FormWindow:
         actions = q2app.Q2Actions()
         actions.add_action(text="-")
         actions.add_action(
-            text=q2app.ACTION_FIRST_ROW_TEXT,
+            text=tr(q2app.ACTION_FIRST_ROW_TEXT),
             worker=lambda: self.move_grid_index(7),
             icon=q2app.ACTION_FIRST_ROW_ICON,
             hotkey=q2app.ACTION_FIRST_ROW_HOTKEY,
             eof_disabled=1,
         )
         actions.add_action(
-            text=q2app.ACTION_PREVIOUS_ROW_TEXT,
+            text=tr(q2app.ACTION_PREVIOUS_ROW_TEXT),
             worker=lambda: self.move_grid_index(8),
             icon=q2app.ACTION_PREVIOUS_ROW_ICON,
             eof_disabled=1,
         )
         actions.add_action(
-            text=q2app.ACTION_REFRESH_TEXT,
+            text=tr(q2app.ACTION_REFRESH_TEXT),
             worker=lambda: self.q2_form.refresh(),
             icon=q2app.ACTION_REFRESH_ICON,
             hotkey=q2app.ACTION_REFRESH_HOTKEY,
         )
         actions.add_action(
-            text=q2app.ACTION_NEXT_ROW_TEXT,
+            text=tr(q2app.ACTION_NEXT_ROW_TEXT),
             worker=lambda: self.move_grid_index(2),
             icon=q2app.ACTION_NEXT_ROW_ICON,
             eof_disabled=1,
         )
         actions.add_action(
-            text=q2app.ACTION_LAST_ROW_TEXT,
+            text=tr(q2app.ACTION_LAST_ROW_TEXT),
             worker=lambda: self.move_grid_index(1),
             icon=q2app.ACTION_LAST_ROW_ICON,
             hotkey=q2app.ACTION_LAST_ROW_HOTKEY,
@@ -1366,58 +1409,58 @@ class Q2FormWindow:
         if show_color_menu or show_hide_menu:
             actions.add_action(text="-")
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT),
                 icon=q2app.ACTION_HIDDEN_ROW_ICON,
             )
         if show_color_menu:
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_TOOLS_COLOR_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_TOOLS_COLOR_TEXT),
                 icon=q2app.ACTION_TOOLS_COLOR_ICON,
                 worker=self.q2_form.set_grid_row_colors,
                 eof_disabled=1,
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|-",
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|-",
             )
         if show_hide_menu:
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_HIDE_ROW_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_HIDE_ROW_TEXT),
                 icon=q2app.ACTION_HIDE_ROW_ICON,
                 worker=self.q2_form.hidden_row_hide,
                 eof_disabled=1,
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_ROW_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_SHOW_ROW_TEXT),
                 icon=q2app.ACTION_SHOW_ROW_ICON,
                 worker=self.q2_form.hidden_row_show,
                 eof_disabled=1,
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|-",
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|-",
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_NOTHIDDEN_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_SHOW_NOTHIDDEN_TEXT),
                 icon=q2app.ACTION_SHOW_NOTHIDDEN_ICON,
                 worker=self.q2_form.hidden_row_show_not_hidden,
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_ALL_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_SHOW_ALL_TEXT),
                 icon=q2app.ACTION_SHOW_ALL_ICON,
                 worker=self.q2_form.hidden_row_show_all,
             )
             actions.add_action(
-                text=q2app.ACTION_HIDDEN_ROW_TEXT + "|" + q2app.ACTION_SHOW_HIDDEN_TEXT,
+                text=tr(q2app.ACTION_HIDDEN_ROW_TEXT) + "|" + tr(q2app.ACTION_SHOW_HIDDEN_TEXT),
                 icon=q2app.ACTION_SHOW_HIDDEN_ICON,
                 worker=self.q2_form.hidden_row_show_hidden,
             )
 
         actions.add_action(text="-")
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT,
+            text=tr(q2app.ACTION_TOOLS_TEXT),
             icon=q2app.ACTION_TOOLS_ICON,
         )
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_EXPORT_TEXT,
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + tr(q2app.ACTION_TOOLS_EXPORT_TEXT),
             worker=self.q2_form.grid_data_export,
             icon=q2app.ACTION_TOOLS_EXPORT_ICON,
             eof_disabled=1,
@@ -1425,44 +1468,44 @@ class Q2FormWindow:
 
         if self.q2_form.is_grid_updateable():
             actions.add_action(
-                text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_TEXT,
+                text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + tr(q2app.ACTION_TOOLS_IMPORT_TEXT),
                 worker=self.q2_form.grid_data_import,
                 icon=q2app.ACTION_TOOLS_IMPORT_ICON,
             )
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|-",
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|-",
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT,
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + tr(q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT),
             worker=self.q2_form.grid_data_paste_clipboard,
             icon=q2app.ACTION_TOOLS_IMPORT_CLIPBOARD_ICON,
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_BULK_UPDATE_TEXT,
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + tr(q2app.ACTION_TOOLS_BULK_UPDATE_TEXT),
             worker=self.q2_form.grid_data_bulk_update,
             icon=q2app.ACTION_TOOLS_BULK_UPDATE_ICON,
             eof_disabled=1,
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|-",
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|-",
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + "Print",
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + "Print",
             worker=self.q2_form.grid_print,
             icon="print",
             eof_disabled=1,
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|-",
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|-",
         )
 
         actions.add_action(
-            text=q2app.ACTION_TOOLS_TEXT + "|" + q2app.ACTION_TOOLS_INFO_TEXT,
+            text=tr(q2app.ACTION_TOOLS_TEXT) + "|" + tr(q2app.ACTION_TOOLS_INFO_TEXT),
             worker=self.q2_form.grid_data_info,
             icon=q2app.ACTION_TOOLS_INFO_ICON,
         )
@@ -1470,7 +1513,10 @@ class Q2FormWindow:
         if not self.q2_form.i_am_child:
             actions.add_action(text="-")
             actions.add_action(
-                text=q2app.ACTION_CLOSE_TEXT, worker=self.close, icon=q2app.ACTION_CLOSE_ICON, tag="orange"
+                text=tr(q2app.ACTION_CLOSE_TEXT),
+                worker=self.close,
+                icon=q2app.ACTION_CLOSE_ICON,
+                tag="orange",
             )
         self.q2_form.grid_navigation_actions_hook(actions)
         return actions
@@ -1998,7 +2044,7 @@ class Q2PasteClipboard:
         if not self.main_form.s.first_row_is_header:
             self.data_data.insert(0, {f"{x}": x for x in self.clipboard_headers})
 
-        waitbar = self.q2_form.show_progressbar(q2app.PASTE_CLIPBOARD_WAIT, len(self.data_data))
+        waitbar = self.q2_form.show_progressbar(tr(q2app.PASTE_CLIPBOARD_WAIT), len(self.data_data))
 
         self.q2_form.show_crud_form(NEW, modal="")
 
@@ -2023,10 +2069,10 @@ class Q2PasteClipboard:
         )
 
     def show_main_form(self):
-        self.main_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_TITLE)
+        self.main_form = self.q2_form.q2_app.Q2Form(tr(q2app.PASTE_CLIPBOARD_TITLE))
         self.main_form.add_control("/v")
         self.main_form.add_control(
-            "first_row_is_header", q2app.PASTE_CLIPBOARD_FIRST_ROW, control="check", data="*"
+            "first_row_is_header", tr(q2app.PASTE_CLIPBOARD_FIRST_ROW), control="check", data="*"
         )
         self.main_form.add_control("/vs", tag="vs")
         self.main_form.add_control("/hs", tag="hs")
@@ -2039,7 +2085,7 @@ class Q2PasteClipboard:
 
         self.main_form.add_control("source_form", widget=self.source_form)
         self.main_form.add_control("/")
-        self.main_form.add_control("", q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA)
+        self.main_form.add_control("", tr(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA))
         self.main_form.add_control("data_form", widget=self.data_form)
 
         self.main_form.cancel_button = True
@@ -2099,7 +2145,7 @@ class Q2PasteClipboard:
         return rez & 0xFFFFFFFF
 
     def load_target(self):
-        self.target_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_TARGET)
+        self.target_form = self.q2_form.q2_app.Q2Form(tr(q2app.PASTE_CLIPBOARD_TARGET))
         self.target_data = []
         target_hash_string = ""
         for x in self.q2_form.controls:
@@ -2108,7 +2154,7 @@ class Q2PasteClipboard:
                 target_hash_string += target_column
                 self.target_data.append(
                     {
-                        "target_column": f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
+                        "target_column": f"{x.get('label') if x.get('label') else x.get('gridlabel')} "
                         + f"({self.q2_form.model.get_table_name()}.{target_column})",
                         "_target_column": target_column,
                         "source_column": target_column if target_column in self.clipboard_headers else "",
@@ -2121,10 +2167,10 @@ class Q2PasteClipboard:
         self.target_form.set_model(Q2Model())
         self.target_form.model.set_records(self.target_data)
         self.target_form.add_control(
-            "target_column", q2app.PASTE_CLIPBOARD_TARGET_COLUMNS, control="line", datalen=100
+            "target_column", tr(q2app.PASTE_CLIPBOARD_TARGET_COLUMNS), control="line", datalen=100
         )
         self.target_form.add_control(
-            "source_column", q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS, control="line", datalen=100
+            "source_column", tr(q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS), control="line", datalen=100
         )
         self.target_form.grid_double_clicked = self.move_it
         self.target_form.i_am_child = 1
@@ -2134,12 +2180,12 @@ class Q2PasteClipboard:
     def load_source(self):
         self.source_data = [{"column": x} for x in self.clipboard_headers]
         self.source_hash = self.myhash(",".join(self.clipboard_headers))
-        self.source_form: Q2Form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_SOURCE)
+        self.source_form: Q2Form = self.q2_form.q2_app.Q2Form(tr(q2app.PASTE_CLIPBOARD_SOURCE))
 
         self.source_form.set_model(Q2Model())
         self.source_form.model.set_records(self.source_data)
         self.source_form.add_control(
-            "column", q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS, control="line", datalen=100
+            "column", tr(q2app.PASTE_CLIPBOARD_SOURCE_COLUMNS), control="line", datalen=100
         )
         self.source_form.grid_double_clicked = self.move_it
         self.source_form.i_am_child = 1
@@ -2157,7 +2203,7 @@ class Q2PasteClipboard:
             self.data_data.append(row_dic)
 
     def load_data(self):
-        self.data_form = self.q2_form.q2_app.Q2Form(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA)
+        self.data_form = self.q2_form.q2_app.Q2Form(tr(q2app.PASTE_CLIPBOARD_CLIPBOARD_DATA))
         for col in self.clipboard_headers:
             self.data_form.add_control(col, col)
 
@@ -2175,7 +2221,7 @@ class Q2BulkUpdate:
             self.bulk_data_enter()
 
     def bulk_data_enter(self):
-        bulk_data_form = self.q2_form.q2_app.Q2Form(q2app.BULK_DATA_ENTRY_TITLE)
+        bulk_data_form = self.q2_form.q2_app.Q2Form(tr(q2app.BULK_DATA_ENTRY_TITLE))
         bulk_data_form.model = self.q2_form.model
         bulk_columns = []
         current_record = self.q2_form.get_current_record()
@@ -2198,7 +2244,7 @@ class Q2BulkUpdate:
         record_list = []
         for x in self.q2_form.get_grid_selected_rows():
             record_list.append(self.q2_form.model.get_record(x))
-        waitbar = self.q2_form.show_progressbar(q2app.BULK_DATA_WAIT, len(record_list))
+        waitbar = self.q2_form.show_progressbar(tr(q2app.BULK_DATA_WAIT), len(record_list))
         for x in record_list:
             waitbar.step(1000)
             self.q2_form.set_grid_index(self.q2_form.model.seek_row(x))
@@ -2211,7 +2257,7 @@ class Q2BulkUpdate:
         waitbar.close()
 
     def show_main_form(self):
-        self.main_form = self.q2_form.q2_app.Q2Form(q2app.BULK_DATA_MAIN_TITLE)
+        self.main_form = self.q2_form.q2_app.Q2Form(tr(q2app.BULK_DATA_MAIN_TITLE))
         self.main_form.add_control("/v")
         self.main_form.add_control("target_form", widget=self.target_form)
         self.main_form.cancel_button = True
@@ -2228,20 +2274,22 @@ class Q2BulkUpdate:
         self.target_form.set_grid_index(target_row)
 
     def load_target(self):
-        self.target_form = self.q2_form.q2_app.Q2Form(q2app.BULK_TARGET_TITLE)
+        self.target_form = self.q2_form.q2_app.Q2Form(tr(q2app.BULK_TARGET_TITLE))
         self.target_data = []
         for x in self.q2_form.controls:
             if not x["pk"] and not x["noform"] and not x["column"].startswith("/"):
                 x["target_column"] = (
-                    f'{x.get("label") if x.get("label") else x.get("gridlabel")} '
-                    + f'({self.q2_form.model.get_table_name()}.{x.get("column")})'
+                    f"{x.get('label') if x.get('label') else x.get('gridlabel')} "
+                    + f"({self.q2_form.model.get_table_name()}.{x.get('column')})"
                 )
                 x["_target_column"] = x.get("column")
                 x["_selected"] = ""
                 self.target_data.append(dict(x))
         self.target_form.set_model(Q2Model())
         self.target_form.model.set_records(self.target_data)
-        self.target_form.add_control("target_column", q2app.BULK_TARGET_COLUMNS, control="line", datalen=100)
-        self.target_form.add_control("_selected", q2app.BULK_TARGET_SELECTED, control="check", datalen=5)
+        self.target_form.add_control(
+            "target_column", tr(q2app.BULK_TARGET_COLUMNS), control="line", datalen=100
+        )
+        self.target_form.add_control("_selected", tr(q2app.BULK_TARGET_SELECTED), control="check", datalen=5)
         self.target_form.grid_double_clicked = self.select
         self.target_form.i_am_child = 1

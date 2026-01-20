@@ -20,6 +20,7 @@ from configparser import ConfigParser
 
 # from q2gui.q2window import Q2Window
 from q2gui.q2utils import num
+from q2gui.q2style import Q2Style
 
 import re
 import io
@@ -28,114 +29,124 @@ import os
 import codecs
 import logging
 
+from q2gui.i18n import I18n
+
+
+def _(s):
+    return s
+
+
+def tr(s):
+    return q2app.q2_app.i18n.tr(s)
+
 
 q2_app = None
 engine = ""
 Q2Form = None
 
-ASK_REMOVE_RECORD_TEXT = "You are about to remove current record! Are You Sure?"
-ASK_REMOVE_RECORDS_TEXT = "You are about to remove records<b>(%s)</b>! Are You Sure?"
-MESSAGE_ROWS_REMOVING = "Removing records"
-REMOVE_RECORD_ERROR_TEXT = "Remove record error"
+ASK_REMOVE_RECORD_TEXT = _("You are about to remove current record! Are You Sure?")
+ASK_REMOVE_RECORDS_TEXT = _("You are about to remove records<b>(%s)</b>! Are You Sure?")
+MESSAGE_ROWS_REMOVING = _("Removing records")
+REMOVE_RECORD_ERROR_TEXT = _("Remove record error")
 
 DATE_FORMAT_STRING = "%d.%m.%Y"
 
 
-ACTION_HIDDEN_ROW_TEXT = "Rows"
+ACTION_HIDDEN_ROW_TEXT = _("Rows")
 ACTION_HIDDEN_ROW_ICON = "eye-off.svg"
 
-ACTION_HIDE_ROW_TEXT = "Hide row"
+ACTION_HIDE_ROW_TEXT = _("Hide row")
 ACTION_HIDE_ROW_ICON = "list-minus.svg"
 
-ACTION_SHOW_ROW_TEXT = "Show row"
+ACTION_SHOW_ROW_TEXT = _("Show row")
 ACTION_SHOW_ROW_ICON = "list-plus.svg"
 
-ACTION_SHOW_NOTHIDDEN_TEXT = "Show not hidden"
+ACTION_SHOW_NOTHIDDEN_TEXT = _("Show not hidden")
 ACTION_SHOW_NOTHIDDEN_ICON = "list-chevrons-down-up.svg"
 
-ACTION_SHOW_ALL_TEXT = "Show all"
+ACTION_SHOW_ALL_TEXT = _("Show all")
 ACTION_SHOW_ALL_ICON = "list-chevrons-up-down.svg"
 
-ACTION_SHOW_HIDDEN_TEXT = "Show hidden"
+ACTION_SHOW_HIDDEN_TEXT = _("Show hidden")
 ACTION_SHOW_HIDDEN_ICON = "eye.svg"
 
-ACTION_VIEW_TEXT = "View"
+ACTION_VIEW_TEXT = _("View")
 ACTION_VIEW_ICON = "row-view.png"
 ACTION_VIEW_HOTKEY = "F12"
 
-ACTION_NEW_TEXT = "New"
+ACTION_NEW_TEXT = _("New")
 ACTION_NEW_ICON = "row-new.png"
 ACTION_NEW_HOTKEY = "Ins"
 
-ACTION_COPY_TEXT = "Copy"
+ACTION_COPY_TEXT = _("Copy")
 ACTION_COPY_ICON = "row-copy.png"
 ACTION_COPY_HOTKEY = "Ctrl+Ins"
 
-ACTION_EDIT_TEXT = "Edit"
+ACTION_EDIT_TEXT = _("Edit")
 ACTION_EDIT_ICON = "row-edit.png"
 ACTION_EDIT_HOTKEY = "Spacebar"
 
-ACTION_REMOVE_TEXT = "Remove"
+ACTION_REMOVE_TEXT = _("Remove")
 ACTION_REMOVE_ICON = "row-remove.png"
 ACTION_REMOVE_HOTKEY = "Delete"
 
 
-ACTION_FIRST_ROW_TEXT = "First"
+ACTION_FIRST_ROW_TEXT = _("First")
 ACTION_FIRST_ROW_ICON = "go-top.png"
 ACTION_FIRST_ROW_HOTKEY = "Ctrl+Up"
 
-ACTION_PREVIOUS_ROW_TEXT = "Previous"
+ACTION_PREVIOUS_ROW_TEXT = _("Previous")
 ACTION_PREVIOUS_ROW_ICON = "go-up.png"
 
-ACTION_REFRESH_TEXT = "Refresh"
+ACTION_REFRESH_TEXT = _("Refresh")
 ACTION_REFRESH_ICON = "refresh.png"
 ACTION_REFRESH_HOTKEY = "F5"
 
-ACTION_RENUMBER_TEXT = "Renumber"
+ACTION_RENUMBER_TEXT = _("Renumber")
 ACTION_RENUMBER_ICON = ""
 ACTION_RENUMBER_HOTKEY = ""
 
-ACTION_NEXT_ROW_TEXT = "Next"
+ACTION_NEXT_ROW_TEXT = _("Next")
 ACTION_NEXT_ROW_ICON = "go-down.png"
 
-ACTION_LAST_ROW_TEXT = "Last"
+ACTION_LAST_ROW_TEXT = _("Last")
 ACTION_LAST_ROW_ICON = "go-bottom.png"
 ACTION_LAST_ROW_HOTKEY = "Ctrl+Down"
 
-ACTION_TOOLS_TEXT = "Tools"
+ACTION_TOOLS_TEXT = _("Tools")
 ACTION_TOOLS_ICON = "tools.png"
 
-ACTION_TOOLS_COLOR_TEXT = "Set colors"
+ACTION_TOOLS_COLOR_TEXT = _("Set colors")
 ACTION_TOOLS_COLOR_ICON = "color"
 
-ACTION_TOOLS_EXPORT_TEXT = "Export"
+ACTION_TOOLS_EXPORT_TEXT = _("Export")
 ACTION_TOOLS_EXPORT_ICON = "export.png"
 
-ACTION_TOOLS_IMPORT_TEXT = "Import"
+ACTION_TOOLS_IMPORT_TEXT = _("Import")
 ACTION_TOOLS_IMPORT_ICON = "import.png"
 
-ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT = "Paste clipboard"
+ACTION_TOOLS_IMPORT_CLIPBOARD_TEXT = _("Paste clipboard")
 ACTION_TOOLS_IMPORT_CLIPBOARD_ICON = "paste-csv.png"
 
-ACTION_TOOLS_BULK_UPDATE_TEXT = "Bulk update"
+ACTION_TOOLS_BULK_UPDATE_TEXT = _("Bulk update")
 ACTION_TOOLS_BULK_UPDATE_ICON = "bulk-update.png"
 
-ACTION_TOOLS_INFO_TEXT = "Info"
+ACTION_TOOLS_INFO_TEXT = _("Info")
 ACTION_TOOLS_INFO_ICON = "info.png"
 
-ACTION_SELECT_TEXT = "Select"
+ACTION_SELECT_TEXT = _("Select")
 ACTION_SELECT_ICON = "select.png"
 
-ACTION_CLOSE_TEXT = "Close"
+ACTION_CLOSE_TEXT = _("Close")
 ACTION_CLOSE_ICON = "exit.png"
 
-CRUD_BUTTON_EDIT_TEXT = "Edit"
+CRUD_BUTTON_EDIT_TEXT = _("Edit")
 CRUD_BUTTON_EDIT_MESSAGE = "enable editing"
 
-CRUD_BUTTON_OK_TEXT = "OK"
+CRUD_BUTTON_OK_TEXT = _("OK")
 CRUD_BUTTON_OK_MESSAGE = "save data"
 
-CRUD_BUTTON_CANCEL_TEXT = "Cancel"
+CRUD_BUTTON_CANCEL_TEXT = _("Cancel")
 CRUD_BUTTON_CANCEL_MESSAGE = "Do not save changes"
 
 GRID_ACTION_TEXT = "☰"
@@ -147,51 +158,48 @@ ARROW_DOWN_ICON = "arrow-down.png"
 FINANCIAL_FORMAT = r"{:,.%sf}"
 GRID_COLUMN_WIDTH = 25
 
-MESSAGE_SORTING = "Sorting..."
-MESSAGE_SORTING = "Sorting..."
-MESSAGE_ROWS_HIDING = "Toggle hide/show rows"
-MESSAGE_ROWS_COLOR = "Colorizing rows"
+MESSAGE_SORTING = _("Sorting...")
+MESSAGE_ROWS_HIDING = _("Toggle hide/show rows")
+MESSAGE_ROWS_COLOR = _("Colorizing rows")
 
-MESSAGE_GRID_DATA_EXPORT_TITLE = "Export data"
-MESSAGE_GRID_DATA_EXPORT_WAIT = "Export data to: %s"
-MESSAGE_GRID_DATA_EXPORT_ERROR = "Export error: %s"
-MESSAGE_GRID_DATA_EXPORT_DONE = "Export done:<br>Rows: %s<br>Time: %.2f sec."
+MESSAGE_GRID_DATA_EXPORT_TITLE = _("Export data")
+MESSAGE_GRID_DATA_EXPORT_WAIT = _("Export data to: %s")
+MESSAGE_GRID_DATA_EXPORT_ERROR = _("Export error: %s")
+MESSAGE_GRID_DATA_EXPORT_DONE = _("Export done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec.")
 
-MESSAGE_GRID_DATA_IMPORT_TITLE = "Import data"
-MESSAGE_GRID_DATA_IMPORT_WAIT = "Import data to: %s"
-MESSAGE_GRID_DATA_IMPORT_ERROR = "Import error: %s"
-MESSAGE_GRID_DATA_IMPORT_DONE = "Import done:<br>Rows: %s<br>Time: %.2f sec."
+MESSAGE_GRID_DATA_IMPORT_TITLE = _("Import data")
+MESSAGE_GRID_DATA_IMPORT_WAIT = _("Import data to: %s")
+MESSAGE_GRID_DATA_IMPORT_ERROR = _("Import error: %s")
+MESSAGE_GRID_DATA_IMPORT_DONE = _("Import done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec.")
 
-GRID_DATA_INFO_TABLE = "Table/Query"
-GRID_DATA_INFO_SQL = "Query"
-GRID_DATA_INFO_ROWS = "Rows"
-GRID_DATA_INFO_ORDER = "Order"
-GRID_DATA_INFO_FILTER = "Filter"
-GRID_DATA_INFO_COLUMNS = "Columns"
+GRID_DATA_INFO_TABLE = _("Table/Query")
+GRID_DATA_INFO_SQL = _("Query")
+GRID_DATA_INFO_ROWS = _("Rows")
+GRID_DATA_INFO_ORDER = _("Order")
+GRID_DATA_INFO_FILTER = _("Filter")
+GRID_DATA_INFO_COLUMNS = _("Columns")
 
-PASTE_CLIPBOARD_WAIT = "Paste rows"
-PASTE_CLIPBOARD_TITLE = "Paste (Clipboard)"
-PASTE_CLIPBOARD_FIRST_ROW = "First row is a header"
-PASTE_CLIPBOARD_CLIPBOARD_DATA = "Clipboard data"
-PASTE_CLIPBOARD_TARGET = "Target"
-PASTE_CLIPBOARD_SOURCE = "Source"
-PASTE_CLIPBOARD_TARGET_COLUMNS = "Target columns"
-PASTE_CLIPBOARD_SOURCE_COLUMNS = "Source columns"
+PASTE_CLIPBOARD_WAIT = _("Paste rows")
+PASTE_CLIPBOARD_TITLE = _("Paste (Clipboard)")
+PASTE_CLIPBOARD_FIRST_ROW = _("First row is a header")
+PASTE_CLIPBOARD_CLIPBOARD_DATA = _("Clipboard data")
+PASTE_CLIPBOARD_TARGET = _("Target")
+PASTE_CLIPBOARD_SOURCE = _("Source")
+PASTE_CLIPBOARD_TARGET_COLUMNS = _("Target columns")
+PASTE_CLIPBOARD_SOURCE_COLUMNS = _("Source columns")
 
-BULK_DATA_ENTRY_TITLE = "Bulk data"
-BULK_DATA_MAIN_TITLE = "Bulk update selected rows"
-BULK_DATA_WAIT = "Bulk update rows"
-BULK_TARGET_TITLE = "Target"
-BULK_TARGET_COLUMNS = "Columns"
-BULK_TARGET_SELECTED = "Selected"
+BULK_DATA_ENTRY_TITLE = _("Bulk data")
+BULK_DATA_MAIN_TITLE = _("Bulk update selected rows")
+BULK_DATA_WAIT = _("Bulk update rows")
+BULK_TARGET_TITLE = _("Target")
+BULK_TARGET_COLUMNS = _("Columns")
+BULK_TARGET_SELECTED = _("Selected")
 
-ASK_ROWS_REMOVING_ERRORS_SUPRESS = "Do not show next errors"
-ASK_COPY_CHILD_DATA = "Copy %s?"
+ASK_ROWS_REMOVING_ERRORS_SUPRESS = _("Do not show next errors")
+ASK_COPY_CHILD_DATA = _("Copy %s?")
 
-DIALOG_OPEN_FILE_TITLE = "Open file"
-DIALOG_SAVE_FILE_TITLE = "Save file"
-
-from q2gui.q2style import Q2Style
+DIALOG_OPEN_FILE_TITLE = _("Open file")
+DIALOG_SAVE_FILE_TITLE = _("Save file")
 
 
 def load_q2engine(glo, engine="PyQt6"):
@@ -555,6 +563,9 @@ class Q2App:
         self.settings_file = self.get_argv("ini")
         self.icon = None
         sys.stdout = Q2Stdout(self)
+        self.i18n = I18n()
+        self.i18n.setup()  # default language
+        self.title = self.tr(title)
 
         self.menu_list = []
         self._main_menu = {}
@@ -581,6 +592,14 @@ class Q2App:
         self.set_icon(f"{self.assets_folder}/q2gui.ico")
 
         self.on_init()
+
+    def tr(self, text):
+        print(self.i18n, "<<")
+        txt = self.i18n.tr(text)
+        return txt
+
+    def set_lang(self, lang: str):
+        self.i18n.setup(lang)
 
     def set_clipboard(self, text):
         pass
