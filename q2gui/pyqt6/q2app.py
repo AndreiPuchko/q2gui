@@ -16,7 +16,6 @@
 # from q2gui import q2form
 
 import os
-import time
 from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
