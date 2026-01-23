@@ -7,308 +7,308 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-20 23:12+0100\n"
-"PO-Revision-Date: 2026-01-18 23:54+0100\n"
-"Last-Translator: Automatically generated\n"
+"POT-Creation-Date: 2026-01-23 18:12+0100\n"
+"PO-Revision-Date: 2026-01-23 18:30+0100\n"
+"Last-Translator: Gemini\n"
 "Language-Team: none\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CP1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:43
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:47
 msgid "You are about to remove current record! Are You Sure?"
-msgstr ""
+msgstr "Sie sind im Begriff, den aktuellen Datensatz zu löschen! Sind Sie sicher?"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:44
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:48
 #, python-format
 msgid "You are about to remove records<b>(%s)</b>! Are You Sure?"
-msgstr ""
+msgstr "Sie sind im Begriff, Datensätze zu löschen <b>(%s)</b>! Sind Sie sicher?"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:45
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:49
 msgid "Removing records"
-msgstr ""
+msgstr "Datensätze werden gelöscht"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:46
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:50
 msgid "Remove record error"
-msgstr ""
+msgstr "Fehler beim Löschen des Datensatzes"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:51
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:173
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:55
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:177
 msgid "Rows"
-msgstr ""
+msgstr "Zeilen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:54
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:58
 msgid "Hide row"
-msgstr ""
+msgstr "Zeile ausblenden"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:57
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:61
 msgid "Show row"
-msgstr ""
+msgstr "Zeile anzeigen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:60
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:64
 msgid "Show not hidden"
-msgstr ""
+msgstr "Nicht ausgeblendete anzeigen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:63
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:67
 msgid "Show all"
-msgstr ""
+msgstr "Alle anzeigen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:66
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:70
 msgid "Show hidden"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:69
-msgid "View"
-msgstr ""
+msgstr "Ausgeblendete anzeigen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:73
-msgid "New"
-msgstr ""
+msgid "View"
+msgstr "Ansicht"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:77
-msgid "Copy"
-msgstr ""
+msgid "New"
+msgstr "Neu"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:81
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:139
-msgid "Edit"
-msgstr ""
+msgid "Copy"
+msgstr "Kopieren"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:85
-msgid "Remove"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:143
+msgid "Edit"
+msgstr "Bearbeiten"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:90
-msgid "First"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:89
+msgid "Remove"
+msgstr "Löschen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:94
-msgid "Previous"
-msgstr ""
+msgid "First"
+msgstr "Erster"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:97
-msgid "Refresh"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:98
+msgid "Previous"
+msgstr "Vorheriger"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:101
-msgid "Renumber"
-msgstr ""
+msgid "Refresh"
+msgstr "Aktualisieren"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:105
-msgid "Next"
-msgstr ""
+msgid "Renumber"
+msgstr "Neu nummerieren"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:108
-msgid "Last"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:109
+msgid "Next"
+msgstr "Nächster"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:112
+msgid "Last"
+msgstr "Letzter"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:116
 msgid "Tools"
-msgstr ""
+msgstr "Extras"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:115
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:119
 msgid "Set colors"
-msgstr ""
+msgstr "Farben festlegen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:118
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:122
 msgid "Export"
-msgstr ""
+msgstr "Exportieren"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:121
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:125
 msgid "Import"
-msgstr ""
+msgstr "Importieren"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:124
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:128
 msgid "Paste clipboard"
-msgstr ""
+msgstr "Aus Zwischenablage einfügen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:127
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:131
 msgid "Bulk update"
-msgstr ""
+msgstr "Massenaktualisierung"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:130
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:134
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:133
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:137
 msgid "Select"
-msgstr ""
+msgstr "Auswählen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:136
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:140
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:142
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:146
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:145
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:149
 msgid "Cancel"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:157
-msgid "Sorting..."
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:158
-msgid "Toggle hide/show rows"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:159
-msgid "Colorizing rows"
-msgstr ""
+msgstr "Abbrechen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:161
-msgid "Export data"
-msgstr ""
+msgid "Sorting..."
+msgstr "Sortieren..."
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:162
-#, python-format
-msgid "Export data to: %s"
-msgstr ""
+msgid "Toggle hide/show rows"
+msgstr "Zeilen ein-/ausblenden umschalten"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:163
-#, python-format
-msgid "Export error: %s"
-msgstr ""
+msgid "Colorizing rows"
+msgstr "Zeilen einfärben"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:164
-#, python-format
-msgid "Export done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:165
+msgid "Export data"
+msgstr "Daten exportieren"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:166
-msgid "Import data"
-msgstr ""
+#, python-format
+msgid "Export data to: %s"
+msgstr "Daten exportieren nach: %s"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:167
 #, python-format
-msgid "Import data to: %s"
-msgstr ""
+msgid "Export error: %s"
+msgstr "Exportfehler: %s"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:168
 #, python-format
-msgid "Import error: %s"
-msgstr ""
+msgid "Export done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
+msgstr "Export abgeschlossen:<br>Zeilen: %(_count)s<br>Zeit: %(_time).2f Sek."
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:169
-#, python-format
-msgid "Import done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:170
+msgid "Import data"
+msgstr "Daten importieren"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:171
-msgid "Table/Query"
-msgstr ""
+#, python-format
+msgid "Import data to: %s"
+msgstr "Daten importieren nach: %s"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:172
-msgid "Query"
-msgstr ""
+#, python-format
+msgid "Import error: %s"
+msgstr "Importfehler: %s"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:174
-msgid "Order"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:173
+#, python-format
+msgid "Import done:<br>Rows: %(_count)s<br>Time: %(_time).2f sec."
+msgstr "Import abgeschlossen:<br>Zeilen: %(_count)s<br>Zeit: %(_time).2f Sek."
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:175
-msgid "Filter"
-msgstr ""
+msgid "Table/Query"
+msgstr "Tabelle/Abfrage"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:176
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:191
-msgid "Columns"
-msgstr ""
+msgid "Query"
+msgstr "Abfrage"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:178
-msgid "Paste rows"
-msgstr ""
+msgid "Order"
+msgstr "Sortierung"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:179
-msgid "Paste (Clipboard)"
-msgstr ""
+msgid "Filter"
+msgstr "Filter"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:180
-msgid "First row is a header"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:181
-msgid "Clipboard data"
-msgstr ""
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:195
+msgid "Columns"
+msgstr "Spalten"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:182
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:190
-msgid "Target"
-msgstr ""
+msgid "Paste rows"
+msgstr "Zeilen einfügen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:183
-msgid "Source"
-msgstr ""
+msgid "Paste (Clipboard)"
+msgstr "Einfügen (Zwischenablage)"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:184
-msgid "Target columns"
-msgstr ""
+msgid "First row is a header"
+msgstr "Erste Zeile ist Kopfzeile"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:185
-msgid "Source columns"
-msgstr ""
+msgid "Clipboard data"
+msgstr "Daten der Zwischenablage"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:186
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:194
+msgid "Target"
+msgstr "Ziel"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:187
-msgid "Bulk data"
-msgstr ""
+msgid "Source"
+msgstr "Quelle"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:188
-msgid "Bulk update selected rows"
-msgstr ""
+msgid "Target columns"
+msgstr "Zielspalten"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:189
-msgid "Bulk update rows"
-msgstr ""
+msgid "Source columns"
+msgstr "Quellspalten"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:191
+msgid "Bulk data"
+msgstr "Massendaten"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:192
+msgid "Bulk update selected rows"
+msgstr "Ausgewählte Zeilen massenhaft aktualisieren"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:193
+msgid "Bulk update rows"
+msgstr "Zeilen massenhaft aktualisieren"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:196
 msgid "Selected"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:194
-msgid "Do not show next errors"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:195
-#, python-format
-msgid "Copy %s?"
-msgstr ""
-
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:197
-msgid "Open file"
-msgstr ""
+msgstr "Ausgewählt"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:198
+msgid "Do not show next errors"
+msgstr "Nächste Fehler nicht anzeigen"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:199
+#, python-format
+msgid "Copy %s?"
+msgstr "%s kopieren?"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:201
+msgid "Open file"
+msgstr "Datei öffnen"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:202
 msgid "Save file"
-msgstr ""
+msgstr "Datei speichern"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:165
 msgid "Refreshing..."
-msgstr ""
+msgstr "Aktualisierung..."
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:409
 msgid "Renumber sequence"
-msgstr ""
+msgstr "Sequenz neu nummerieren"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1147
 msgid "Font color"
-msgstr ""
+msgstr "Schriftfarbe"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
 msgid "Background color"
-msgstr ""
+msgstr "Hintergrundfarbe"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1155
 msgid "Reset colors"
-msgstr ""
+msgstr "Farben zurücksetzen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1166
 msgid "Foreground color is not valid! "
-msgstr ""
+msgstr "Vordergrundfarbe ist ungültig! "
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1173
 msgid "Background color is not valid! "
-msgstr ""
+msgstr "Hintergrundfarbe ist ungültig! "

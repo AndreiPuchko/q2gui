@@ -11,9 +11,7 @@ class I18n:
         # Ordered from lowest → highest priority
         self._domains: list[tuple[str, str]] = []
 
-        self._translator: gettext.NullTranslations | gettext.GNUTranslations = (
-            gettext.NullTranslations()
-        )
+        self._translator: gettext.NullTranslations | gettext.GNUTranslations = gettext.NullTranslations()
         self.register_domain("q2gui", "q2gui")
 
     # ------------------------------------------------------------
@@ -53,9 +51,7 @@ class I18n:
     # ------------------------------------------------------------
 
     def _build_chain(self):
-        tr: gettext.NullTranslations | gettext.GNUTranslations = (
-            gettext.NullTranslations()
-        )
+        tr: gettext.NullTranslations | gettext.GNUTranslations = gettext.NullTranslations()
 
         for domain, package in self._domains:
             t = gettext.translation(

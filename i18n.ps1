@@ -31,6 +31,7 @@ Write-Host "Extracting strings → $PotFile"
     -L Python `
     --from-code=UTF-8 `
     --keyword=_ `
+    --keyword=tr `
     --keyword=ngettext:1,2 `
     --keyword=pgettext:1c,2 `
     --add-comments=TRANSLATORS `
