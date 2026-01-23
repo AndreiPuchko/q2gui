@@ -12,11 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
 
-
-
-# from PyQt6.QtWidgets import QTextEdit, QSizePolicy
 from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
@@ -76,7 +72,7 @@ class q2code(QsciScintilla, Q2Widget):
             self.textChanged.connect(self.valid)
         # if self.meta.get("changed"):
         #     self.textChanged.connect(self.meta.get("changed"))
-        
+
         # self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
         self.editor_panel = q2editor_panel(self)
         # self.create_context_menu()

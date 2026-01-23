@@ -12,12 +12,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import sys
-
-
 
 from PyQt6.QtWidgets import QDoubleSpinBox
-
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_, float_
 
