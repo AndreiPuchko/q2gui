@@ -269,8 +269,9 @@ class Q2Widget:
         mess="",
         tag="",
         eat_enter=None,
+        index=None,
         hotkey="",
+        style="",
     ):
         meta = locals().copy()
         return meta
-

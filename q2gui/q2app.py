@@ -383,6 +383,7 @@ class Q2Controls(list):
         mess="",
         tag="",
         eat_enter=None,
+        index=None,
         hotkey="",
         style="",
         **args,
@@ -592,11 +593,6 @@ class Q2App:
         self.set_icon(f"{self.assets_folder}/q2gui.ico")
 
         self.on_init()
-
-    def tr(self, text):
-        print(self.i18n, "<<")
-        txt = self.i18n.tr(text)
-        return txt
 
     def set_lang(self, lang: str):
         self.i18n.setup(lang)

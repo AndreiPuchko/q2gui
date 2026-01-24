@@ -499,6 +499,7 @@ class Q2Form:
                     "related": meta["related"],
                     "pk": meta["pk"],
                     "ai": meta["ai"],
+                    "index": meta["index"],
                 }
                 rez.append(column)
         return rez
@@ -968,6 +969,7 @@ class Q2Form:
         mess="",
         tag="",
         eat_enter=None,
+        index=None,
         hotkey="",
         style="",
         **args,
@@ -1123,7 +1125,6 @@ class Q2Form:
             return
         file = self.validate_impexp_file_name(file, filetype)
         waitbar = self._q2dialogs.Q2WaitShow(tr(q2app.MESSAGE_GRID_DATA_IMPORT_WAIT) % file)
-        self.model.data_import(file, tick_callback=lambda: waitbar.step(1000))
         try:
             self.model.data_import(file, tick_callback=lambda: waitbar.step(1000))
         except Exception as e:
