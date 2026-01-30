@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 18:12+0100\n"
+"POT-Creation-Date: 2026-01-25 23:22+0100\n"
 "PO-Revision-Date: 2026-01-23 18:30+0100\n"
 "Last-Translator: Gemini\n"
 "Language-Team: none\n"
@@ -19,12 +19,14 @@ msgstr ""
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:47
 msgid "You are about to remove current record! Are You Sure?"
-msgstr "Sie sind im Begriff, den aktuellen Datensatz zu löschen! Sind Sie sicher?"
+msgstr ""
+"Sie sind im Begriff, den aktuellen Datensatz zu löschen! Sind Sie sicher?"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:48
 #, python-format
 msgid "You are about to remove records<b>(%s)</b>! Are You Sure?"
-msgstr "Sie sind im Begriff, Datensätze zu löschen <b>(%s)</b>! Sind Sie sicher?"
+msgstr ""
+"Sie sind im Begriff, Datensätze zu löschen <b>(%s)</b>! Sind Sie sicher?"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:49
 msgid "Removing records"
@@ -293,22 +295,22 @@ msgstr "Aktualisierung..."
 msgid "Renumber sequence"
 msgstr "Sequenz neu nummerieren"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1147
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
 msgid "Font color"
 msgstr "Schriftfarbe"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1149
 msgid "Background color"
 msgstr "Hintergrundfarbe"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1155
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1156
 msgid "Reset colors"
 msgstr "Farben zurücksetzen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1166
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1167
 msgid "Foreground color is not valid! "
 msgstr "Vordergrundfarbe ist ungültig! "
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1173
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1174
 msgid "Background color is not valid! "
 msgstr "Hintergrundfarbe ist ungültig! "

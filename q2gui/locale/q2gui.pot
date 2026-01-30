@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 18:12+0100\n"
+"POT-Creation-Date: 2026-01-25 23:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,22 +293,22 @@ msgstr ""
 msgid "Renumber sequence"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1147
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
 msgid "Font color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1149
 msgid "Background color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1155
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1156
 msgid "Reset colors"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1166
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1167
 msgid "Foreground color is not valid! "
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1173
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1174
 msgid "Background color is not valid! "
 msgstr ""
