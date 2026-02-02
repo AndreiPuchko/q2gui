@@ -95,7 +95,7 @@ class Q2Style(q2style.Q2Style):
                 QRadioButton
                     {{
                         border: none;
-                        padding:0px 0.3em;
+                        padding:0.1em 0.3em;
                     }}
 
                 QRadioButton:checked {{
@@ -106,6 +106,7 @@ class Q2Style(q2style.Q2Style):
                 QRadioButton:focus
                     {{
                         background-color: {background_focus};
+                        border: 0px solid;
                     }}
 
                 q2spin {{border:{border};}}
@@ -129,11 +130,14 @@ class Q2Style(q2style.Q2Style):
                     color:{color};
                     background: transparent;
                 }}
+                q2text, q2line {{
+                    padding:0.1em 0.1em;
+                }}
                 QGroupBox#title
                     {{
                         border: {border};
-                        margin: 0.5em 0em;
-                        padding: 0.5em 0.3em 0.1em 0.3em;
+                        margin: 0.8em 0em 0.3em 0em;
+                        padding: 0.3em;
                     }}
                 QGroupBox::title {{
                         subcontrol-origin: padding;
@@ -309,7 +313,7 @@ class Q2Style(q2style.Q2Style):
                 #mdiarea {{border:none;}}
                 q2check
                     {{
-                        padding: 0em  0.3ex
+                        padding: 0.1em  1ex;
                     }}
                 q2text
                     {{
