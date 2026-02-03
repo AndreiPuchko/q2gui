@@ -143,7 +143,8 @@ class Q2QtWindow(q2window.Q2Window, Q2Frame):
         super().hide_border()
         self.setObjectName("grb")
         # self.setStyleSheet("QGroupBox#grb {border:0}")
-        self.parent().setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.FramelessWindowHint)
+        if parent := self.parent():
+            parent.setWindowFlags(Qt.WindowType.CustomizeWindowHint | Qt.WindowType.FramelessWindowHint)
 
     def is_maximized(self):
         return 1 if QWidget.isMaximized(self) else 0
