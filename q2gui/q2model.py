@@ -191,7 +191,11 @@ class Q2Model:
             if meta.get("column", "").startswith("/") or meta.get("nogrid"):
                 # if meta.get("column", "").startswith("/"):
                 continue
-            if meta.get("control", "") in ["button", "widget", "form"]:
+            elif meta.get("control", "") == "form":
+                for meta2 in meta.get("widget", "").controls:
+                    if meta2.get("column", "").startswith("/") or meta2.get("nogrid"):
+                        continue
+                    self.add_column(meta2)
                 continue
             self.q2_form.model.add_column(meta)
 
