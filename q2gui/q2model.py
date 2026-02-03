@@ -189,7 +189,8 @@ class Q2Model:
         self.meta = []
         for meta in self.q2_form.controls:
             if meta.get("column", "").startswith("/") or meta.get("nogrid"):
-                # if meta.get("column", "").startswith("/"):
+                continue
+            elif meta.get("control", "") in ["button", "widget"]:
                 continue
             elif meta.get("control", "") == "form":
                 for meta2 in meta.get("widget", "").controls:
@@ -197,7 +198,7 @@ class Q2Model:
                         continue
                     self.add_column(meta2)
                 continue
-            self.q2_form.model.add_column(meta)
+            self.add_column(meta)
 
     def add_column(self, meta):
         if not meta.get("control"):
@@ -249,12 +250,13 @@ class Q2Model:
             col_name = self.columns[col]
             value = self.get_record(row).get(col_name, "")
             meta = self.meta[col]
+            strign_for_num = False
             if meta.get("relation"):
                 value = self._get_related(value, meta)
                 skip_format = True
             elif meta.get("show"):
                 value = meta.get("show")(mode="grid", row=row)
-            elif self.is_strign_for_num(meta):
+            elif strign_for_num := self.is_strign_for_num(meta):
                 if num(value) == 0:
                     value = 1
                 tmp_list = meta.get("pic").split(";")
@@ -265,7 +267,7 @@ class Q2Model:
                 except Exception:
                     value = ""
 
-            if meta.get("num") and skip_format is False:  # Numeric value
+            if not strign_for_num and meta.get("num") and skip_format is False:  # Numeric value
                 if num(value) == 0:  # do not show zero
                     value = ""
                 elif meta.get("pic") == "F":  # financial format
