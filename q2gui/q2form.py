@@ -728,15 +728,21 @@ class Q2Form:
 
     def get_crud_form_data(self):
         # put data from form into self._model_record
-        for x in self.crud_form.widgets:
+        form = self.crud_form if self.crud_form else self.form_stack[-1]
+        for x in form.widgets:
             if x.startswith("/"):
                 continue
-            widget = self.crud_form.widgets[x]
+            widget = form.widgets[x]
             if widget.meta.get("control") in NO_DATA_WIDGETS:
                 continue
+
+            if widget.meta.get("control") == "form" and isinstance(widget.meta.get("widget"), Q2Form):
+                data = widget.meta.get("widget").get_crud_form_data()
+                self._model_record.update(data)
+                continue
+
             self._model_record[x] = self.s.__getattr__(x)
 
-            # if widget.meta.get("check") and not widget.check.get_text():
             if widget.meta.get("check") and not widget.check.is_checked():
                 if widget.meta.get("num"):
                     value = "0"
@@ -756,11 +762,9 @@ class Q2Form:
         self.set_crud_form_data(mode)
         self.crud_form.show_form(modal=modal)
 
-    def set_crud_form_data(self, mode=EDIT):
-        """set current record's value in crud_form"""
-        where_string = self.model.get_where()
+    def _get_where_dict(self):
         where_dict = {}
-        if "=" in where_string:
+        if "=" in self.model.get_where():
             for part in self.model.get_where().split(" and "):
                 eq = part.split("=")
                 if len(eq) == 2:
@@ -768,61 +772,89 @@ class Q2Form:
                         where_dict[eq[0].strip()] = eq[1].strip()
                 else:
                     continue
-        else:
-            where_dict = {}
+        return where_dict
 
+    def _get_sub_forms_widgets(self):
+        sub_forms_widgets = {}
+        _meta = {}
+        _meta.update
+        for x in self.controls:
+            if x["control"] == "form" and isinstance(x["widget"], Q2Form):
+                for sbw in x["widget"].controls:
+                    column = sbw["column"]
+                    if column.startswith("/"):
+                        continue
+                    if sbw["control"] in NO_DATA_WIDGETS:
+                        continue
+                    sub_forms_widgets[column] = x["widget"].widgets()[column]
+                    for y in x["widget"].controls:
+                        _meta[y["column"]] = y
+            else:
+                _meta[x["column"]] = x
+        return sub_forms_widgets, _meta
+
+    def set_crud_form_data(self, mode=EDIT):
+        """set current record's value in crud_form"""
+        where_dict = self._get_where_dict()
+        _form_widgets = self.crud_form.widgets
+        _sub_form_widgets, _meta = self._get_sub_forms_widgets()
+        _form_widgets.update(_sub_form_widgets)
         if self.current_row >= 0:
             self.model.refresh_record(self.current_row)
             self._model_record = dict(self.model.get_record(self.current_row))
+
             for x in self._model_record:
-                if x not in self.crud_form.widgets:
+                widget_text = ""
+                widget_check = None
+                if x not in _form_widgets:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
                 if mode in (NEW, COPY) and x == "seq":
-                    self.crud_form.widgets[x].set_text(self.model.get_next_sequence(x, self._model_record[x]))
+                    widget_text = self.model.get_next_sequence(x, self._model_record[x])
                 if (
-                    self.controls.c.__getattr__(x)["pk"]
+                    _meta[x]["pk"]
                     and mode in (NEW, COPY)
-                    and not self.controls.c.__getattr__(x)["ai"]
+                    and not _meta[x]["ai"]
                 ):
                     # for new record - get next primary key
-                    self.crud_form.widgets[x].set_text(self.model.get_uniq_value(x, self._model_record[x]))
+                    widget_text = self.model.get_uniq_value(x, self._model_record[x])
 
-                if self.c.__getattr__(x) is None:
+                if _meta.get(x) is None:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
-                if self.c.__getattr__(x)["check"]:
-                    if self.c.__getattr__(x)["num"]:
+                if _meta[x]["check"]:
+                    if _meta[x]["num"]:
                         value = num(self._model_record[x])
                     else:
                         value = self._model_record[x]
                     if value:
-                        self.crud_form.widgets[x].check.set_checked(True)
-                        # self.crud_form.widgets[x].check.set_text("*")
+                        widget_check = True
+
                 if mode == NEW:
-                    if x not in where_dict and x != "seq" and not self.controls.c.__getattr__(x)["pk"]:
-                        self.crud_form.widgets[x].set_text("")
+                    if x not in where_dict and x != "seq" and not _meta[x]["pk"]:
+                        widget_text = ""
                         self._model_record[x] = ""
                 else:
-                    self.crud_form.widgets[x].set_text(self._model_record[x])
+                    widget_text = self._model_record[x]
+
+                _form_widgets[x].set_text(widget_text)
+                if widget_check:
+                    _form_widgets[x].check.set_checked(widget_check)
         # take care about PK and filters
-        for x in self.controls.get_names():
-            if x not in self.crud_form.widgets:
+        for x in _meta:
+            if x not in _form_widgets:
                 continue
-            if mode == EDIT and self.controls.get(x)["pk"] and x in self.crud_form.widgets:
+            if mode == EDIT and _meta[x]["pk"] and x in _form_widgets:
                 # Disable primary key when edit
-                self.crud_form.widgets[x].set_disabled()
+                _form_widgets[x].set_disabled()
             elif mode == NEW and x in where_dict:
                 # set where fields
-                if where_dict[x][0] == where_dict[x][-1] and where_dict[x][0] in (
-                    '"',
-                    "'",
-                ):
+                if where_dict[x][0] == where_dict[x][-1] and where_dict[x][0] in ('"', "'"):
                     where_dict[x] = where_dict[x][1:-1]  # cut quotes
-                self.crud_form.widgets[x].set_text(where_dict[x])
-                self.crud_form.widgets[x].set_disabled()
+                _form_widgets[x].set_text(where_dict[x])
+                _form_widgets[x].set_disabled()
 
     def _grid_index_changed(self, row, column):
         refresh_children_forms = row != self.current_row and row >= 0
@@ -875,7 +907,8 @@ class Q2Form:
         current_record = self.model.get_record(self.current_row)
         if self.model is not None:
             self._q2dialogs.q2working(
-                lambda: self.model.set_order(column, direction), tr(q2app.MESSAGE_SORTING)
+                lambda: self.model.set_order(column, direction),
+                tr(q2app.MESSAGE_SORTING),
             )
             self.refresh()
             self.set_grid_index(self.model.seek_row(current_record))
@@ -1146,14 +1179,24 @@ class Q2Form:
             q2_fcolor = self.r.__getattr__("q2_fcolor")
             _fcolor = f"#{int_(q2_fcolor):06x}"
             _form.add_control("fcolor", _("Font color"), control="color", data=_fcolor, datalen=20)
-            _form.add_control("bcolor", _("Background color"), control="color", data=_bcolor, datalen=20)
+            _form.add_control(
+                "bcolor",
+                _("Background color"),
+                control="color",
+                data=_bcolor,
+                datalen=20,
+            )
 
             def reset_colors():
                 _form.s.fcolor = "#000000"
                 _form.s.bcolor = "#000000"
 
             _form.add_control(
-                "reset_colors", _("Reset colors"), datalen=15, control="button", valid=reset_colors
+                "reset_colors",
+                _("Reset colors"),
+                datalen=15,
+                control="button",
+                valid=reset_colors,
             )
             _form.ok_button = True
             _form.cancel_button = True
@@ -1237,7 +1280,6 @@ class Q2Form:
         if not self.w.__getattr__(control1).is_checked() and not dev:
             return ""
 
-        # control_datatype = self.controls.c.__getattr__(control1)["datatype"]
         date_control = self.controls.c.__getattr__(control1)["datatype"] == "date"
         num_control = self.controls.c.__getattr__(control1).get("num")
         control1_value = self.s.__getattr__(control1)
@@ -1712,12 +1754,13 @@ class Q2FormWindow:
             label2add = None
 
         # Form or widget
-        if control == "widget":
+        if control in ["widget", "form"]:
             if isinstance(meta.get("widget"), Q2Form):
                 if meta.get("widget").model is not None:
                     widget2add = meta.get("widget").get_grid_widget()
                 else:
                     widget2add = meta.get("widget").get_form_widget()
+                    meta.get("widget").form_stack.append(widget2add)
                 widget2add.meta = meta
                 # widget2add.form_is_active = True
             else:
@@ -1751,7 +1794,10 @@ class Q2FormWindow:
         if meta.get("check"):  # has checkbox
             # label2add = self._get_widget("check", "check")({"label": meta["label"], "stretch": 0})
             label2add = self._get_widget("check", "check")(
-                {"label": meta["label"] if meta["control"] != "check" else "Turn on", "stretch": 0}
+                {
+                    "label": meta["label"] if meta["control"] != "check" else "Turn on",
+                    "stretch": 0,
+                }
             )
 
             label2add.add_managed_widget(widget2add)
@@ -1955,7 +2001,9 @@ class Q2FormData:
         else:
             widget = self.q2_form.form_stack[-1].widgets.get(name)
         if widget is not None:
-            if hasattr(widget, "get_text"):
+            if isinstance(widget, Q2FormWindow) and widget.mode == "form":
+                return widget.q2_form.s
+            elif hasattr(widget, "get_text"):
                 return widget.get_text()
             else:
                 return ""
@@ -1987,7 +2035,9 @@ class Q2FormWidget:
                 widget = widgets.get(list(widgets)[pos])
         else:
             widget = widgets.get(attrname)
-        if widget is not None:
+        if isinstance(widget, Q2FormWindow) and widget.mode == "form":
+            return widget.q2_form.w
+        elif widget is not None:
             return widget
 
 
