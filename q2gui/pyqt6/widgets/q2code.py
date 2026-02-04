@@ -12,24 +12,47 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import q2gui.q2app as q2app
 
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QHBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLineEdit, QToolButton
 
 from PyQt6.Qsci import QsciScintilla, QsciLexerPython, QsciLexerSQL, QsciLexerJSON, QsciAPIs, QsciLexer
-from PyQt6.QtGui import QColor
+from PyQt6.QtGui import QColor, QKeyEvent, QResizeEvent
 
 # from PyQt6.QtWidgets import QMenu
-from PyQt6.QtCore import Qt, QTimer, QSize
+from PyQt6.QtCore import Qt, QTimer, QSize, pyqtSignal
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.pyqt6.widgets.q2line import q2line
 from q2gui.pyqt6.widgets.q2label import q2label
 from q2gui.pyqt6.widgets.q2button import q2button
 from q2gui.q2utils import int_
+
+
+def _(s):
+    return s
+
+
+def tr(s):
+    return q2app.q2_app.i18n.tr(s)
+
+
+widgets_stylesheet = """
+            QWidget {
+                background: #5fb0e3;
+                border: 1px solid #555;
+                border-radius: 6px;
+            }
+            QLineEdit {
+                background: #3e3e3e;
+                color: white;
+                border: none;
+                padding: 4px;
+            }
+            QToolButton {
+                color: white;
+            }
+        """
 
 
 class q2code(QsciScintilla, Q2Widget):
@@ -65,16 +88,25 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.cursorPositionChanged.connect(self.__cursorPositionChanged)
         self.__markOccurrencesTimer = QTimer(self)
-        self.__markOccurrencesTimer.setSingleShot(True)
-        self.__markOccurrencesTimer.setInterval(500)
-        self.__markOccurrencesTimer.timeout.connect(self.__markOccurrences)
+
+        def show(self):
+            self.set_geometry()
+            super().show()
+            self.raise_()
+            self.activateWindow()
+            self.setFocus()
+            return self
+
         if self.meta.get("valid"):
             self.textChanged.connect(self.valid)
         # if self.meta.get("changed"):
         #     self.textChanged.connect(self.meta.get("changed"))
 
         # self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        self.editor_panel = q2editor_panel(self)
+        # self.editor_panel = q2editor_panel(self)
+        self.gotoline_widget = GoToLineWidget(self)
+        self.find_widget = FindWidget(self)
+        # self._init_editor_panel_shortcuts()
         # self.create_context_menu()
         self.set_custom_autocompletition_list()
 
@@ -100,20 +132,18 @@ class q2code(QsciScintilla, Q2Widget):
         self.__api.prepare()
 
     def set_background_color(self, red=150, green=200, blue=230):
-        # color_mode = self.meta.get("q2_app").q2style.get_system_color_mode()
-        # print(color_mode, self.meta.get("q2_app").q2style.color_mode)
-        # b_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("background"))
-        # f_color = QColor(self.meta.get("q2_app").q2style.styles.get(color_mode).get("color"))
         d_color = self.meta.get("q2_app").q2style.get_style("background_disabled")
         self.set_style_sheet("QFrame:disabled {background:%s}" % d_color)
-        # self.setMatchedBraceForegroundColor(QColor("lightgreen"))
+        self.setMatchedBraceForegroundColor(QColor("red"))
         self.lexer.setDefaultPaper(QColor(red, green, blue))
         self.lexer.setPaper(QColor(red, green, blue))
-        # self.lexer.setDefaultPaper(b_color)
-        # self.lexer.setPaper(b_color)
-        # self.lexer.setColor(f_color, 5)
         self.setMarginsForegroundColor(QColor("black"))
         self.setMarginsBackgroundColor(QColor("gray"))
+
+    def resizeEvent(self, e: QResizeEvent) -> None:
+        super().resizeEvent(e)
+        self.find_widget.set_widget_position()
+        self.gotoline_widget.set_widget_position()
 
     def __cursorPositionChanged(self, line, index):
         self.__markOccurrencesTimer.stop()
@@ -191,56 +221,47 @@ class q2code(QsciScintilla, Q2Widget):
         for x in self.actions():
             self.removeAction(x)
 
+    def addAction(self, text, worker, shortcuts):
+        _action = self.context_menu.addAction(text)
+        _action.triggered.connect(worker)
+        _action.setShortcuts(shortcuts)
+
     def create_context_menu(self):
         self.context_menu = self.createStandardContextMenu()
         self.context_menu.addSeparator()
 
-        find_action = self.context_menu.addAction("Find next")
-        find_action.triggered.connect(self.editor_panel.show_find_next)
-        find_action.setShortcuts(["Ctrl+F", "F3"])
+        self.addAction(_("Find"), self.find_widget.show_find, ["Ctrl+F"])
+        self.addAction(_("Find next"), self.find_widget._next, ["F3"])
+        self.addAction(_("Find previous"), self.find_widget._prev, ["Shift+F3"])
 
-        find_action = self.context_menu.addAction("Find prev")
-        find_action.triggered.connect(self.editor_panel.show_find_prev)
-        find_action.setShortcuts(["Shift+F3"])
-
-        replace_action = self.context_menu.addAction("Replace")
-        replace_action.triggered.connect(self.editor_panel.show_replace)
-        replace_action.setShortcut("Ctrl+H")
+        self.addAction(_("Replace"), self.find_widget.show_replace, ["Ctrl+H"])
 
         self.context_menu.addSeparator()
 
-        move_up_action = self.context_menu.addAction("Move selection up")
-        move_up_action.triggered.connect(self.perform_move_up)
-        move_up_action.setShortcuts(["Ctrl+Alt+Up"])
-
-        move_down_action = self.context_menu.addAction("Move selectipn down")
-        move_down_action.triggered.connect(self.perform_move_down)
-        move_down_action.setShortcuts(["Ctrl+Alt+Down"])
-
-        self.context_menu.addSeparator()
-
-        gotoline_action = self.context_menu.addAction("Go to line")
-        gotoline_action.triggered.connect(self.editor_panel.show_go)
-        gotoline_action.setShortcut("Ctrl+G")
+        self.addAction(
+            _("Move selection up"),
+            self.perform_move_up,
+            [
+                "Ctrl+Alt+Up",
+                "Ctrl+Shift+Up",
+            ],
+        )
+        self.addAction(_("Move selection down"), self.perform_move_down, ["Ctrl+Alt+Down", "Ctrl+Shift+Down"])
 
         self.context_menu.addSeparator()
 
-        fold_action = self.context_menu.addAction("Fold/Unfold")
-        fold_action.triggered.connect(self.perform_folding)
-        fold_action.setShortcuts(["Alt+Up", "Alt+Down"])
-
-        foldall_action = self.context_menu.addAction("Fold/Unfold All")
-        foldall_action.triggered.connect(self.foldAll)
-        foldall_action.setShortcuts(["Alt+Left", "Alt+Right"])
+        self.addAction(_("Go to line"), self.gotoline_widget.focus, ["Ctrl+G"])
 
         self.context_menu.addSeparator()
-        comment_action = self.context_menu.addAction("Comment/uncomment line(s)")
-        comment_action.setShortcut("Ctrl+3")
-        comment_action.triggered.connect(self.perform_comment)
 
-        complete_action = self.context_menu.addAction("Autocomplete")
-        complete_action.triggered.connect(self.autoCompleteFromAll)
-        complete_action.setShortcuts(["Ctrl+Space"])
+        self.addAction(_("Fold/Unfold"), self.perform_folding, ["Alt+Up", "Alt+Down"])
+        self.addAction(_("Fold/Unfold All"), self.foldAll, ["Alt+Left", "Alt+Right"])
+
+        self.context_menu.addSeparator()
+
+        self.addAction(_("Comment/uncomment line(s)"), self.perform_comment, ["Ctrl+3"])
+
+        self.addAction(_("Autocomplete"), self.autoCompleteFromAll, ["Ctrl+Space"])
 
         self.addActions(self.context_menu.actions())
         for x in self.context_menu.actions():
@@ -315,156 +336,279 @@ class q2code(QsciScintilla, Q2Widget):
         else:
             return super().sizeHint()
 
+    def find_next(self, text):
+        return self._find(text, True)
 
-class q2editor_panel(QWidget):
-    def __init__(self, parent, text=""):
-        super().__init__(parent, Qt.WindowType.Popup)
-        # super().__init__(parent)
-        self.setLayout(QVBoxLayout())
-        self.setObjectName("editor_panel")
+    def getSelectedText(self):
+        if self.hasSelectedText():
+            line1, pos1, line2, pos2 = self.getSelection()
+            for x in range(line1, line2 + 1):
+                selected_lines.append(x)
 
-        self.layout().setContentsMargins(0, 0, 0, 0)
-        # self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        self.create_find()
-        self.create_replace()
-        self.create_go()
+    def find_prev(self, text):
+        line1, index1, line2, index2 = self.getSelection()
+        self.setCursorPosition(line1, index1)
+        return self._find(text, False)
 
-        self.layout().addWidget(self.find_frame)
-        self.layout().addWidget(self.replace_frame)
-        self.layout().addWidget(self.go_frame)
+    def _find(self, text, direction):
+        return self.findFirst(text, False, False, False, False, direction)
 
-        self.set_find_text(text)
-        self.q2code: q2code = parent
+    def replace_one(self, text1, text2):
+        if text1 == "":
+            return
+        if self.selectedText() != text1:
+            return self.find_next(text1)
+        self.replace(text2)
+        self.find_next(text1)
+
+    def keyPressEvent(self, e):
+        key = e.key()
+        if key == Qt.Key.Key_Escape and self.isVisible():
+            self.setFocus()
+            self.find_widget.hide()
+            self.gotoline_widget.hide()
+            return
+        super().keyPressEvent(e)
+
+
+class FindWidget(QWidget):
+    def __init__(self, parent: q2code = None):
+        super().__init__(parent)
+
+        self.setWindowFlags(Qt.WindowType.SubWindow)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setObjectName(_("FindWidget"))
+
         self.last_find_direction = "down"
 
-    def create_find(self):
-        self.find_frame = QWidget()
+        # --- find ---
+        self.find_edit = QLineEdit()
+        self.find_edit.setPlaceholderText(_("Find"))
 
-        self.find_frame.setLayout(QHBoxLayout())
-        self.find_frame.layout().setContentsMargins(0, 0, 0, 0)
+        btn_prev = QToolButton()
+        btn_prev.setText("↑")
 
-        self.find_next_button = q2button({"label": ">"})
-        self.find_next_button.set_fixed_width(3, "w")
+        btn_next = QToolButton()
+        btn_next.setText("↓")
 
-        self.find_prev_button = q2button({"label": "<"})
-        self.find_prev_button.set_fixed_width(3, "w")
+        btn_close = QToolButton()
+        btn_close.setText("✕")
 
-        self.find_text = q2line({})
-        self.find_frame.layout().addWidget(q2label({"label": "find:"}))
-        self.find_frame.layout().addWidget(self.find_text)
-        self.find_frame.layout().addWidget(self.find_prev_button)
-        self.find_frame.layout().addWidget(self.find_next_button)
-        self.find_next_button.pressed.connect(self.perform_find_next)
-        self.find_prev_button.pressed.connect(self.perform_find_prev)
-        self.find_text.keyPressEvent = self.find_keyPressEvent
+        # --- replace ---
+        self.replace_edit = QLineEdit()
+        self.replace_edit.setPlaceholderText(_("Replace"))
 
-    def find_keyPressEvent(self, event):
-        if event.key() in [Qt.Key.Key_Up] or (
-            event.key() in [Qt.Key.Key_Enter, Qt.Key.Key_Return, Qt.Key.Key_F3]
-            and event.modifiers() == Qt.KeyboardModifier.ShiftModifier
+        btn_replace = QToolButton()
+        btn_replace.setText("↵")
+
+        btn_replace_all = QToolButton()
+        # btn_replace_all.setText("↵ ↵")
+
+        # --- layouts ---
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(2, 2, 2, 2)
+        main_layout.setSpacing(2)
+
+        find_row = QHBoxLayout()
+        find_row.setSpacing(2)
+        find_row.addWidget(self.find_edit)
+        find_row.addWidget(btn_prev)
+        find_row.addWidget(btn_next)
+        find_row.addWidget(btn_close)
+
+        replace_row = QHBoxLayout()
+        replace_row.setSpacing(2)
+        replace_row.addWidget(self.replace_edit)
+        replace_row.addWidget(btn_replace)
+        # replace_row.addWidget(btn_replace_all)
+
+        self.find_container = QWidget()
+        self.find_container.setLayout(find_row)
+        self.find_container.hide()
+
+        self.replace_container = QWidget()
+        self.replace_container.setLayout(replace_row)
+        self.replace_container.hide()
+
+        main_layout.addWidget(self.find_container)
+        main_layout.addWidget(self.replace_container)
+
+        # --- signals ---
+        btn_next.clicked.connect(self._next)
+        btn_prev.clicked.connect(self._prev)
+        btn_close.clicked.connect(self.hide)
+
+        btn_replace.clicked.connect(self._replace_one)
+        # btn_replace_all.clicked.connect(self._replace_all)
+
+        # --- style ---
+        self.setStyleSheet(widgets_stylesheet)
+        self.hide()
+
+    # --- mode control -------------------------------------------------
+
+    def keyPressEvent(self, e: QKeyEvent) -> None:
+        key = e.key()
+        mods = e.modifiers()
+        if sum(
+            [
+                (key in [Qt.Key.Key_Return, Qt.Key.Key_Enter] and mods == Qt.KeyboardModifier.NoModifier)
+                and self.find_edit.hasFocus(),
+                (key in [Qt.Key.Key_F3] and mods == Qt.KeyboardModifier.NoModifier),
+                (key in [Qt.Key.Key_Down]),
+            ]
         ):
-            self.perform_find_prev()
-        elif event.key() in [Qt.Key.Key_Enter, Qt.Key.Key_Return, Qt.Key.Key_Down, Qt.Key.Key_F3]:
-            self.perform_find_next()
-        elif event.key() == Qt.Key.Key_H:
+            self._next()
+            return
+        elif sum(
+            [
+                (key in [Qt.Key.Key_Return, Qt.Key.Key_Enter] and mods == Qt.KeyboardModifier.ShiftModifier),
+                (key in [Qt.Key.Key_F3] and mods == Qt.KeyboardModifier.ShiftModifier),
+                (key in [Qt.Key.Key_Up]),
+            ]
+        ):
+            self._prev()
+            return
+        elif key == Qt.Key.Key_H and mods == Qt.KeyboardModifier.ControlModifier:
             self.show_replace()
-        q2line.keyPressEvent(self.find_text, event)
+        elif (
+            key in [Qt.Key.Key_Return, Qt.Key.Key_Enter]
+            and mods == Qt.KeyboardModifier.NoModifier
+            and self.replace_edit.hasFocus()
+        ):
+            self._replace_one()
+            return
 
-    def perform_find_next(self):
-        self.q2code.findFirst(self.find_text.get_text(), False, False, False, False, True)
+        return super().keyPressEvent(e)
+
+    def _next(self):
+        self.show_find()
+        self.parent().find_next(self.find_edit.text())
         self.last_find_direction = "down"
 
-    def perform_find_prev(self):
-        line1, index1, line2, index2 = self.q2code.getSelection()
-        self.q2code.setCursorPosition(line1, index1)
-        self.q2code.findFirst(self.find_text.get_text(), False, False, False, False, False)
+    def _prev(self):
+        self.show_find()
+        self.parent().find_prev(self.find_edit.text())
         self.last_find_direction = "up"
 
-    def create_replace(self):
-        self.replace_frame = QWidget()
-        self.replace_frame.setLayout(QHBoxLayout())
-        self.replace_frame.layout().setContentsMargins(0, 0, 0, 0)
-        self.replace_text = q2line({})
-        self.replace_text.returnPressed.connect(self.perform_replace)
+    def _replace_one(self):
+        self.parent().replace_one(self.find_edit.text(), self.replace_edit.text())
 
-        self.replace_frame.layout().addWidget(q2label({"label": "replace:"}))
-        self.replace_frame.layout().addWidget(self.replace_text)
+    def _replace_all(self):
+        pass
 
-        self.replace_button = q2button({"label": "Ok", "datalen": 4})
-        self.replace_button.pressed.connect(self.perform_replace)
-        # self.replace_button.set_fixed_width(3, "w")
-        self.replace_frame.layout().addWidget(self.replace_button)
+    def set_widget_position(self):
+        margin = 1
+        vp = self.parent().viewport()
+        self.adjustSize()
 
-    def perform_replace(self):
-        self.q2code.replace(self.replace_text.get_text())
-        if self.last_find_direction == "down":
-            self.perform_find_next()
-        else:
-            self.perform_find_prev()
+        x = vp.width() - self.width() - margin
+        y = margin
 
-    def create_go(self):
-        self.go_frame = QWidget()
-        self.go_frame.setLayout(QHBoxLayout())
-        self.go_frame.layout().setContentsMargins(0, 0, 0, 0)
-        self.go_text = q2line({"datatype": "int", "datalen": 5, "num": 1})
-        self.go_frame.layout().addWidget(q2label({"label": "go to line:"}))
-        self.go_frame.layout().addWidget(self.go_text)
-        self.go_button = q2button({"label": ">"})
-        self.go_button.set_fixed_width(3, "w")
-        self.go_frame.layout().addWidget(self.go_button)
-        self.go_frame.layout().addStretch()
-        self.go_text.editingFinished.connect(self.perform_go)
-        self.go_button.pressed.connect(self.perform_go)
-
-    def perform_go(self):
-        self.q2code.goto_line(self.go_text.get_text())
+        self.move(
+            vp.mapToParent(vp.rect().topLeft()).x() + x,
+            vp.mapToParent(vp.rect().topLeft()).y() + y,
+        )
 
     def show_find(self):
-        st = self.q2code.selectedText()
-        if st:
-            self.find_text.set_text(st)
-        self.find_frame.show()
-        self.replace_frame.hide()
-        self.go_frame.hide()
-        self.find_text.set_focus()
-        self.show()
-
-    def show_find_prev(self):
-        self.show_find()
-        self.perform_find_prev()
-
-    def show_find_next(self):
-        self.show_find()
-        self.perform_find_next()
+        if self.find_container.isVisible():
+            return
+        self.find_container.show()
+        self.replace_container.hide()
+        self.focus()
 
     def show_replace(self):
-        self.find_frame.show()
-        self.replace_frame.show()
-        self.go_frame.hide()
+        self.find_container.show()
+        self.replace_container.show()
+        self.focus()
+
+    def focus(self):
         self.show()
+        self.set_widget_position()
+        self.raise_()
+        self.find_edit.setFocus()
+        self.find_edit.selectAll()
 
-    def show_go(self):
-        self.find_frame.hide()
-        self.replace_frame.hide()
-        self.go_frame.show()
-        self.go_text.set_alignment(9)
-        self.go_text.set_text("")
-        self.go_text.set_focus()
+
+class GoToLineWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.setWindowFlags(Qt.WindowType.SubWindow)
+        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setObjectName("GoToLineWidget")
+
+        # --- input ---
+        self.line_edit = QLineEdit()
+        self.line_edit.setPlaceholderText(_("Go to line"))
+
+        # --- buttons ---
+        btn_go = QToolButton()
+        btn_go.setText(_("Go"))
+
+        btn_close = QToolButton()
+        btn_close.setText("✕")
+
+        # --- layout ---
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(2, 2, 2, 2)
+        layout.setSpacing(2)
+        layout.addWidget(self.line_edit)
+        layout.addWidget(btn_go)
+        layout.addWidget(btn_close)
+
+        # --- signals ---
+        btn_go.clicked.connect(self.goto_line)
+        btn_close.clicked.connect(self.hide)
+
+        # --- style ---
+        self.setStyleSheet(widgets_stylesheet)
+        self.hide()
+
+    # -------------------------------
+    def goto_line(self):
+        try:
+            line_num = int(self.line_edit.text())
+        except ValueError:
+            return  # invalid input, ignore
+
+        editor: q2code = self.parent()
+        if not editor:
+            return
+
+        line_count = editor.lines()
+        line_num = max(1, min(line_num, line_count))
+        # QScintilla lines are 0-based
+        editor.setCursorPosition(line_num - 1, 0)
+        editor.ensureLineVisible(line_num - 1)
+        self.hide()
+        editor.setFocus()
+
+    # -------------------------------
+    def set_widget_position(self):
+        margin_top = 2
+        vp = self.parent().viewport()
+        self.adjustSize()
+
+        # X — по центру viewport по ширине
+        x = (vp.width() - self.width()) // 2
+
+        # Y — сверху с небольшим margin
+        y = margin_top
+
+        # map viewport -> координаты родителя
+        self.move(vp.mapToParent(vp.rect().topLeft()).x() + x, vp.mapToParent(vp.rect().topLeft()).y() + y)
+
+    def focus(self):
         self.show()
+        self.set_widget_position()
+        self.raise_()
+        self.line_edit.setFocus()
+        self.line_edit.selectAll()
 
-    def set_find_text(self, text=""):
-        self.find_text.set_text(text)
-        self.find_text.set_focus()
-
-    def show(self):
-        self.set_geometry()
-        return super().show()
-
-    def set_geometry(self):
-        parent = self.q2code
-        rect = parent.rect()
-        self.setFixedWidth(400 if rect.width() > 400 else int(rect.width() / 2))
-        pos = rect.topLeft()
-        pos.setX(rect.width() - self.width())
-        pos = parent.mapToGlobal(pos)
-        self.move(pos)
+    def keyPressEvent(self, e: QKeyEvent) -> None:
+        key = e.key()
+        if key in [Qt.Key.Key_Return, Qt.Key.Key_Enter]:
+            self.goto_line()
+            return
+        return super().keyPressEvent(e)
