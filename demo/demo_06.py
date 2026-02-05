@@ -16,10 +16,12 @@ class DemoApp(Q2App):
         self.first_form()
 
     def on_init(self):
-        self.add_menu("File|About", lambda: q2Mess("First application!"), toolbar=1)
+        self.add_menu("File|About", lambda: q2Mess("First application!"), toolbar=1, icon="info")
+        self.add_menu("File|Color|Dark Mode", lambda: self.set_color_mode("dark"), icon="moon", toolbar=1)
+        self.add_menu("File|Color|Light Mode", lambda: self.set_color_mode("light"), icon="sun", toolbar=1)        
         self.add_menu("File|First Form", self.first_form, toolbar=1)
         self.add_menu("File|-")
-        self.add_menu("File|Exit", self.close, toolbar=1)
+        self.add_menu("File|Exit", self.close, toolbar=1, icon="exit")
         return super().on_init()
 
     def first_form(self):

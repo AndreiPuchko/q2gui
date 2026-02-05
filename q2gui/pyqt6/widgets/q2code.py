@@ -17,15 +17,10 @@ import q2gui.q2app as q2app
 from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLineEdit, QToolButton
 
 from PyQt6.Qsci import QsciScintilla, QsciLexerPython, QsciLexerSQL, QsciLexerJSON, QsciAPIs, QsciLexer
-from PyQt6.QtGui import QColor, QKeyEvent, QResizeEvent
-
-# from PyQt6.QtWidgets import QMenu
-from PyQt6.QtCore import Qt, QTimer, QSize, pyqtSignal
+from PyQt6.QtGui import QColor, QKeyEvent, QResizeEvent, QRegularExpressionValidator
+from PyQt6.QtCore import Qt, QTimer, QSize, QRegularExpression
 
 from q2gui.pyqt6.q2widget import Q2Widget
-from q2gui.pyqt6.widgets.q2line import q2line
-from q2gui.pyqt6.widgets.q2label import q2label
-from q2gui.pyqt6.widgets.q2button import q2button
 from q2gui.q2utils import int_
 
 
@@ -56,6 +51,9 @@ widgets_stylesheet = """
 
 
 class q2code(QsciScintilla, Q2Widget):
+    INDIC_CURRENT = 8  # current word
+    INDIC_SEL = 10  # selection
+
     def __init__(self, meta):
         super().__init__(meta)
         self.setUtf8(True)
@@ -86,41 +84,81 @@ class q2code(QsciScintilla, Q2Widget):
         self.SendScintilla(QsciScintilla.SCI_INDICSETSTYLE, self.searchIndicator, QsciScintilla.INDIC_BOX)
         self.SendScintilla(QsciScintilla.SCI_INDICSETFORE, self.searchIndicator, QColor("red"))
 
-        self.cursorPositionChanged.connect(self.__cursorPositionChanged)
-        self.__markOccurrencesTimer = QTimer(self)
-
-        def show(self):
-            self.set_geometry()
-            super().show()
-            self.raise_()
-            self.activateWindow()
-            self.setFocus()
-            return self
-
         if self.meta.get("valid"):
             self.textChanged.connect(self.valid)
-        # if self.meta.get("changed"):
-        #     self.textChanged.connect(self.meta.get("changed"))
-
-        # self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
-        # self.editor_panel = q2editor_panel(self)
         self.gotoline_widget = GoToLineWidget(self)
         self.find_widget = FindWidget(self)
-        # self._init_editor_panel_shortcuts()
-        # self.create_context_menu()
         self.set_custom_autocompletition_list()
+        self.define_highlights()
+
+        self.highlight_timer = QTimer()
+        self.highlight_timer.setSingleShot(True)
+        self.highlight_timer.timeout.connect(self.highlight)
+
+        self.cursorPositionChanged.connect(lambda: self.highlight_timer.start(300))
+        self.selectionChanged.connect(lambda: self.highlight_timer.start(300))
+
+    def define_highlights(self):
+        self.SendScintilla(QsciScintilla.SCI_INDICSETSTYLE, self.INDIC_SEL, QsciScintilla.INDIC_ROUNDBOX)
+        self.SendScintilla(QsciScintilla.SCI_INDICSETFORE, self.INDIC_SEL, 0x0000FF)
+        self.SendScintilla(QsciScintilla.SCI_INDICSETALPHA, self.INDIC_SEL, 150)
+        self.SendScintilla(QsciScintilla.SCI_INDICSETUNDER, self.INDIC_SEL, True)
+
+    def highlight(self):
+        self.highlight_current_word()
+        self.highlight_current_selection()
+
+    def highlight_current_word(self):
+        self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT, self.INDIC_CURRENT)
+        self.SendScintilla(QsciScintilla.SCI_INDICATORCLEARRANGE, 0, self.length())
+        current_word = self.wordAtLineIndex(*self.getCursorPosition())
+        search_text = current_word.encode("utf-8")
+        pos = 0
+        while True and len(current_word) > 1:
+            self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, pos)
+            self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, self.length())
+            pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, len(search_text), search_text)
+            if pos == -1:
+                break
+            match_end = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
+            self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, pos, match_end - pos)
+            pos = match_end
+
+    def highlight_current_selection(self):
+        self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT, self.INDIC_SEL)
+        self.SendScintilla(QsciScintilla.SCI_INDICATORCLEARRANGE, 0, self.length())
+        had_selection = self.hasSelectedText()
+        if had_selection:
+            sel = self.selectedText()
+            search_text = sel.encode("utf-8")
+            pos = 0
+            while True:
+                self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, pos)
+                self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, self.length())
+                pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, len(search_text), search_text)
+                if pos == -1:
+                    break
+                match_end = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
+                self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, pos, match_end - pos)
+                pos = match_end
 
     def set_lexer(self, lexer=""):
+        test_string_color = QColor("#0C6102")
         if lexer == "":
             lexer = self.meta["control"]
-        if "python" in lexer:
-            self.lexer = QsciLexerPython()
-        elif "sql" in lexer:
+        if "sql" in lexer:
             self.lexer = QsciLexerSQL()
+            self.lexer.setColor(test_string_color, QsciLexerSQL.SingleQuotedString)
+            self.lexer.setColor(test_string_color, QsciLexerSQL.DoubleQuotedString)
         elif "json" in lexer:
             self.lexer = QsciLexerJSON()
         else:
             self.lexer = QsciLexerPython()
+            self.lexer.setColor(QColor("#023A55"), QsciLexerPython.DoubleQuotedFString)
+            self.lexer.setColor(QColor("#023A55"), QsciLexerPython.SingleQuotedFString)
+            self.lexer.setColor(test_string_color, QsciLexerPython.DoubleQuotedString)
+            self.lexer.setColor(test_string_color, QsciLexerPython.SingleQuotedString)
+
         if self.lexer:
             self.setLexer(self.lexer)
 
@@ -145,70 +183,6 @@ class q2code(QsciScintilla, Q2Widget):
         self.find_widget.set_widget_position()
         self.gotoline_widget.set_widget_position()
 
-    def __cursorPositionChanged(self, line, index):
-        self.__markOccurrencesTimer.stop()
-        self.clearIndicatorRange(
-            0, 0, self.lines() - 1, len(self.text(self.lines() - 1)), self.searchIndicator
-        )
-        self.__markOccurrencesTimer.start()
-
-    def __findFirstTarget(self, text):
-        if text == "":
-            return False
-        self.__targetSearchExpr = text.encode("utf-8")
-        self.__targetSearchFlags = QsciScintilla.SCFIND_MATCHCASE | QsciScintilla.SCFIND_WHOLEWORD
-        self.__targetSearchStart = 0
-        self.__targetSearchEnd = self.SendScintilla(QsciScintilla.SCI_GETTEXTLENGTH)
-        self.__targetSearchActive = True
-        return self.__doSearchTarget()
-
-    def __findNextTarget(self):
-        if not self.__targetSearchActive:
-            return False
-        return self.__doSearchTarget()
-
-    def __doSearchTarget(self):
-        if self.__targetSearchStart == self.__targetSearchEnd:
-            self.__targetSearchActive = False
-            return False
-        self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, self.__targetSearchStart)
-        self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, self.__targetSearchEnd)
-        self.SendScintilla(QsciScintilla.SCI_SETSEARCHFLAGS, self.__targetSearchFlags)
-        pos = self.SendScintilla(
-            QsciScintilla.SCI_SEARCHINTARGET, len(self.__targetSearchExpr), self.__targetSearchExpr
-        )
-        if pos == -1:
-            self.__targetSearchActive = False
-            return False
-        self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, pos, len(self.__targetSearchExpr))
-        targend = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
-        self.__targetSearchStart = targend
-        return True
-
-    def __markOccurrences(self):
-        if self.hasFocus():
-            line, index = self.getCursorPosition()
-            ok = self.__findFirstTarget(self.__getWord(self.text(line), index - 1))
-            while ok:
-                ok = self.__findNextTarget()
-
-    def __getWord(self, text, index):
-        word = ""
-        for x in range(index, -1, -1):
-            if text[x].isalpha() or text[x].isdigit():
-                word = text[x] + word
-            else:
-                break
-        for x in range(index + 1, len(text)):
-            if text[x].isalpha() or text[x].isdigit():
-                word += text[x]
-            else:
-                break
-        return word
-
-    def mouseDoubleClickEvent(self, event):
-        return super().mouseDoubleClickEvent(event)
-
     def focusInEvent(self, ev):
         super().focusInEvent(ev)
         self.create_context_menu()
@@ -230,9 +204,9 @@ class q2code(QsciScintilla, Q2Widget):
         self.context_menu = self.createStandardContextMenu()
         self.context_menu.addSeparator()
 
-        self.addAction(_("Find"), self.find_widget.show_find, ["Ctrl+F"])
-        self.addAction(_("Find next"), self.find_widget._next, ["F3"])
-        self.addAction(_("Find previous"), self.find_widget._prev, ["Shift+F3"])
+        self.addAction(_("Find"), self.show_find, ["Ctrl+F"])
+        self.addAction(_("Find next"), self.find_next_, ["F3"])
+        self.addAction(_("Find previous"), self.find_prev_, ["Shift+F3"])
 
         self.addAction(_("Replace"), self.find_widget.show_replace, ["Ctrl+H"])
 
@@ -269,6 +243,17 @@ class q2code(QsciScintilla, Q2Widget):
                 x.setVisible(True)
             else:
                 x.setVisible(False)
+
+    def show_find(self):
+        self.find_widget.show_find(self.selectedText())
+
+    def find_next_(self):
+        self.find_widget._next()
+        self.setFocus()
+
+    def find_prev_(self):
+        self.find_widget._prev()
+        self.setFocus()
 
     def perform_move_down(self):
         self.SendScintilla(QsciScintilla.SCI_MOVESELECTEDLINESDOWN)
@@ -510,9 +495,12 @@ class FindWidget(QWidget):
             vp.mapToParent(vp.rect().topLeft()).y() + y,
         )
 
-    def show_find(self):
+    def show_find(self, text=""):
         if self.find_container.isVisible():
+            self.focus()
             return
+        if text:
+            self.find_edit.setText(text)
         self.find_container.show()
         self.replace_container.hide()
         self.focus()
@@ -540,6 +528,12 @@ class GoToLineWidget(QWidget):
 
         # --- input ---
         self.line_edit = QLineEdit()
+        regex = QRegularExpression("^[0-9]*$")
+        validator = QRegularExpressionValidator(regex)
+
+        self.line_edit.setValidator(validator)
+        self.line_edit.setAlignment(Qt.AlignmentFlag.AlignRight)
+
         self.line_edit.setPlaceholderText(_("Go to line"))
 
         # --- buttons ---
