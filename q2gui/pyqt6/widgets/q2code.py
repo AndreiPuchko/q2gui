@@ -301,11 +301,13 @@ class q2code(QsciScintilla, Q2Widget):
     def current_line(self):
         return self.getCursorPosition()[0]
 
-    def goto_line(self, line=0):
-        self.setCursorPosition(int_(line) - 1, 0)
+    def goto_line(self, line_num=0):
+        line_count = self.lines()
+        line_num = max(1, min(line_num, line_count))
+
+        self.setCursorPosition(int_(line_num) - 1, 0)
         self.set_focus()
         self.ensureLineVisible(self.getCursorPosition()[0])
-        self.editor_panel.close()
 
     def contextMenuEvent(self, event):
         self.create_context_menu()
@@ -562,21 +564,11 @@ class GoToLineWidget(QWidget):
     # -------------------------------
     def goto_line(self):
         try:
-            line_num = int(self.line_edit.text())
+            line_num = int_(self.line_edit.text())
         except ValueError:
             return  # invalid input, ignore
-
-        editor: q2code = self.parent()
-        if not editor:
-            return
-
-        line_count = editor.lines()
-        line_num = max(1, min(line_num, line_count))
-        # QScintilla lines are 0-based
-        editor.setCursorPosition(line_num - 1, 0)
-        editor.ensureLineVisible(line_num - 1)
+        self.parent().goto_line(line_num)
         self.hide()
-        editor.setFocus()
 
     # -------------------------------
     def set_widget_position(self):
