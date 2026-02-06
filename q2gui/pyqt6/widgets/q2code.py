@@ -114,35 +114,54 @@ class q2code(QsciScintilla, Q2Widget):
         self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT, self.INDIC_CURRENT)
         self.SendScintilla(QsciScintilla.SCI_INDICATORCLEARRANGE, 0, self.length())
         current_word = self.wordAtLineIndex(*self.getCursorPosition())
-        search_text = current_word.encode("utf-8")
+        if not current_word or len(current_word) <= 1:
+            return
+        search_bytes = current_word.encode("utf-8")
+        search_len = len(search_bytes)  # Длина в БАЙТАХ
         pos = 0
-        while True and len(current_word) > 1:
+        doc_len = self.SendScintilla(QsciScintilla.SCI_GETLENGTH)
+        self.SendScintilla(QsciScintilla.SCI_SETSEARCHFLAGS, QsciScintilla.SCFIND_WHOLEWORD)
+        while pos < doc_len:
             self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, pos)
-            self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, self.length())
-            pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, len(search_text), search_text)
-            if pos == -1:
+            self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, doc_len)
+            found_pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, search_len, search_bytes)
+            if found_pos == -1:
                 break
             match_end = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
-            self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, pos, match_end - pos)
-            pos = match_end
+            self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, found_pos, match_end - found_pos)
+            if pos == match_end:
+                pos += 1
+            else:
+                pos = match_end
 
     def highlight_current_selection(self):
         self.SendScintilla(QsciScintilla.SCI_SETINDICATORCURRENT, self.INDIC_SEL)
-        self.SendScintilla(QsciScintilla.SCI_INDICATORCLEARRANGE, 0, self.length())
-        had_selection = self.hasSelectedText()
-        if had_selection:
-            sel = self.selectedText()
-            search_text = sel.encode("utf-8")
-            pos = 0
-            while True:
-                self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, pos)
-                self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, self.length())
-                pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, len(search_text), search_text)
-                if pos == -1:
-                    break
-                match_end = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
-                self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, pos, match_end - pos)
-                pos = match_end
+        self.SendScintilla(
+            QsciScintilla.SCI_INDICATORCLEARRANGE, 0, self.SendScintilla(QsciScintilla.SCI_GETLENGTH)
+        )
+        if not self.hasSelectedText():
+            return
+        sel = self.selectedText()
+        if len(sel) < 2:
+            return
+        search_bytes = sel.encode("utf-8")
+        search_len = len(search_bytes)
+        if search_len == 0 or sel.isspace():
+            return
+        self.SendScintilla(QsciScintilla.SCI_SETSEARCHFLAGS, 0)
+        current_pos = 0
+        doc_len = self.SendScintilla(QsciScintilla.SCI_GETLENGTH)
+        while current_pos < doc_len:
+            self.SendScintilla(QsciScintilla.SCI_SETTARGETSTART, current_pos)
+            self.SendScintilla(QsciScintilla.SCI_SETTARGETEND, doc_len)
+            found_pos = self.SendScintilla(QsciScintilla.SCI_SEARCHINTARGET, search_len, search_bytes)
+            if found_pos == -1:
+                break
+            match_end = self.SendScintilla(QsciScintilla.SCI_GETTARGETEND)
+            self.SendScintilla(QsciScintilla.SCI_INDICATORFILLRANGE, found_pos, match_end - found_pos)
+            current_pos = match_end
+            if found_pos == match_end:
+                current_pos += 1
 
     def set_lexer(self, lexer=""):
         test_string_color = QColor("#0C6102")
