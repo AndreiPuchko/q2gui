@@ -105,6 +105,8 @@ class q2code(QsciScintilla, Q2Widget):
         self.SendScintilla(QsciScintilla.SCI_INDICSETUNDER, self.INDIC_SEL, True)
 
     def highlight(self):
+        if self.isListActive():
+            return
         self.highlight_current_word()
         self.highlight_current_selection()
 
