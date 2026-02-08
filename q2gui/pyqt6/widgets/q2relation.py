@@ -78,15 +78,20 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             # self.to_form.max_child_level = 0
             self.to_form.title += " ."
 
+    def setReadOnly(self, arg):
+        if hasattr(self, "get"):
+            self.get.set_readonly(arg)
+
     def show_related_form(self):
         if isinstance(self.to_form, Q2Form):
-            self.to_form.add_action(
-                q2app.ACTION_SELECT_TEXT,
-                self.show_related_form_result,
-                hotkey="Enter",
-                tag="select",
-                icon=q2app.ACTION_SELECT_ICON,
-            )
+            if not self.get.is_readonly():
+                self.to_form.add_action(
+                    q2app.ACTION_SELECT_TEXT,
+                    self.show_related_form_result,
+                    hotkey="Enter",
+                    tag="select",
+                    icon=q2app.ACTION_SELECT_ICON,
+                )
 
             def seek():
                 if self.filter_string:

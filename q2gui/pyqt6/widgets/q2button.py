@@ -35,6 +35,9 @@ class q2button(QPushButton, Q2Widget):
             self.when()
         return super().focusInEvent(event)
 
+    def setReadOnly(self, mode):
+        self.setDisabled(mode)
+
     def changeEvent(self, e):
         if e.type() == QEvent.Type.StyleChange:
             self.ensurePolished()

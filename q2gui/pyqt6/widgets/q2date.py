@@ -79,6 +79,9 @@ class q2date(QComboBox, Q2Widget):
             self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance("0") * 16))
         return super().changeEvent(e)
 
+    def setReadOnly(self, mode):
+        self.lineedit.setReadOnly(mode)
+
     def lineeditCursorPositionChanged(self, old, new):
         if old in [3, 4] and (new < 3 or new > 4):
             # self.lineedit.setText(self.fixupDay(self.lineedit.text()))
@@ -125,7 +128,7 @@ class q2date(QComboBox, Q2Widget):
             return super().keyPressEvent(event)
 
     def showPopup(self):
-        if self.meta.get("readonly"):
+        if self.meta.get("readonly") or self.lineedit.isReadOnly():
             return
 
         class q2CalendarWidget(QWidget):
