@@ -87,20 +87,6 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.setEdgeColor(QColor("#555555"))  # Темно-серый
 
-        def sync_edge_with_cursor(line, col):
-            indent_size = self.indentationWidth() or 4
-            full_line = self.text(line)
-            leading_spaces = len(full_line) - len(full_line.lstrip()) - 1
-            if col < leading_spaces:
-                leading_spaces = col
-            visual_column = (leading_spaces // indent_size) * indent_size
-            if visual_column:
-                self.setEdgeMode(QsciScintilla.EdgeMode.EdgeLine)
-                self.setEdgeColumn(visual_column)
-            else:
-                self.setEdgeMode(QsciScintilla.EdgeMode.EdgeNone)
-
-        self.cursorPositionChanged.connect(sync_edge_with_cursor)
 
         if self.meta.get("valid"):
             self.textChanged.connect(self.valid)
@@ -115,6 +101,26 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.cursorPositionChanged.connect(lambda: self.highlight_timer.start(300))
         self.selectionChanged.connect(lambda: self.highlight_timer.start(300))
+
+        self.edge_timer = QTimer()
+        self.edge_timer.setSingleShot(True)
+        self.edge_timer.timeout.connect(self.sync_edge_with_cursor)
+        self.cursorPositionChanged.connect(lambda: self.edge_timer.start(100))
+
+    def sync_edge_with_cursor(self):
+        line, col = self.getCursorPosition()
+        indent_size = self.indentationWidth() or 4
+        full_line = self.text(line)
+        leading_spaces = len(full_line) - len(full_line.lstrip()) - 1
+        if col < leading_spaces:
+            leading_spaces = col
+        visual_column = (leading_spaces // indent_size) * indent_size
+        if visual_column:
+            self.setEdgeMode(QsciScintilla.EdgeMode.EdgeLine)
+            self.setEdgeColumn(visual_column)
+        else:
+            self.setEdgeMode(QsciScintilla.EdgeMode.EdgeNone)
+
 
     def define_highlights(self):
         self.searchIndicator = QsciScintilla.INDIC_CONTAINER
