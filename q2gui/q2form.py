@@ -51,6 +51,7 @@ class Q2Form:
 
         self.heap = q2app.Q2Heap()
         self.actions = q2app.Q2Actions()
+        self.disabled_actions = []
         self.grid_navi_actions = []
         self.controls = q2app.Q2Controls()
         self.system_controls = q2app.Q2Controls()
@@ -86,7 +87,7 @@ class Q2Form:
 
         self._in_close_flag = False
         self.last_closed_form = None
-        self.last_closed_form_widgets_text = {}
+        self.last_closed_form_widgets_data = {}
 
         self.grid_form = None
         self.crud_form = None
@@ -197,11 +198,7 @@ class Q2Form:
             # self.q2_app.process_events()
 
     def save_closed_form_text(self):
-        self.last_closed_form_widgets_text = {
-            x: self.last_closed_form.widgets[x].get_text()
-            for x in self.last_closed_form.widgets
-            if hasattr(self.last_closed_form.widgets[x], "get_text")
-        }
+        self.last_closed_form_widgets_data = self.get_crud_form_data()
 
     def _close(self, q2form_window=None):
         if self._in_close_flag:
@@ -728,6 +725,8 @@ class Q2Form:
 
     def get_crud_form_data(self):
         # put data from form into self._model_record
+        if not self.form_stack and not self.crud_form:
+            return {}
         form = self.crud_form if self.crud_form else self.form_stack[-1]
         for x in form.widgets:
             if x.startswith("/"):
@@ -812,11 +811,7 @@ class Q2Form:
                     continue
                 if mode in (NEW, COPY) and x == "seq":
                     widget_text = self.model.get_next_sequence(x, self._model_record[x])
-                if (
-                    _meta[x]["pk"]
-                    and mode in (NEW, COPY)
-                    and not _meta[x]["ai"]
-                ):
+                if _meta[x]["pk"] and mode in (NEW, COPY) and not _meta[x]["ai"]:
                     # for new record - get next primary key
                     widget_text = self.model.get_uniq_value(x, self._model_record[x])
 
@@ -858,14 +853,14 @@ class Q2Form:
 
     def _grid_index_changed(self, row, column):
         refresh_children_forms = row != self.current_row and row >= 0
-        refresh_children_forms = True
+        # refresh_children_forms = True
         self.last_current_row = self.current_row
         self.last_current_column = self.current_column
         self.current_row = row
         self.current_column = column
         if refresh_children_forms:
-            self.refresh_children()
             self.grid_index_changed()
+            self.refresh_children()
 
     def grid_index_changed(self):
         pass
@@ -873,7 +868,10 @@ class Q2Form:
     def refresh_children(self):
         for x in self.actions + self.grid_navi_actions:
             if x.get("engineAction") and "_set_disabled" in x:
-                x["_set_disabled"](True if x.get("eof_disabled") and self.model.row_count() <= 0 else False)
+                disabled = (True if x.get("eof_disabled") and self.model.row_count() <= 0 else False) or (
+                    x["text"] in self.disabled_actions
+                )
+                x["_set_disabled"](disabled)
 
         for action in self.children_forms:
             filter = self.get_where_for_child(action)
@@ -904,8 +902,10 @@ class Q2Form:
             return "1=2"
 
     def grid_header_clicked(self, column, direction=None):
-        current_record = self.model.get_record(self.current_row)
         if self.model is not None:
+            if self.model.row_count() <= 0:
+                return
+            current_record = self.model.get_record(self.current_row)
             self._q2dialogs.q2working(
                 lambda: self.model.set_order(column, direction),
                 tr(q2app.MESSAGE_SORTING),
@@ -921,12 +921,17 @@ class Q2Form:
                 break
 
     def set_grid_index(self, row=None, column=None):
+        is_refresh = False
         if row is None:
             row = self.current_row
+            is_refresh = True
         if column is None:
             column = self.current_column
+            is_refresh = True
         if self.grid_form:
             self.grid_form.set_grid_index(row, column)
+            if is_refresh:
+                self.grid_index_changed()
 
     def move_grid_index(self, mode):
         self.grid_form.move_grid_index(mode)
@@ -1372,6 +1377,14 @@ class Q2Form:
         elif control1_value and control2_value:
             return f"{column} >= '{control1_value}' and {column}<='{control2_value}'"
         return ""
+
+    def set_readonly(self, mode=True):
+        for x in self.widgets_list():
+            x.set_readonly(mode)
+
+    def set_disabled(self, mode=True):
+        for x in self.widgets_list():
+            x.set_disabled(mode)
 
 
 class Q2FormWindow:
@@ -1996,8 +2009,8 @@ class Q2FormData:
                 return None
             else:
                 # widget = self.q2_form.last_closed_form.widgets.get(name)
-                # widget = self.q2_form.last_closed_form_widgets_text.get(name)
-                return self.q2_form.last_closed_form_widgets_text.get(name, "")
+                # widget = self.q2_form.last_closed_form_widgets_data.get(name)
+                return self.q2_form.last_closed_form_widgets_data.get(name, "")
         else:
             widget = self.q2_form.form_stack[-1].widgets.get(name)
         if widget is not None:
