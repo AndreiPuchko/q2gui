@@ -567,6 +567,7 @@ class Q2App:
         self.i18n = I18n()
         self.i18n.setup()  # default language
         self.title = self.tr(title)
+        self.heap = Q2Heap()
 
         self.menu_list = []
         self._main_menu = {}
