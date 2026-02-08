@@ -65,7 +65,11 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.setAutoIndent(True)
         self.setIndentationGuides(True)
+        self.setIndentationGuidesForegroundColor(QColor("#cccccc"))
+        self.SendScintilla(self.SCI_SETTABDRAWMODE, 1)
+
         self.setIndentationsUseTabs(False)
+        self.setBackspaceUnindents(True)
         self.setBraceMatching(QsciScintilla.BraceMatch.StrictBraceMatch)
         self.setMarginLineNumbers(1, True)
         self.setMarginWidth(1, "9999")
@@ -78,11 +82,25 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.SCN_DOUBLECLICK
 
+        # highlight current line
         self.setCaretLineVisible(True)
 
-        self.searchIndicator = QsciScintilla.INDIC_CONTAINER
-        self.SendScintilla(QsciScintilla.SCI_INDICSETSTYLE, self.searchIndicator, QsciScintilla.INDIC_BOX)
-        self.SendScintilla(QsciScintilla.SCI_INDICSETFORE, self.searchIndicator, QColor("red"))
+        self.setEdgeColor(QColor("#555555"))  # Темно-серый
+
+        def sync_edge_with_cursor(line, col):
+            indent_size = self.indentationWidth() or 4
+            full_line = self.text(line)
+            leading_spaces = len(full_line) - len(full_line.lstrip()) - 1
+            if col < leading_spaces:
+                leading_spaces = col
+            visual_column = (leading_spaces // indent_size) * indent_size
+            if visual_column:
+                self.setEdgeMode(QsciScintilla.EdgeMode.EdgeLine)
+                self.setEdgeColumn(visual_column)
+            else:
+                self.setEdgeMode(QsciScintilla.EdgeMode.EdgeNone)
+
+        self.cursorPositionChanged.connect(sync_edge_with_cursor)
 
         if self.meta.get("valid"):
             self.textChanged.connect(self.valid)
@@ -99,6 +117,10 @@ class q2code(QsciScintilla, Q2Widget):
         self.selectionChanged.connect(lambda: self.highlight_timer.start(300))
 
     def define_highlights(self):
+        self.searchIndicator = QsciScintilla.INDIC_CONTAINER
+        self.SendScintilla(QsciScintilla.SCI_INDICSETSTYLE, self.searchIndicator, QsciScintilla.INDIC_BOX)
+        self.SendScintilla(QsciScintilla.SCI_INDICSETFORE, self.searchIndicator, QColor("red"))
+
         self.SendScintilla(QsciScintilla.SCI_INDICSETSTYLE, self.INDIC_SEL, QsciScintilla.INDIC_ROUNDBOX)
         self.SendScintilla(QsciScintilla.SCI_INDICSETFORE, self.INDIC_SEL, 0x0000FF)
         self.SendScintilla(QsciScintilla.SCI_INDICSETALPHA, self.INDIC_SEL, 150)
