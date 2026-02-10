@@ -99,6 +99,7 @@ class Q2Form:
         self.current_column = -1
         self.last_current_row = -1
         self.last_current_column = -1
+        self.seq_column = "seq"
 
         # Must be called in subclass
         # self.on_init()
@@ -271,7 +272,7 @@ class Q2Form:
             self.add_action_delete(tmp_actions)
             tmp_actions.add_action(text="-")
 
-        if "seq" in self.model.columns:
+        if self.seq_column in self.model.columns:
             self.add_action_seq()
 
         for x in self.actions:
@@ -370,10 +371,10 @@ class Q2Form:
             self.set_grid_index(row)
             nr = self.model.get_record(self.current_row - 1)
             cr = self.model.get_record(self.current_row)
-            if nr["seq"] == cr["seq"]:
-                nr["seq"] = "%s" % (int_(nr["seq"]) - 1)
+            if nr[self.seq_column] == cr[self.seq_column]:
+                nr[self.seq_column] = "%s" % (int_(nr[self.seq_column]) - 1)
             else:
-                nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
+                nr[self.seq_column], cr[self.seq_column] = cr[self.seq_column], nr[self.seq_column]
             self.model.update(nr)
             self.model.update(cr)
         self.refresh(True)
@@ -390,10 +391,10 @@ class Q2Form:
             self.set_grid_index(row)
             nr = self.model.get_record(self.current_row + 1)
             cr = self.model.get_record(self.current_row)
-            if nr["seq"] == cr["seq"]:
-                nr["seq"] = "%s" % (int_(nr["seq"]) + 1)
+            if nr[self.seq_column] == cr[self.seq_column]:
+                nr[self.seq_column] = "%s" % (int_(nr[self.seq_column]) + 1)
             else:
-                nr["seq"], cr["seq"] = cr["seq"], nr["seq"]
+                nr[self.seq_column], cr[self.seq_column] = cr[self.seq_column], nr[self.seq_column]
             self.model.update(nr)
             self.model.update(cr)
         self.refresh(True)
@@ -409,7 +410,7 @@ class Q2Form:
             self.set_grid_index(x)
             # dic = {pk: self.model.get_record(x)[pk]}
             dic = {pk: self.r.__getattr__(pk)}
-            dic["seq"] = x + 1
+            dic[self.seq_column] = x + 1
             self.model.update(dic, refresh=False)
         wait.close()
         self.refresh(True)
@@ -809,7 +810,7 @@ class Q2Form:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
-                if mode in (NEW, COPY) and x == "seq":
+                if mode in (NEW, COPY) and x == self.seq_column:
                     widget_text = self.model.get_next_sequence(x, self._model_record[x])
                 if _meta[x]["pk"] and mode in (NEW, COPY) and not _meta[x]["ai"]:
                     # for new record - get next primary key
@@ -828,7 +829,7 @@ class Q2Form:
                         widget_check = True
 
                 if mode == NEW:
-                    if x not in where_dict and x != "seq" and not _meta[x]["pk"]:
+                    if x not in where_dict and x != self.seq_column and not _meta[x]["pk"]:
                         widget_text = ""
                         self._model_record[x] = ""
                 else:
