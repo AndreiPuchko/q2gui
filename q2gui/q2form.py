@@ -685,6 +685,7 @@ class Q2Form:
             self.model.refresh()
 
         if rez:
+            self.current_row = -1
             self.set_grid_index(self.model.seek_row(crud_data))
         if rez is False:
             self._q2dialogs.q2Mess(self.model.get_data_error())
