@@ -677,7 +677,7 @@ class Q2Form:
             return
         crud_data = self.get_crud_form_data()
         if self.crud_mode in [EDIT, VIEW]:
-            rez = self.update_current_row(crud_data)
+            rez = self.model.update(crud_data, self.current_row)
         else:
             rez = self.model.insert(crud_data, self.current_row, refresh=False)
             if self.crud_mode == COPY:
@@ -724,7 +724,11 @@ class Q2Form:
 
     def update_current_row(self, crud_data):
         rez = self.model.update(crud_data, self.current_row)
-        self.set_grid_index(self.current_row)
+        if rez:
+            new_current_row = self.model.seek_row(crud_data)
+            if new_current_row == self.current_row:
+                self.current_row = -1
+            self.set_grid_index(new_current_row)
         return rez
 
     def get_crud_form_data(self):
