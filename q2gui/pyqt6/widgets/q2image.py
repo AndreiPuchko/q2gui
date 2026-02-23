@@ -19,7 +19,7 @@ import codecs
 
 from PyQt6.QtWidgets import QLabel, QApplication, QSizePolicy
 from PyQt6.QtGui import QPixmap, QImage
-from PyQt6.QtCore import QByteArray, QBuffer, QIODevice, QFile, Qt
+from PyQt6.QtCore import QByteArray, QBuffer, QIODevice, QFile, Qt, QSize
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2app import Q2Actions
@@ -41,6 +41,7 @@ class q2image(QLabel, Q2Widget):
         meta["actions"] = actions
         super().__init__(meta)
         self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
+        self.setMinimumSize(50, 50)
 
         self.image_base64 = ""
         self.image = None
