@@ -1896,6 +1896,9 @@ class Q2FormWindow:
                 if hasattr(widget, "can_get_focus") and not widget.can_get_focus():
                     continue
                 elif hasattr(widget, "is_enabled") and widget.is_enabled():
+                    if widget.meta.get("when"):
+                        if not widget.when():
+                            continue
                     widget.set_focus()
                     break
                 elif hasattr(widget, "get_check") and widget.get_check():
