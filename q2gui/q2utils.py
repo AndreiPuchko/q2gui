@@ -66,6 +66,20 @@ def today():
     return f"{datetime.date.today()}"
 
 
+def add_days(iso_date_str, delta_days=0):
+    """
+    Takes a date string in ISO format (YYYY-MM-DD) and a day delta (integer).
+    Returns a new date in ISO format (YYYY-MM-DD).
+    If parsing fails, returns None.
+    """
+    try:
+        dt = datetime.datetime.strptime(iso_date_str, "%Y-%m-%d")
+        new_dt = dt + datetime.timedelta(days=int_(delta_days))
+        return new_dt.strftime("%Y-%m-%d")
+    except Exception:
+        return iso_date_str
+
+
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
 
