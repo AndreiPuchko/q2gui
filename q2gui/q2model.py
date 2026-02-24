@@ -190,7 +190,7 @@ class Q2Model:
         for meta in self.q2_form.controls:
             if meta.get("column", "").startswith("/") or meta.get("nogrid"):
                 continue
-            elif meta.get("control", "") in ["button", "widget"]:
+            elif meta.get("control", "") in ["button", "widget", "label"]:
                 continue
             elif meta.get("control", "") == "form":
                 for meta2 in meta.get("widget", "").controls:
