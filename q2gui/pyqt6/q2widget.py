@@ -182,8 +182,8 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def get_default_height(self):
         return self.sizeHint().height()
 
-    def set_maximum_height(self, height):
-        self.setMaximumHeight(int(height))
+    def set_maximum_height(self, height, char="O"):
+        self.setMaximumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * height * 1.3))
 
     # def fix_default_width(self):
     #     self.set_maximum_width(self.get_default_width())
