@@ -901,12 +901,13 @@ class Q2Form:
 
     def get_where_for_child(self, action):
         if self.current_row >= 0 and self.model.row_count() > 0:
-            current_record = self.model.get_record(self.current_row)
-
-            if action.get("child_form_object"):
-                if action.get("child_form_object").grid_form:
-                    action["child_form_object"].grid_form.set_enabled()
-            return action["child_where"].format(**current_record)
+            if current_record := self.model.get_record(self.current_row):
+                if action.get("child_form_object"):
+                    if action.get("child_form_object").grid_form:
+                        action["child_form_object"].grid_form.set_enabled()
+                return action["child_where"].format(**current_record)
+            else:
+                return "1=2"
         else:
             if action["child_form_object"].grid_form:
                 action["child_form_object"].grid_form.set_disabled()
