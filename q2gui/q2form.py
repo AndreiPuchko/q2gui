@@ -113,6 +113,9 @@ class Q2Form:
             if text == x["text"]:
                 x["_worker"]()
 
+    def get_action_form(self, action=""):
+        return self.a.__getattr__(action).get("child_form_object")
+
     def disable_action(self, text="", mode=True):
         self.actions.set_disabled(text, mode)
 
