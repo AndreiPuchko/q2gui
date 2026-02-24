@@ -820,11 +820,14 @@ class Q2Form:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
-                if mode in (NEW, COPY) and x == self.seq_column:
-                    widget_text = self.model.get_next_sequence(x, self._model_record[x])
-                if _meta[x]["pk"] and mode in (NEW, COPY) and not _meta[x]["ai"]:
-                    # for new record - get next primary key
-                    widget_text = self.model.get_uniq_value(x, self._model_record[x])
+                if mode in (NEW, COPY):
+                    if x == self.seq_column:
+                        widget_text = self.model.get_next_sequence(x, self._model_record[x])
+                        self._model_record[x] = widget_text
+                    if _meta[x]["pk"] and not _meta[x]["ai"]:
+                        # for new record - get next primary key
+                        widget_text = self.model.get_uniq_value(x, self._model_record[x])
+                        self._model_record[x] = widget_text
 
                 if _meta.get(x) is None:
                     if mode == NEW:
