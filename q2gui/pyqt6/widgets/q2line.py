@@ -13,7 +13,9 @@
 #    limitations under the License.
 
 
+from PyQt6.QtGui import QFocusEvent
 from PyQt6.QtWidgets import QLineEdit
+from PyQt6.QtCore import Qt, QTimer
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_, num
@@ -160,3 +162,25 @@ class q2line(QLineEdit, Q2Widget):
 
     def format_decimal_string(self, text):
         return self.formatstring.format(num(text.replace(self.TS, ""))).replace(",", self.TS)
+
+    def _fix_cursor_position(self):
+        if num(self.get_text()) != 0:
+            return
+        if not (text := self.text()):
+            return
+        if self.DS in text:
+            pos = text.index(self.DS)
+        else:
+            pos = len(text)
+        self.setCursorPosition(pos)
+        self.setSelection(pos, 0)
+
+    def focusInEvent(self, event: QFocusEvent | None) -> None:
+        super().focusInEvent(event)
+
+        if not event:
+            return
+
+        if event.reason() == Qt.FocusReason.MouseFocusReason:
+            if self.meta.get("num"):
+                QTimer.singleShot(0, self._fix_cursor_position)
