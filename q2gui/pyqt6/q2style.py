@@ -317,7 +317,7 @@ class Q2Style(q2style.Q2Style):
                     }}
                 q2text
                     {{
-                        margin:0em;
+                        margin:0.2em;
                     }}
 
                 QMenu{{
