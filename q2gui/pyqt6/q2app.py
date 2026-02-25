@@ -57,6 +57,9 @@ from q2gui.q2utils import int_
 import q2gui.q2app as q2app
 from q2gui.q2icons import icons
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class stdout_widget(q2frame):
     def __init__(self, mode="h"):
@@ -281,7 +284,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             self.restore_button.setVisible(mode)
 
         def get_subwindow_count(self):
-            return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
+            try:
+                return sum([len(self.widget(x).subWindowList()) for x in range(self.count() - 1)])
+            except Exception:
+                return 0
 
         def addTab(self, widget=None, label=" = "):
             if not widget:
@@ -430,7 +436,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
 
         # form.installEventFilter(self)
-        self.subwindow_count_changed()
+        swc = self.subwindow_count_changed()
 
         if modal != "" and form.heap.prev_mdi_window:  # mdiarea normal window
             form.heap.prev_mdi_window.setDisabled(True)
@@ -455,9 +461,10 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             loop = QEventLoop()
             form.destroyed.connect(loop.quit)
             form.show()
+            _logger.info(swc*"-" + str(form).split("at")[1] + f"shown {form.window_title}")
             if loop:
                 loop.exec()  # blocks until form is destroyed
-
+            _logger.info(swc*"-" + str(form).split("at")[1] + f"closed {form.window_title}")
             if modal == "super":  # real modal dialog
                 self.enable_toolbar(form.heap.prev_toolbar_enabled)
                 self.enable_menubar(form.heap.prev_menubar_enabled)
