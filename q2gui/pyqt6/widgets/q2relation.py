@@ -65,11 +65,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.setFocusProxy(self.get)
         self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.4em")
         self.layout().setSpacing(0)
-        # self.layout().setContentsMargins(0, 0, 0, 0)
         self.set_content_margins(0)
-        # self.get.setDisabled(True)
-        # self.button.setDisabled(True)
-        # self.get_valid()
         if self.meta.get("to_form"):
             if isinstance(self.meta.get("to_form"), Q2Form):
                 self.to_form: Q2Form = self.meta.get("to_form")
@@ -111,19 +107,11 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             self.get.set_focus()
             self.get.set_text(self.to_form.r.__getattr__(self.meta["to_column"]))
             self.to_form.close()
-            self.get_valid()
+            self.set_related()
             self.get.valid()
 
     def edit_done(self):
-        self.get_valid()
-
-    def get_valid(self):
-        value = self.get.get_text()
-        # if self.meta.get("num") and num(value) == 0:
-        #     return True
-        # elif value == "":
-        #     return True
-        return self.set_related()
+        self.set_related()
 
     def get_related(self):
         rel = None
@@ -158,7 +146,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def set_text(self, text):
         if hasattr(self, "get"):
             self.get.set_text(text)
-            self.get_valid()
+            self.set_related()
 
     def get_text(self):
         return self.get.get_text()
