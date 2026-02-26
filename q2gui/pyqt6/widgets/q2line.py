@@ -70,7 +70,15 @@ class q2line(QLineEdit, Q2Widget):
     def set_text(self, text):
         if self.formatstring is not None:
             text = self.format_decimal_string(str(text))
+        QTimer.singleShot(0, lambda: self.home(False))
         return super().set_text(text)
+
+    def focusOutEvent(self, a0: QFocusEvent | None) -> None:
+        super().focusOutEvent(a0)
+        if self.meta.get("num"):
+            QTimer.singleShot(0, lambda: self.end(False))
+        else:
+            QTimer.singleShot(0, lambda: self.home(False))
 
     def get_text(self):
         if self.meta.get("num"):
