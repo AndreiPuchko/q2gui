@@ -706,7 +706,9 @@ class Q2App:
         pass
 
     def focus_changed(self, from_widget, to_widget):
-        if not (hasattr(from_widget, "meta") and hasattr(to_widget, "meta")):
+        from_form = from_widget.meta.get("form") if  hasattr(from_widget, "meta") else None
+        to_form = to_widget.meta.get("form") if  hasattr(to_widget, "meta") else None
+        if from_form != to_form or not from_form or not to_form:
             return
         if from_widget.__class__.__name__ in (
             "q2line",
@@ -715,12 +717,11 @@ class Q2App:
             "q2ScriptEdit",
             "q2ScriptSqlEdit",
         ):
-            if from_widget.meta.get("form") == to_widget.meta.get("form"):
-                if from_widget.valid() is False:
-                    from_widget.set_focus()
-        if _f := from_widget.meta.get("form"):
-            if _f.form_stack and _f.form_stack[-1].mode == "form":
-                _f.form_refresh()
+            if from_widget.valid() is False:
+                from_widget.set_focus()
+        if hasattr(from_widget, "meta") and from_form:
+            if from_form.form_stack and from_form.form_stack[-1].mode == "form":
+                from_form.form_refresh()
         if to_widget.__class__.__name__ in (
             "q2line",
             "q2text",
@@ -728,9 +729,7 @@ class Q2App:
             "q2ScriptEdit",
             "q2ScriptSqlEdit",
         ):
-            if from_widget.meta.get("form") == to_widget.meta.get("form"):
-                if to_widget:
-                    to_widget.when()
+            to_widget.when()
 
     def get_clipboard_text(self):
         pass
