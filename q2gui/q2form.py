@@ -833,13 +833,6 @@ class Q2Form:
                     if mode == NEW:
                         self._model_record[x] = ""
                     continue
-                if _meta[x]["check"]:
-                    if _meta[x]["num"]:
-                        value = num(self._model_record[x])
-                    else:
-                        value = self._model_record[x]
-                    if value:
-                        widget_check = True
 
                 if mode == NEW:
                     if x not in where_dict and x != self.seq_column and not _meta[x]["pk"]:
@@ -847,6 +840,14 @@ class Q2Form:
                         self._model_record[x] = ""
                 else:
                     widget_text = self._model_record[x]
+
+                if _meta[x]["check"]:
+                    if _meta[x]["num"]:
+                        value = num(self._model_record[x])
+                    else:
+                        value = self._model_record[x]
+                    if value:
+                        widget_check = True
 
                 _form_widgets[x].set_text(widget_text)
                 if widget_check:
