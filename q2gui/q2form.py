@@ -1789,6 +1789,7 @@ class Q2FormWindow:
                     widget2add = meta.get("widget").get_grid_widget()
                 else:
                     widget2add = meta.get("widget").get_form_widget()
+                    widget2add.hotkey_widgets = self.hotkey_widgets
                     meta.get("widget").form_stack.append(widget2add)
                 widget2add.meta = meta
                 # widget2add.form_is_active = True
