@@ -79,6 +79,19 @@ def add_days(iso_date_str, delta_days=0):
     except Exception:
         return iso_date_str
 
+def diff_days_iso(date1_str, date2_str):
+    """
+    Takes two ISO date strings (YYYY-MM-DD).
+    Returns the difference in days as an integer (date1 - date2).
+    If parsing fails, returns None.
+    """
+    try:
+        d1 = datetime.datetime.strptime(date1_str, "%Y-%m-%d")
+        d2 = datetime.datetime.strptime(date2_str, "%Y-%m-%d")
+        delta = d1 - d2
+        return delta.days
+    except Exception:
+        return None
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
