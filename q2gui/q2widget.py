@@ -31,6 +31,7 @@ class Q2Widget:
         self.label = None
         self.check = None
         self.frame = None
+        self.last_data = None
         self.style_sheet = ""
         if self.meta.get("readonly"):
             self.set_readonly(True)
@@ -117,26 +118,36 @@ class Q2Widget:
     def valid(self):
         if not self.meta.get("form"):
             return
-        # if not self.meta.get("form").form_is_active is True:
-        #     return
-        if self.meta.get("form_window") and not self.meta.get("form_window").form_is_active is True:
+        if (_w := self.meta.get("form_window")) and not _w.form_is_active is True:
             return
         valid = self.meta.get("valid")
         if valid is not None:
-            return valid()
+            if hasattr(valid, "script") and callable(valid):
+                return valid(is_changed=self.is_changed(), widget=self, data=self.get_text())
+            else:
+                return valid()
         else:
             return True
 
     def when(self):
-        when = self.meta.get("when", lambda: True)
-        if when:
-            return self.meta.get("when", lambda: True)()
+        self.last_data = self.get_text()
+        if when := self.meta.get("when", lambda: True):
+            if hasattr(when, "script") and callable(when):
+                return when(widget=self, data=self.get_text())
+            else:
+                return when()
         else:
             return True
 
     def show_(self):
-        if self.meta.get("show"):
-            self.set_text(self.meta["show"](mode="form"))
+        if show := self.meta.get("show"):
+            if hasattr(show, "script") and callable(show):
+                self.set_text(show(mode="form", widget=self, data=self.get_text()))
+            else:
+                self.set_text(show(mode="form"))
+
+    def is_changed(self):
+        return self.last_data != self.get_text()
 
     def set_maximum_len(self, length):
         pass
