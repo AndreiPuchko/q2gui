@@ -453,17 +453,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 self.disable_toolbar(True)
                 self.disable_menubar(True)
                 self.disable_tabbar(True)
-            # form.show()
-            # while form.not_closed:
-            #     time.sleep(0.005)
-            #     self.process_events()
-
-            loop = QEventLoop()
-            form.destroyed.connect(loop.quit)
-            form.show()
-            _logger.info(swc*"-" + str(form).split("at")[1] + f"shown {form.window_title}")
-            if loop:
-                loop.exec()  # blocks until form is destroyed
+            form._show_modal()
             _logger.info(swc*"-" + str(form).split("at")[1] + f"closed {form.window_title}")
             if modal == "super":  # real modal dialog
                 self.enable_toolbar(form.heap.prev_toolbar_enabled)
