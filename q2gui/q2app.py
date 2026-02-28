@@ -711,6 +711,7 @@ class Q2App:
         if from_form != to_form or not from_form or not to_form:
             return
         if from_widget.__class__.__name__ in (
+            "q2date",
             "q2line",
             "q2text",
             "q2relation",
@@ -723,6 +724,7 @@ class Q2App:
             if from_form.form_stack and from_form.form_stack[-1].mode == "form":
                 from_form.form_refresh()
         if to_widget.__class__.__name__ in (
+            "q2date",
             "q2line",
             "q2text",
             "q2relation",
