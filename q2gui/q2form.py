@@ -1303,22 +1303,7 @@ class Q2Form:
 
         date_control = self.controls.c.__getattr__(control1)["datatype"] == "date"
         num_control = self.controls.c.__getattr__(control1).get("num")
-        control1_value = self.s.__getattr__(control1)
-        if control2 is None:
-            if control1.endswith("____1"):
-                control2 = control1[:-5] + "____2"
-                control2_value = self.s.__getattr__(control2)
-            else:
-                control2_value = None
-        if date_control:
-            if control1_value == "0001-01-01":
-                control1_value = ""
-            if control2_value == "0001-01-01":
-                control2_value = ""
-        elif num_control:
-            control1_value = num(control1_value)
-            if control2_value:
-                control2_value = num(control2_value)
+        empty_value = "'0001-01-01'" if date_control else "''"
 
         if dev:
             dev_lines.append(f"if form.w.{control1}.is_checked():")
@@ -1361,14 +1346,14 @@ class Q2Form:
                     )
                 else:
                     dev_lines.append(
-                        """%(indent)sif form.s.%(control1)s and not form.s.%(control2)s:""" % locals()
+                        """%(indent)sif form.s.%(control1)s > %(empty_value)s and form.s.%(control2)s <= %(empty_value)s:""" % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
                         % locals()
                     )
                     dev_lines.append(
-                        """%(indent)selif not form.s.%(control1)s and form.s.%(control2)s:""" % locals()
+                        """%(indent)selif form.s.%(control1)s <= %(empty_value)s and form.s.%(control2)s > %(empty_value)s:""" % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s <= '{form.s.%(control2)s}'")"""
@@ -1379,7 +1364,25 @@ class Q2Form:
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}' and %(column)s <= '{form.s.%(control2)s}' ")"""
                         % locals()
                     )
+            dev_lines.append("")
             return dev_lines
+
+        control1_value = self.s.__getattr__(control1)
+        if control2 is None:
+            if control1.endswith("____1"):
+                control2 = control1[:-5] + "____2"
+                control2_value = self.s.__getattr__(control2)
+            else:
+                control2_value = None
+        if date_control:
+            if control1_value == "0001-01-01":
+                control1_value = ""
+            if control2_value == "0001-01-01":
+                control2_value = ""
+        elif num_control:
+            control1_value = num(control1_value)
+            if control2_value:
+                control2_value = num(control2_value)                
 
         if (control2_value is None) or control1_value == control2_value:
             if date_control or num_control:
