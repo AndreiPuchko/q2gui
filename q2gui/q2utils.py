@@ -79,6 +79,7 @@ def add_days(iso_date_str, delta_days=0):
     except Exception:
         return iso_date_str
 
+
 def diff_days_iso(date1_str, date2_str):
     """
     Takes two ISO date strings (YYYY-MM-DD).
@@ -92,6 +93,17 @@ def diff_days_iso(date1_str, date2_str):
         return delta.days
     except Exception:
         return None
+
+
+def format_date(date, format_string=None):
+    if format_string is None:
+        from .q2app import DATE_FORMAT_STRING
+        format_string = DATE_FORMAT_STRING
+        try:
+            return datetime.datetime.strptime(date, "%Y-%m-%d").strftime(format_string)
+        except Exception:
+            return date
+
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
