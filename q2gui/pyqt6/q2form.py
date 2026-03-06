@@ -14,7 +14,7 @@
 
 
 from PyQt6.QtWidgets import QDialog, QMdiSubWindow, QApplication, QTabBar
-from PyQt6.QtCore import Qt, QEvent, QEventLoop
+from PyQt6.QtCore import Qt, QEvent
 from PyQt6.QtGui import QKeySequence, QKeyEvent
 
 
@@ -67,7 +67,6 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         self.heap.prev_focus_widget = None
         self.heap.prev_tabbar_text = ""
         self.about_to_close = False
-        self.loop = None
 
     def restore_geometry(self, settings):
         paw = self.parent()
@@ -225,13 +224,6 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         elif self.mode == "grid":
             self.q2_form.after_grid_show()
 
-    def _show_modal(self):
-        self.show()
-        self.loop = QEventLoop()
-        # self.destroyed.connect(self.loop.quit)
-        _logger.info(str(self).split("at")[1] + f"shown {self.window_title}")
-        self.loop.exec()
-
     def mdi_subwindow_state_changed(self):
         if self.about_to_close:
             return
@@ -304,9 +296,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         self.about_to_close = True
         if event:
             event.accept()
-        if self.loop and self.loop.isRunning():
-            _logger.info(str(self).split("at")[1] + f"lost destroyed {self.window_title}")
-            self.loop.quit()
+        super().closeEvent(event)
 
     def set_style_sheet(self, css):
         self.setStyleSheet(css)

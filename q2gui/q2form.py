@@ -55,6 +55,7 @@ class Q2Form:
         self.grid_navi_actions = []
         self.controls = q2app.Q2Controls()
         self.system_controls = q2app.Q2Controls()
+        self.non_modal = None
         self.model = None
         self.db = None
         self.q2_app = q2app.q2_app
@@ -122,7 +123,16 @@ class Q2Form:
     def enable_action(self, text="", mode=True):
         self.actions.set_enabled(text, mode)
 
-    def run(self, order="", where=""):
+    def run_modalless(self, order="", where=""):
+        return self.run(order, where, "")
+
+    def run_mdi(self, order="", where=""):
+        return self.run(order, where, "mdi")
+
+    def run_modal(self, order="", where=""):
+        return self.run(order, where, "modal")
+
+    def run(self, order="", where="", modal=""):
         if self.model:
             need_refresh = False
             if order:
@@ -133,9 +143,17 @@ class Q2Form:
                 self.model.set_where(where)
             if need_refresh:
                 self.model.refresh()
-            self.show_mdi_modal_grid()
+
+            if modal == "modal":
+                self.show_mdi_modal_grid()
+            else:
+                self.show_mdi_grid()
         else:
-            self.show_mdi_modal_form()
+            if modal == "modal":
+                self.show_mdi_modal_form()
+            else:
+                self.show_mdi_form()
+
         return self
 
     def show_progressbar(self, title="", count=""):
@@ -762,7 +780,7 @@ class Q2Form:
 
         return self._model_record
 
-    def show_crud_form(self, mode, modal="modal"):
+    def show_crud_form(self, mode, modal=""):
         """mode - VIEW, NEW, COPY, EDIT"""
         self.crud_mode = mode
         self.add_crud_buttons(mode)
@@ -900,7 +918,8 @@ class Q2Form:
         child_form.prev_form = self
         child_form.model.set_where(self.get_where_for_child(action))
         child_form.model.refresh()
-        child_form.show_mdi_modal_grid()
+        # child_form.show_mdi_modal_grid()
+        child_form.run()
         self.refresh(soft=True)
 
     def get_where_for_child(self, action):
@@ -1241,7 +1260,7 @@ class Q2Form:
                 return not not_valid
 
             _form.valid = colors_valid
-            _form.run()
+            _form.run_modal()
             if _form.ok_pressed:
                 pk = self.model.get_meta_primary_key()
                 waitbar = None
@@ -2178,7 +2197,7 @@ class Q2PasteClipboard:
         self.main_form.cancel_button = True
         self.main_form.ok_button = True
         self.main_form.add_ok_cancel_buttons()
-        self.main_form.show_form()
+        self.main_form.show_mdi_modal_form()
 
         return self.main_form
 
@@ -2323,7 +2342,7 @@ class Q2BulkUpdate:
 
         bulk_data_form.ok_button = True
         bulk_data_form.cancel_button = True
-        bulk_data_form.show_form()
+        bulk_data_form.show_mdi_modal_form()
         if bulk_data_form.ok_pressed:
             self.bulk_update(bulk_data_form, bulk_columns)
 

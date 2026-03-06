@@ -163,6 +163,7 @@ class Q2WaitForm:
         self.tick = {}
         self.worker_thread = worker_thread
         self.wait_window = Q2Form("Wait...")
+        self.wait_window.non_modal = True
         self.wait_window.do_not_save_geometry = True
         self.wait_window.add_control("", label=mess, control="label")
         # self.wait_window.add_control("label", label="", data=mess)
@@ -281,12 +282,14 @@ class Q2WaitShow:
         self.main_wait_widget = None
         self.widget_stack = []
         self.widget_height = []
+        self._prev_nav_state = q2app.q2_app.get_navigation_state()
 
         self.prev_q2_form = q2app.q2_app.get_current_q2_form()
         if self.prev_q2_form and self.prev_q2_form.name == "Wait...":
             self.i_am_first_wait = False
 
         self.wait_window = Q2Form("Wait...")
+        self.wait_window.non_modal = True
         self.wait_window.do_not_save_geometry = True
         self.wait_window.add_control("mess", label=self.mess, control="label", alignment=5)
         steps_count_separator = "⇒"
@@ -317,9 +320,10 @@ class Q2WaitShow:
         self.wait_window.after_form_closed = self.wait_windows_after_form_closed
 
     def wait_windows_after_form_closed(self):
-        q2app.q2_app.disable_toolbar(False)
-        q2app.q2_app.disable_menubar(False)
-        q2app.q2_app.disable_tabbar(False)
+        # q2app.q2_app.disable_toolbar(False)
+        # q2app.q2_app.disable_menubar(False)
+        # q2app.q2_app.disable_tabbar(False)
+        q2app.q2_app.set_navigation_state(self._prev_nav_state)
         self.interrupted = True
 
     def step(self, *args):
@@ -402,9 +406,10 @@ class Q2WaitShow:
                 q2app.q2_app.disable_current_form(False)
                 if hasattr(self.last_focus_widget, "set_focus"):
                     self.last_focus_widget.set_focus()
-            q2app.q2_app.disable_toolbar(False)
-            q2app.q2_app.disable_menubar(False)
-            q2app.q2_app.disable_tabbar(False)
+            # q2app.q2_app.disable_toolbar(False)
+            # q2app.q2_app.disable_menubar(False)
+            # q2app.q2_app.disable_tabbar(False)
+            q2app.q2_app.set_navigation_state(self._prev_nav_state)
         else:
             self.wait_window.form_stack[-1].remove()
             self.main_wait_widget.heap.q2wait.widget_stack.pop()

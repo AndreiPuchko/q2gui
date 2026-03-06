@@ -436,29 +436,26 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
 
         # form.installEventFilter(self)
-        swc = self.subwindow_count_changed()
+        self.subwindow_count_changed()
 
-        if modal != "" and form.heap.prev_mdi_window:  # mdiarea normal window
+        if modal != "mdi" and form.heap.prev_mdi_window:  # mdiarea normal window
             form.heap.prev_mdi_window.setDisabled(True)
 
         self.set_tabbar_text(form.window_title)
 
-        if modal == "":  # mdiarea normal window
+        if (modal == "" and not self.modal_mode) or form.q2_form.non_modal:  # mdiarea normal window
             form.show()
         else:
-            if modal == "super":  # real modal dialog
-                form.heap.prev_toolbar_enabled = self.is_toolbar_enabled()
-                form.heap.prev_menubar_enabled = self.is_menubar_enabled()
-                form.heap.prev_tabbar_enabled = self.is_tabbar_enabled()
-                self.disable_toolbar(True)
-                self.disable_menubar(True)
-                self.disable_tabbar(True)
-            form._show_modal()
-            _logger.info(swc*"-" + str(form).split("at")[1] + f"closed {form.window_title}")
-            if modal == "super":  # real modal dialog
-                self.enable_toolbar(form.heap.prev_toolbar_enabled)
-                self.enable_menubar(form.heap.prev_menubar_enabled)
-                self.enable_tabbar(form.heap.prev_tabbar_enabled)
+            _prev_nav_state = self.get_navigation_state()
+            self.disable_navigation()
+            loop = QEventLoop()
+            form.destroyed.connect(loop.quit)
+            form.show()
+            # _logger.info(swc*"-" + str(form).split("at")[1] + f"shown {form.window_title}")
+            if loop:
+                loop.exec()  # blocks until form is destroyed
+            # _logger.info(swc*"-" + str(form).split("at")[1] + f"closed {form.window_title}")
+            self.set_navigation_state(_prev_nav_state)
         self.subwindow_count_changed()
 
     def dpi(self):
