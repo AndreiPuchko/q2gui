@@ -556,6 +556,7 @@ class Q2App:
     def __init__(self, title=""):
         q2app.q2_app = self
         self.window_title = title
+        self.modal_mode = None
         self.heap = Q2Heap()
         self.db = None
         self.style_file = ""
@@ -706,8 +707,8 @@ class Q2App:
         pass
 
     def focus_changed(self, from_widget, to_widget):
-        from_form = from_widget.meta.get("form") if  hasattr(from_widget, "meta") else None
-        to_form = to_widget.meta.get("form") if  hasattr(to_widget, "meta") else None
+        from_form = from_widget.meta.get("form") if hasattr(from_widget, "meta") else None
+        to_form = to_widget.meta.get("form") if hasattr(to_widget, "meta") else None
         if from_form != to_form or not from_form or not to_form:
             return
         if from_widget.__class__.__name__ in (
@@ -789,6 +790,30 @@ class Q2App:
 
     def is_toolbar_enabled(self):
         pass
+
+    def get_navigation_state(self):
+        return (
+            self.is_menubar_enabled(),
+            self.is_toolbar_enabled(),
+            self.is_tabbar_enabled(),
+            self.modal_mode
+        )
+
+    def set_navigation_state(self, state):
+        self.enable_menubar(state[0])
+        self.enable_toolbar(state[1])
+        self.enable_tabbar(state[2])
+        self.modal_mode = state[3]
+
+    def disable_navigation(self, mode=True):
+        self.disable_toolbar(mode)
+        self.disable_tabbar(mode)
+        self.disable_menubar(mode)
+        self.modal_mode = mode
+
+    def enable_navigation(self, mode=True):
+        self.disable_navigation(not mode)
+        self.modal_mode = not mode
 
     def disable_toolbar(self, mode=True):
         pass
