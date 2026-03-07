@@ -85,7 +85,7 @@ def q2AskYN(mess, title="Question", buttons=["Cancel", "Ok"]):
 
         for index, x in enumerate(buttons):
             form.add_control(
-                f"button_{index+1}",
+                f"button_{index + 1}",
                 x,
                 control="button",
                 valid=buttonPressed(form, index + 1),
@@ -285,7 +285,7 @@ class Q2WaitShow:
         self._prev_nav_state = q2app.q2_app.get_navigation_state()
 
         self.prev_q2_form = q2app.q2_app.get_current_q2_form()
-        if self.prev_q2_form and self.prev_q2_form.name == "Wait...":
+        if self.prev_q2_form and self.prev_q2_form.name == "Wait..." and self.prev_q2_form.controls:
             self.i_am_first_wait = False
 
         self.wait_window = Q2Form("Wait...")
