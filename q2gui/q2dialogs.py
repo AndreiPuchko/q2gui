@@ -231,7 +231,7 @@ def q2working(worker, mess=""):
     last_focus_widget = q2app.q2_app.focus_widget()
     last_progressbar_value = 0
     last_progressbar_time = 0
-    q2app.q2_app.lock()
+    _prev_navi_state = q2app.q2_app.disable_navigation()
     worker_thread = Q2Thread(target=worker)
     worker_thread.start()
     while worker_thread.is_alive():
@@ -248,7 +248,7 @@ def q2working(worker, mess=""):
                 last_progressbar_time = worker_thread.time()
         last_progressbar_value = worker_thread.value
         q2app.q2_app.process_events()
-    q2app.q2_app.unlock()
+    q2app.q2_app.set_navigation_state(_prev_navi_state)
     if wait_window is not None:
         wait_window.close()
     if hasattr(last_focus_widget, "set_focus"):

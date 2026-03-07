@@ -590,16 +590,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         current_style = self.styleSheet() + f"{style}"
         self.setStyleSheet(current_style)
 
-    def lock(self):
-        self.menuBar().setDisabled(True)
-        self.q2_toolbar.setDisabled(True)
-        self.q2_tabwidget.setDisabled(True)
-
-    def unlock(self):
-        self.menuBar().setDisabled(False)
-        self.q2_toolbar.setDisabled(False)
-        self.q2_tabwidget.setDisabled(False)
-
     def set_icon(self, icon_path):
         self.icon = icon_path
         # self.setWindowIcon(QIcon(self.icon))

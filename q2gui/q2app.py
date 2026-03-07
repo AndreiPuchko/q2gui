@@ -741,10 +741,10 @@ class Q2App:
         pass
 
     def lock(self):
-        pass
+        return self.disable_navigation()
 
     def unlock(self):
-        pass
+        self.enable_navigation()
 
     def set_icon(self):
         pass
@@ -791,29 +791,30 @@ class Q2App:
     def is_toolbar_enabled(self):
         pass
 
+    def set_modal_mode(self, mode=True):
+        self.modal_mode = mode
+
     def get_navigation_state(self):
         return (
             self.is_menubar_enabled(),
             self.is_toolbar_enabled(),
             self.is_tabbar_enabled(),
-            self.modal_mode
         )
 
     def set_navigation_state(self, state):
         self.enable_menubar(state[0])
         self.enable_toolbar(state[1])
         self.enable_tabbar(state[2])
-        self.modal_mode = state[3]
 
     def disable_navigation(self, mode=True):
+        _prev_state = self.get_navigation_state()
         self.disable_toolbar(mode)
         self.disable_tabbar(mode)
         self.disable_menubar(mode)
-        self.modal_mode = mode
+        return _prev_state
 
     def enable_navigation(self, mode=True):
         self.disable_navigation(not mode)
-        self.modal_mode = not mode
 
     def disable_toolbar(self, mode=True):
         pass
