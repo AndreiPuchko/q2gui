@@ -30,6 +30,7 @@ from PyQt6.QtCore import (
     QVariant,
     QItemSelectionModel,
     QSortFilterProxyModel,
+    QTimer,
 )
 
 from q2gui.pyqt6.q2window import q2_align
@@ -335,7 +336,7 @@ class q2_grid_lookup(q2lookup):
         self.q2_model_column = column
         self.q2_model = q2_grid.q2_model
         super().show()
-        self.lookup_edit.setCursorPosition(1)
+        QTimer.singleShot(0, lambda: self.lookup_edit.setCursorPosition(1))
 
     def set_geometry(self):
         parent = self.parent()
@@ -349,7 +350,6 @@ class q2_grid_lookup(q2lookup):
 
 
 class q2_col_manager(QFrame):
-
     class content_view(QTableView):
         class content_view_model(QAbstractTableModel):
             def __init__(self, parent):
@@ -419,9 +419,9 @@ class q2_col_manager(QFrame):
 
         def invert(self, state):
             for x in range(self.model().rowCount()):
-                self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"] = (
-                    not self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"]
-                )
+                self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()][
+                    "c"
+                ] = not self._model._content[self.proxy.mapToSource(self.proxy.index(x, 0)).row()]["c"]
             self._model.beginResetModel()
             self._model.endResetModel()
 
