@@ -413,7 +413,7 @@ class FindWidget(QWidget):
 
         self.setWindowFlags(Qt.WindowType.SubWindow)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
-        self.setObjectName(_("FindWidget"))
+        self.setObjectName("FindWidget")
 
         self.last_find_direction = "down"
 
@@ -589,7 +589,7 @@ class GoToLineWidget(QWidget):
 
         # --- buttons ---
         btn_go = QToolButton()
-        btn_go.setText(_("Go"))
+        btn_go.setText(_("Go to line"))
 
         btn_close = QToolButton()
         btn_close.setText("✕")

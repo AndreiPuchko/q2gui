@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 23:22+0100\n"
+"POT-Creation-Date: 2026-03-08 13:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -285,30 +285,78 @@ msgstr ""
 msgid "Save file"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:165
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:188
 msgid "Refreshing..."
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:409
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:428
 msgid "Renumber sequence"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1148
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1221
 msgid "Font color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1149
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1224
 msgid "Background color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1156
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1236
 msgid "Reset colors"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1167
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1250
 msgid "Foreground color is not valid! "
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1174
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1257
 msgid "Background color is not valid! "
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:256
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:422
+msgid "Find"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:257
+msgid "Find next"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:258
+msgid "Find previous"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:260
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:435
+msgid "Replace"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:265
+msgid "Move selection up"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:272
+msgid "Move selection down"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:276
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:588
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:592
+msgid "Go to line"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:280
+msgid "Fold/Unfold"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:281
+msgid "Fold/Unfold All"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:285
+msgid "Comment/uncomment line(s)"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:287
+msgid "Autocomplete"
 msgstr ""
