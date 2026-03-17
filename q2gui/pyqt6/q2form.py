@@ -267,6 +267,7 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         if self.parent() is not None:
             if isinstance(self.parent(), QMdiSubWindow):
                 self.parent().close()
+                q2app.q2_app.subwindow_count_changed()
                 # QDialog.close(self)
         else:
             QDialog.close(self)
