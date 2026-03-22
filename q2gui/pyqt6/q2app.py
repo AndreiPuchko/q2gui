@@ -266,15 +266,13 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                     pass
 
         def closeSubWindow(self):
-            # print(">", len(set(self.main_window.QApplication.allWidgets())))
             currentTabIndex = self.currentIndex()
             if wlist := self.currentWidget().subWindowList():
                 wlist[-1].close()
             elif self.count() > 2:  # close tab if them >2
                 self.setCurrentIndex(currentTabIndex - 1)
-                # self.removeTab(currentTabIndex)
                 self.widget(currentTabIndex).deleteLater()
-            # print(">>", len(set(self.main_window.QApplication.allWidgets())))
+            self.main_window.subwindow_count_changed()
 
         def show_mdi_normal(self):
             self.currentWidget().activeSubWindow().showNormal()
