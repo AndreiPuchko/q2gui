@@ -31,6 +31,8 @@ import logging
 
 from q2gui.i18n import I18n
 
+from importlib.resources import files
+
 
 def _(s):
     return s
@@ -592,7 +594,8 @@ class Q2App:
         self.content_margin_bottom = None
         self.content_margin_left = None
         self.assets_folder = "assets"
-        self.set_icon(f"{self.assets_folder}/q2gui.ico")
+        # self.set_icon(f"{self.assets_folder}/q2gui.ico")
+        self.set_icon(str(files("q2gui").joinpath("icons/q2gui.ico")))
 
         self.on_init()
 
@@ -753,7 +756,8 @@ class Q2App:
         pass
 
     def on_init(self):
-        self.set_icon(f"{self.assets_folder}/q2gui.ico")
+        pass
+        # self.set_icon(f"{self.assets_folder}/q2gui.ico")
 
     def on_start(self):
         pass

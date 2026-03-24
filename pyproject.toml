@@ -5,6 +5,11 @@ description = "Python GUI toolkit"
 authors = ["Andrei Puchko <andrei.puchko@gmx.de>"]
 license = "Apache 2.0"
 readme = "README.md"
+packages = [{ include = "q2gui" }]
+
+include = [
+    "q2gui/icons/*.ico"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1"
