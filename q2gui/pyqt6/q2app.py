@@ -43,6 +43,7 @@ from PyQt6.QtGui import (
     QAction,
     QPixmap,
     QPainter,
+    QGuiApplication,
 )
 from PyQt6.QtSvg import QSvgRenderer
 
@@ -58,6 +59,7 @@ import q2gui.q2app as q2app
 from q2gui.q2icons import icons
 
 import logging
+
 _logger = logging.getLogger(__name__)
 
 
@@ -743,10 +745,61 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
     def save_geometry(self, settings):
         Q2QtWindow.save_geometry(self, settings)
 
+    def _fix_geometry(self):
+        geometry = self.geometry()
+        scl = [
+            QGuiApplication.screenAt(_x)
+            for _x in [geometry.bottomRight(), geometry.topRight(), geometry.topLeft(), geometry.bottomLeft()]
+        ]
+        counted = {scl.count(_x): _x for _x in scl if _x}
+        if counted == {}:
+            screen = QGuiApplication.primaryScreen()
+        else:
+            screen = counted[max(counted.keys())]
+
+        x = y = w = h = None
+        if geometry.width() > screen.availableGeometry().width():
+            w = screen.availableGeometry().width()
+        if geometry.height() > screen.availableGeometry().height():
+            h = screen.availableGeometry().height() + (self.frameGeometry().top() - self.geometry().top())
+        if w is not None or h is not None:
+            if w is None:
+                w = geometry.width()
+            if h is None:
+                h = geometry.height()
+            self.resize(w, h)
+        # move left
+        if (
+            self.frameGeometry().bottomRight().x() - screen.availableGeometry().x()
+            > screen.availableGeometry().width()
+        ):
+            x = screen.availableGeometry().width() - (
+                self.frameGeometry().width() - screen.availableGeometry().x()
+            )
+        # lift up
+        if (
+            self.frameGeometry().bottomLeft().y() - screen.availableGeometry().y()
+            > screen.availableGeometry().height()
+        ):
+            y = screen.availableGeometry().height() - (
+                self.frameGeometry().height() - screen.availableGeometry().y()
+            )
+
+        if self.pos().x() < screen.availableGeometry().x():
+            x = screen.availableGeometry().x()
+        if self.pos().y() < screen.availableGeometry().y():
+            y = screen.availableGeometry().y()
+        if x is not None or y is not None:
+            if x is None:
+                x = geometry.x()
+            if y is None:
+                y = geometry.y()
+            self.move(x, y)
+
     def run(self):
-        # self.restore_geometry(self.settings)
         Q2QtWindow.restore_geometry(self, self.settings)
         self.show()
+        self._fix_geometry()
         super().run()
         self._wait_for_show()
         if len(QApplication.allWindows()) == 1:
