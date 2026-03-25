@@ -42,6 +42,10 @@ def tr(s):
     return q2app.q2_app.i18n.tr(s)
 
 
+_("__lang_name__")
+_("__lang_native__")
+
+
 q2_app = None
 engine = ""
 Q2Form = None
