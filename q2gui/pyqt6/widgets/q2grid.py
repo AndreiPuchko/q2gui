@@ -300,8 +300,9 @@ class q2grid(QTableView):
     def get_columns_settings(self):
         rez = []
         hohe = self.horizontalHeader()
+        if hohe.count() == 1:
+            return rez
         for x in range(0, hohe.count()):
-            # header = hohe.model().headerData(x, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
             header = self.q2_model.headers[x]
             width = self.columnWidth(x)
             pos = hohe.visualIndex(x)
