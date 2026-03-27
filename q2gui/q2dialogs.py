@@ -18,7 +18,7 @@ import time
 import json
 from q2gui.q2form import Q2Form
 import q2gui.q2app as q2app
-
+from html import escape
 
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
@@ -33,9 +33,9 @@ def q2Mess(mess="", title="Message", html=True):
     form.do_not_save_geometry = True
     form.add_control("/v")
     if isinstance(mess, dict) or isinstance(mess, list):
-        mess = "<pre>" + json.dumps(mess, indent=2, ensure_ascii=False) + "</pre>"
+        mess = "<pre>" + escape(json.dumps(mess, indent=2, ensure_ascii=False), quote=False) + "</pre>"
     elif html is not True:
-        mess = "<pre>" + mess + "</pre>"
+        mess = "<pre>" + escape(mess, quote=False) + "</pre>"
     form.add_control("mess", control="text", data=f"{mess}", readonly=True)
     if form.add_control("/h"):
         form.add_control("/s")
