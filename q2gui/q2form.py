@@ -1326,6 +1326,8 @@ class Q2Form:
 
         if dev:
             dev_lines.append(f"if form.w.{control1}.is_checked():")
+            if control2 is None and control1.endswith("____1"):
+                control2 = control1[:-5] + "____2"
             if control2 is None:
                 if num_control:
                     dev_lines.append(
