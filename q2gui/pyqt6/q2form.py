@@ -40,10 +40,6 @@ class Q2Form(q2form.Q2Form):
         super().__init__(title=title)
         self._Q2FormWindow_class = Q2FormWindow
         self._q2dialogs = q2gui.q2dialogs
-        # if QApplication.activeWindow():
-        #     self.q2_app = QApplication.activeWindow()
-        # else:
-        #     self.q2_app = q2app.q2_app
         self.q2_app = q2app.q2_app
         self.on_init()
 
@@ -188,7 +184,6 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
         if event:
             event.accept()
 
-        # self.q2_form.form_is_active = True
         self.form_is_active = True
         self.shown = True
         if hasattr(q2app.q2_app, "settings"):
@@ -269,18 +264,14 @@ class Q2FormWindow(QDialog, q2form.Q2FormWindow, Q2QtWindow, Q2Widget):
                 self.parent().close()
         else:
             QDialog.close(self)
-        q2app.q2_app.subwindow_count_changed()
 
     def closeEvent(self, event=None):
         super().close()
         self.q2_form._close()
         self.not_closed = False
-        # self.q2_form.form_is_active = False
         self.form_is_active = False
         if self.heap.prev_mdi_window:
             self.heap.prev_mdi_window.setEnabled(True)
-            # else:
-            #     q2app.q2_app.q2_tabwidget.show_mdi_normal_button(False)
             if self.heap.prev_focus_widget is not None and not isinstance(
                 self.heap.prev_focus_widget, QTabBar
             ):

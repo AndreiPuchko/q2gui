@@ -274,7 +274,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             elif self.count() > 2:  # close tab if them >2
                 self.setCurrentIndex(currentTabIndex - 1)
                 self.widget(currentTabIndex).deleteLater()
-            self.main_window.subwindow_count_changed()
 
         def show_mdi_normal(self):
             self.currentWidget().activeSubWindow().showNormal()
@@ -408,19 +407,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         if action:
             action.setEnabled(True)
 
-    # def eventFilter(self, obj, ev: QEvent):
-    #     if ev.type() == QEvent.Type.Close:
-    #         if not obj.isEnabled():
-    #             ev.ignore()
-    #             return True
-    #     return super().eventFilter(obj, ev)
-
     def moveEvent(self, ev):
         self.q2_toolbar.move(ev.pos(), ev.oldPos())
         return super().moveEvent(ev)
 
     def show_form(self, form=None, modal="modal"):
-        # form.heap = q2app.Q2Heap()
         form.heap.modal = modal
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
         form.heap.prev_focus_widget = QApplication.focusWidget()
@@ -434,8 +425,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         tmp_icon = QPixmap(1, 1)
         tmp_icon.fill(Qt.GlobalColor.transparent)
         form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
-
-        # form.installEventFilter(self)
+        form_mdi_subwindow.destroyed.connect(lambda: self.subwindow_count_changed())
         self.subwindow_count_changed()
 
         if modal != "mdi" and form.heap.prev_mdi_window:  # mdiarea normal window
@@ -451,12 +441,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
             loop = QEventLoop()
             form.destroyed.connect(loop.quit)
             form.show()
-            # _logger.info(swc*"-" + str(form).split("at")[1] + f"shown {form.window_title}")
             if loop:
                 loop.exec()  # blocks until form is destroyed
-            # _logger.info(swc*"-" + str(form).split("at")[1] + f"closed {form.window_title}")
             self.set_navigation_state(_prev_nav_state)
-        self.subwindow_count_changed()
 
     def dpi(self):
         return self.physicalDpiX()
@@ -476,7 +463,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
                 prev_mdi_window.setFocus()
 
     def build_menu(self):
-        # self.menu_list = super().reorder_menu(self.menu_list)
         super().build_menu()
         self._main_menu = {}
         QMainWindow.menuBar(self).clear()
@@ -547,12 +533,6 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         return QIcon(pix)
 
     def make_svg_icon(self, svg_text, size=24):
-        # if mode == "dark":
-        #     c = "#ffffff"
-        # else:
-        #     color = "#000000"
-        # if mode == "dark":
-        #     svg_text = svg_text.replace('stroke="black"', 'stroke="red"')
         renderer = QSvgRenderer(QByteArray(svg_text.encode("utf-8")))
         pixmap = QPixmap(size, size)
         pixmap.fill(Qt.GlobalColor.transparent)
