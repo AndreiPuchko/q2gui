@@ -411,6 +411,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.q2_toolbar.move(ev.pos(), ev.oldPos())
         return super().moveEvent(ev)
 
+    def on_msw_destroyed(self, arg):
+        self.subwindow_count_changed()
+
     def show_form(self, form=None, modal="modal"):
         form.heap.modal = modal
         form.heap.prev_mdi_window = self.q2_tabwidget.currentWidget().activeSubWindow()
@@ -425,7 +428,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         tmp_icon = QPixmap(1, 1)
         tmp_icon.fill(Qt.GlobalColor.transparent)
         form_mdi_subwindow.setWindowIcon(QIcon(tmp_icon))
-        form_mdi_subwindow.destroyed.connect(lambda: self.subwindow_count_changed())
+        form_mdi_subwindow.destroyed.connect(self.on_msw_destroyed)
         self.subwindow_count_changed()
 
         if modal != "mdi" and form.heap.prev_mdi_window:  # mdiarea normal window
