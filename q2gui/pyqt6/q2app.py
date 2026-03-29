@@ -359,14 +359,14 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self.next_tab_shortcut.activated.connect(
             lambda: (
                 self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() + 1)
-                if self.q2_tabwidget.tabBar().isVisible()
+                if self.q2_tabwidget.tabBar().isVisible() and self.q2_tabwidget.tabBar().isEnabled()
                 else None
             )
         )
         self.prev_tab_shortcut.activated.connect(
             lambda: (
                 self.q2_tabwidget.setCurrentIndex(self.q2_tabwidget.currentIndex() - 1)
-                if self.q2_tabwidget.tabBar().isVisible()
+                if self.q2_tabwidget.tabBar().isVisible() and self.q2_tabwidget.tabBar().isEnabled()
                 else None
             )
         )
