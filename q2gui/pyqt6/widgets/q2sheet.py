@@ -67,7 +67,8 @@ class q2sheet(QTableWidget, Q2Widget):
 
     def focusOutEvent(self, event):
         if self.meta.get("valid"):
-            if self.meta.get("valid")() is False:
+            # if self.meta.get("valid")() is False:
+            if self.valid() is False:
                 self.setFocus()
                 return
         rez = super().focusOutEvent(event)

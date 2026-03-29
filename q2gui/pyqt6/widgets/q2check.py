@@ -42,7 +42,8 @@ class q2check(QCheckBox, Q2Widget):
                     x.meta.get("when")()
             else:
                 if x.meta.get("valid"):
-                    x.meta.get("valid")()
+                    # x.meta.get("valid")()
+                    x.valid()
         if self.meta.get("changed"):
             self.meta["changed"]()
         self.valid()
