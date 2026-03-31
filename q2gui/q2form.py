@@ -1352,6 +1352,7 @@ class Q2Form:
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s}")"""
                         % locals()
                     )
+                    
                     dev_lines.append(
                         """%(indent)selif num(form.s.%(control1)s) == 0 and num(form.s.%(control2)s):"""
                         % locals()
@@ -1367,12 +1368,21 @@ class Q2Form:
                     )
                 else:
                     dev_lines.append(
-                        """%(indent)sif form.s.%(control1)s > %(empty_value)s and form.s.%(control2)s <= %(empty_value)s:""" % locals()
+                        """%(indent)sif form.s.%(control1)s == %(empty_value)s and form.s.%(control2) == %(empty_value)s:""" % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
                         % locals()
                     )
+                    
+                    dev_lines.append(
+                        """%(indent)selif form.s.%(control1)s > %(empty_value)s and form.s.%(control2)s <= %(empty_value)s:""" % locals()
+                    )
+                    dev_lines.append(
+                        """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
+                        % locals()
+                    )
+                    
                     dev_lines.append(
                         """%(indent)selif form.s.%(control1)s <= %(empty_value)s and form.s.%(control2)s > %(empty_value)s:""" % locals()
                     )
@@ -1406,7 +1416,7 @@ class Q2Form:
                 control2_value = num(control2_value)                
 
         if (control2_value is None) or control1_value == control2_value:
-            if date_control or num_control:
+            if date_control or num_control or control1_value == "":
                 return f"{column} = '{control1_value}'"
             else:
                 return f"{column} like '%{control1_value}%'"
