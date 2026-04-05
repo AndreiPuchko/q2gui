@@ -895,11 +895,15 @@ class Q2App:
         time.sleep(seconds)
 
     @staticmethod
-    def get_open_file_dialoq(header="Open file", path="", filter=""):
+    def get_folder_dialoq(header=_("Select folder"), path=""):
         pass
 
     @staticmethod
-    def get_save_file_dialoq(header="Save file", path="", filter="", confirm_overwrite=True):
+    def get_open_file_dialoq(header=_("Open file"), path="", filter=""):
+        pass
+
+    @staticmethod
+    def get_save_file_dialoq(header=_("Save file"), path="", filter="", confirm_overwrite=True):
         pass
 
     def add_new_tab(self):

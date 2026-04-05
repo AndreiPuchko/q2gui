@@ -372,6 +372,7 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         )
 
         # replace static methods for instance
+        self.get_folder_dialoq = self._get_folder_dialoq
         self.get_open_file_dialoq = self._get_open_file_dialoq
         self.get_save_file_dialoq = self._get_save_file_dialoq
         self._last_get_file_path = None
@@ -664,6 +665,22 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
 
     def get_char_height(self):
         return QFontMetrics(self.font()).height()
+
+    @staticmethod
+    def get_folder_dialoq(header=q2app.DIALOG_OPEN_FILE_TITLE, path=""):
+        if path == "":
+            path = os.path.expanduser("~/Desktop")
+        rez = QFileDialog.getExistingDirectory(None, header, path)
+        return rez
+
+    def _get_folder_dialoq(self, header=q2app.DIALOG_OPEN_FILE_TITLE, path=""):
+        if self._last_get_file_path and not path:
+            path = self._last_get_file_path
+        rez = Q2App.get_folder_dialoq(header, path)
+        if rez:
+            self._last_get_file_path = rez
+        QApplication.setActiveWindow(self)
+        return rez
 
     @staticmethod
     def get_open_file_dialoq(header=q2app.DIALOG_OPEN_FILE_TITLE, path="", filter=""):
