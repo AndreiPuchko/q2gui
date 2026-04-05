@@ -71,11 +71,11 @@ class q2check(QCheckBox, Q2Widget):
         else:
             return "*" if self.isChecked() else ""
 
-    def set_checked(self, mode=True):
-        self.set_text(mode)
+    # def set_checked(self, mode=True):
+    #     self.set_text(mode)
 
-    def is_checked(self):
-        return True if self.get_text() else False
+    # def is_checked(self):
+    #     return True if self.get_text() else False
 
     def nextCheckState(self):
         if not self.read_only:

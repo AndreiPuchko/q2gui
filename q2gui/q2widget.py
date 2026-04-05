@@ -69,7 +69,7 @@ class Q2Widget:
 
     def is_checked(self):
         if self.check:
-            return self.check.is_checked()
+            return self.check.get_text()
         elif self.frame:
             return self.frame.is_checked()
         else:
@@ -88,7 +88,8 @@ class Q2Widget:
 
     def set_checked(self, mode=True):
         if self.check:
-            return self.check.set_checked(mode)
+            # return self.check.set_checked(mode)
+            return self.check.set_text("*" if mode else "")
         elif self.frame:
             return self.frame.set_checked(mode)
         else:
