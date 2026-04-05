@@ -505,6 +505,8 @@ class Q2Form:
                     continue
                 if not meta.get("migrate"):
                     continue
+                if meta.get("column") == "":
+                    continue
                 if meta.get("control") in NO_DATA_WIDGETS:
                     continue
                 column = {
