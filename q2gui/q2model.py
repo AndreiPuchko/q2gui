@@ -263,7 +263,10 @@ class Q2Model:
                 value = tmp_list[int(num(value)) - 1] if int(num(value)) - 1 < len(tmp_list) else "****"
             elif meta["datatype"] == "date":
                 try:
-                    value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATE_FORMAT_STRING)
+                    if value == "0001-01-01":
+                        value = ""
+                    else:
+                        value = datetime.datetime.strptime(value, "%Y-%m-%d").strftime(q2app.DATE_FORMAT_STRING)
                 except Exception:
                     value = ""
 
