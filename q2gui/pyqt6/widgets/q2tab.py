@@ -77,10 +77,12 @@ class q2tab(QTabWidget, Q2Widget, Q2Frame):
             self.setStyleSheet("QTabWidget::tab-bar { alignment: %s;}" % qss)
 
     def next_tab(self):
-        self.setCurrentIndex(self.currentIndex() + 1)
+        if self.tabBar().isEnabled():
+            self.setCurrentIndex(self.currentIndex() + 1)
 
     def prev_tab(self):
-        self.setCurrentIndex(self.currentIndex() - 1)
+        if self.tabBar().isEnabled():
+            self.setCurrentIndex(self.currentIndex() - 1)
 
     def set_enabled(self, mode=True):
         self.tabBar().setEnabled(mode)
