@@ -111,8 +111,9 @@ class Q2Form:
 
     def run_action(self, text=""):
         for x in self.actions:
-            if text == x["text"]:
+            if text.upper() == x["text"].upper():
                 x["_worker"]()
+                break
 
     def get_action_form(self, action=""):
         return self.a.__getattr__(action).get("child_form_object")
