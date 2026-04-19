@@ -20,6 +20,16 @@ from q2gui.q2form import Q2Form
 import q2gui.q2app as q2app
 from html import escape
 
+
+def _(s):
+    return s
+
+
+def tr(s):
+    return q2app.q2_app.i18n.tr(s)
+
+
+
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
     h -= q2app.q2_app.get_stdout_height()
@@ -65,7 +75,7 @@ def q2Mess(mess="", title="Message", html=True):
 q2_mess = q2mess = q2Mess
 
 
-def q2AskYN(mess, title="Question", buttons=["Cancel", "Ok"]):
+def q2AskYN(mess, title="Question", buttons=[_("Cancel"), _("Ok")]):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.choice = 0
@@ -86,7 +96,7 @@ def q2AskYN(mess, title="Question", buttons=["Cancel", "Ok"]):
         for index, x in enumerate(buttons):
             form.add_control(
                 f"button_{index + 1}",
-                x,
+                tr(x),
                 control="button",
                 valid=buttonPressed(form, index + 1),
                 eat_enter="*",
