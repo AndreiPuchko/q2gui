@@ -481,7 +481,7 @@ class Q2Form:
                         # apply new filter to grid
                         filter_list = []
                         for x in filter_form.widgets_list():
-                            if x.check and x.check.is_checked():
+                            if x.check and x.is_checked():
                                 filter_list.append(f"'{x.get_text()}' in {x.meta['column']}")
                         filter_string = " and ".join(filter_list)
                         self.model.set_where(filter_string)
@@ -774,7 +774,7 @@ class Q2Form:
 
             self._model_record[x] = self.s.__getattr__(x)
 
-            if widget.meta.get("check") and not widget.check.is_checked():
+            if widget.meta.get("check") and not widget.is_checked():
                 if widget.meta.get("num"):
                     value = "0"
                 else:
@@ -872,7 +872,7 @@ class Q2Form:
 
                 _form_widgets[x].set_text(widget_text)
                 if widget_check:
-                    _form_widgets[x].check.set_checked(widget_check)
+                    _form_widgets[x].set_checked(widget_check)
         # take care about PK and filters
         for x in _meta:
             if x not in _form_widgets:
@@ -1871,7 +1871,7 @@ class Q2FormWindow:
             if not meta.get("data"):
                 widget2add.set_disabled()
             else:
-                label2add.set_checked()
+                widget2add.set_checked()
 
         self.widgets[meta.get("tag", "") if meta.get("tag", "") else column] = widget2add
 
