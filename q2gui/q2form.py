@@ -370,10 +370,10 @@ class Q2Form:
         if actions is None:
             actions = self.actions
         actions.add_action(
-            "Move up", self.move_seq_up, icon="arrow-up.png", eof_disabled=1, hotkey="Ctrl+Alt+Up"
+            tr("Move up"), self.move_seq_up, icon="arrow-up.png", eof_disabled=1, hotkey="Ctrl+Alt+Up"
         )
         actions.add_action(
-            "Move down", self.move_seq_down, icon="arrow-down.png", eof_disabled=1, hotkey="Ctrl+Alt+Down"
+            tr("Move down"), self.move_seq_down, icon="arrow-down.png", eof_disabled=1, hotkey="Ctrl+Alt+Down"
         )
         actions.add_action(
             tr(q2app.ACTION_RENUMBER_TEXT),
@@ -493,7 +493,7 @@ class Q2Form:
                     filter_form.add_ok_cancel_buttons()
                     filter_form.show_mdi_modal_form()
 
-                self.actions.add_action("Filter", worker=run_filter_data_form, hotkey="F9", eof_disabled=1)
+                self.actions.add_action(tr("Filter"), worker=run_filter_data_form, hotkey="F9", eof_disabled=1)
 
     def get_table_schema(self):
         rez = []
