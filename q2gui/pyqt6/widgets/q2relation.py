@@ -29,6 +29,10 @@ from q2gui.q2model import Q2Model
 from q2db.db import Q2Db
 
 
+def tr(s):
+    return q2app.q2_app.i18n.tr(s)
+
+
 class q2relation(QFrame, Q2Widget, Q2Frame):
     def __init__(self, meta):
         super().__init__(meta)
