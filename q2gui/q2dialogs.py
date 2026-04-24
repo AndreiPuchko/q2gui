@@ -38,7 +38,7 @@ def center_window(form: Q2Form):
     form.form_stack[0].set_position(int(w * 0.25), int(h * 0.15))
 
 
-def q2Mess(mess="", title="Message", html=True):
+def q2Mess(mess="", title=tr("Message"), html=True):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.add_control("/v")
@@ -75,7 +75,7 @@ def q2Mess(mess="", title="Message", html=True):
 q2_mess = q2mess = q2Mess
 
 
-def q2AskYN(mess, title="Question", buttons=[_("Cancel"), _("Ok")]):
+def q2AskYN(mess, title=tr("Question"), buttons=[tr("Cancel"), tr("Ok")]):
     form = Q2Form(title)
     form.do_not_save_geometry = True
     form.choice = 0
@@ -172,7 +172,7 @@ class Q2WaitForm:
     def __init__(self, mess, worker_thread):
         self.tick = {}
         self.worker_thread = worker_thread
-        self.wait_window = Q2Form("Wait...")
+        self.wait_window = Q2Form(tr("Wait..."))
         self.wait_window.non_modal = True
         self.wait_window.do_not_save_geometry = True
         self.wait_window.add_control("", label=mess, control="label")
@@ -295,10 +295,10 @@ class Q2WaitShow:
         self._prev_nav_state = q2app.q2_app.get_navigation_state()
 
         self.prev_q2_form = q2app.q2_app.get_current_q2_form()
-        if self.prev_q2_form and self.prev_q2_form.name == "Wait..." and self.prev_q2_form.controls:
+        if self.prev_q2_form and self.prev_q2_form.name == tr("Wait...") and self.prev_q2_form.controls:
             self.i_am_first_wait = False
 
-        self.wait_window = Q2Form("Wait...")
+        self.wait_window = Q2Form(tr("Wait..."))
         self.wait_window.non_modal = True
         self.wait_window.do_not_save_geometry = True
         self.wait_window.add_control("mess", label=self.mess, control="label", alignment=5)

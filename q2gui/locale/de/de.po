@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 15:23+0100\n"
+"POT-Creation-Date: 2026-04-24 23:35+0200\n"
 "PO-Revision-Date: 2026-01-23 18:30+0100\n"
 "Last-Translator: Gemini\n"
 "Language-Team: none\n"
@@ -155,6 +155,7 @@ msgid "OK"
 msgstr "OK"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:155
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -221,6 +222,7 @@ msgid "Order"
 msgstr "Sortierung"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:185
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:497
 msgid "Filter"
 msgstr "Filter"
 
@@ -288,38 +290,72 @@ msgid "Copy %s?"
 msgstr "%s kopieren?"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:207
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:902
 msgid "Open file"
 msgstr "Datei öffnen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:208
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:906
 msgid "Save file"
 msgstr "Datei speichern"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:188
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:898
+#, fuzzy
+msgid "Select folder"
+msgstr "Ausgewählt"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:41
+msgid "Message"
+msgstr "Nachricht"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
+msgid "Question"
+msgstr "Frage"
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
+msgid "Ok"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:175
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:298
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:301
+msgid "Wait..."
+msgstr "Warten..."
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:189
 msgid "Refreshing..."
 msgstr "Aktualisierung..."
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:428
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:373
+msgid "Move up"
+msgstr "Ausgewählten Zeilen nach oben Verschieben "
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:376
+#, fuzzy
+msgid "Move down"
+msgstr "Ausgewählten Zeilen nach unten Verschieben "
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:429
 msgid "Renumber sequence"
 msgstr "Sequenz neu nummerieren"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1221
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1232
 msgid "Font color"
 msgstr "Schriftfarbe"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1224
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1235
 msgid "Background color"
 msgstr "Hintergrundfarbe"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1236
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1247
 msgid "Reset colors"
 msgstr "Farben zurücksetzen"
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1250
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1261
 msgid "Foreground color is not valid! "
 msgstr "Vordergrundfarbe ist ungültig! "
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1257
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1268
 msgid "Background color is not valid! "
 msgstr "Hintergrundfarbe ist ungültig! "
 
