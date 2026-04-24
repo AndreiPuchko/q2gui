@@ -54,11 +54,13 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             }
         )
         self.say = q2line({"disabled": "*"})
-        self.say.set_style_sheet("""
+        self.say.set_style_sheet(
+            """
                             background-color:transparent;
                             border:0;
                             border-radius:0;
-                            border-bottom:1px solid gray""")
+                            border-bottom:1px solid gray"""
+        )
         self.to_form = None
 
         self.add_widget(self.get)
@@ -70,6 +72,12 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.4em")
         self.layout().setSpacing(0)
         self.set_content_margins(0)
+
+    def setReadOnly(self, arg):
+        if hasattr(self, "get"):
+            self.get.set_readonly(arg)
+
+    def show_related_form(self):
         if self.meta.get("to_form"):
             if isinstance(self.meta.get("to_form"), Q2Form):
                 self.to_form: Q2Form = self.meta.get("to_form")
@@ -78,11 +86,6 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             # self.to_form.max_child_level = 0
             self.to_form.title += " ."
 
-    def setReadOnly(self, arg):
-        if hasattr(self, "get"):
-            self.get.set_readonly(arg)
-
-    def show_related_form(self):
         if isinstance(self.to_form, Q2Form):
             if not self.get.is_readonly():
                 self.to_form.add_action(
@@ -103,7 +106,8 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
 
             self.to_form.before_grid_show = seek
             self.get.when()
-            self.to_form.show_mdi_modal_grid()
+            # self.to_form.show_mdi_modal_grid()
+            self.to_form.run()
             # self.set_related()
 
     def show_related_form_result(self):
@@ -115,7 +119,8 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
             self.get.valid()
 
     def edit_done(self):
-        self.set_related()
+        if not self.set_related():
+            self.show_related_form()
 
     def get_related(self):
         rel = None
@@ -134,13 +139,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
     def set_related(self):
         rel = self.get_related()
         # if rel == "":
-        if rel == {}:
-            rel = None
-            self.say.set_text("")
-            self.show_related_form()
-            return True
-
-        if rel is None:
+        if rel == {} or rel is None:
             self.say.set_text("")
             return False
         else:
