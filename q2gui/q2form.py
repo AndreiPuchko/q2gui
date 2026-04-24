@@ -491,7 +491,7 @@ class Q2Form:
                     filter_form.ok_button = 1
                     filter_form.cancel_button = 1
                     filter_form.add_ok_cancel_buttons()
-                    filter_form.show_mdi_modal_form()
+                    filter_form.run()
 
                 self.actions.add_action(
                     tr("Filter"), worker=run_filter_data_form, hotkey="F9", eof_disabled=1
