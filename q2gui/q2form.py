@@ -493,7 +493,9 @@ class Q2Form:
                     filter_form.add_ok_cancel_buttons()
                     filter_form.show_mdi_modal_form()
 
-                self.actions.add_action(tr("Filter"), worker=run_filter_data_form, hotkey="F9", eof_disabled=1)
+                self.actions.add_action(
+                    tr("Filter"), worker=run_filter_data_form, hotkey="F9", eof_disabled=1
+                )
 
     def get_table_schema(self):
         rez = []
@@ -1355,7 +1357,7 @@ class Q2Form:
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= {form.s.%(control1)s}")"""
                         % locals()
                     )
-                    
+
                     dev_lines.append(
                         """%(indent)selif num(form.s.%(control1)s) == 0 and num(form.s.%(control2)s):"""
                         % locals()
@@ -1371,23 +1373,26 @@ class Q2Form:
                     )
                 else:
                     dev_lines.append(
-                        """%(indent)sif form.s.%(control1)s == %(empty_value)s and form.s.%(control2) == %(empty_value)s:""" % locals()
+                        """%(indent)sif form.s.%(control1)s == %(empty_value)s and form.s.%(control2) == %(empty_value)s:"""
+                        % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
                         % locals()
                     )
-                    
+
                     dev_lines.append(
-                        """%(indent)selif form.s.%(control1)s > %(empty_value)s and form.s.%(control2)s <= %(empty_value)s:""" % locals()
+                        """%(indent)selif form.s.%(control1)s > %(empty_value)s and form.s.%(control2)s <= %(empty_value)s:"""
+                        % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s >= '{form.s.%(control1)s}'")"""
                         % locals()
                     )
-                    
+
                     dev_lines.append(
-                        """%(indent)selif form.s.%(control1)s <= %(empty_value)s and form.s.%(control2)s > %(empty_value)s:""" % locals()
+                        """%(indent)selif form.s.%(control1)s <= %(empty_value)s and form.s.%(control2)s > %(empty_value)s:"""
+                        % locals()
                     )
                     dev_lines.append(
                         """%(indent)s%(indent)swhere_list.append(f"%(column)s <= '{form.s.%(control2)s}'")"""
@@ -1416,7 +1421,7 @@ class Q2Form:
         elif num_control:
             control1_value = num(control1_value)
             if control2_value:
-                control2_value = num(control2_value)                
+                control2_value = num(control2_value)
 
         if (control2_value is None) or control1_value == control2_value:
             if date_control or num_control or control1_value == "":
