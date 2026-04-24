@@ -923,9 +923,15 @@ class Q2Form:
         child_form.prev_form = self
         child_form.model.set_where(self.get_where_for_child(action))
         child_form.model.refresh()
+
         # child_form.show_mdi_modal_grid()
+        def _after_form_closed(parent_form=self, prev_worker=child_form.after_form_closed):
+            prev_worker()
+            parent_form.refresh(soft=True)
+
+        child_form.after_form_closed = _after_form_closed
         child_form.run()
-        self.refresh(soft=True)
+        # self.refresh(soft=True)
 
     def get_where_for_child(self, action):
         if self.current_row >= 0 and self.model.row_count() > 0:
