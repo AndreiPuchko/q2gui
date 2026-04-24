@@ -110,7 +110,7 @@ class DemoApp(Q2App):
 
     def show_form1(self):
         form = self.describe_form1()
-        form.show_mdi_modal_form()
+        form.run()
 
     def describe_form2(self):
         form = Q2Form("Second form")
@@ -135,7 +135,7 @@ class DemoApp(Q2App):
         return form
 
     def show_form2(self):
-        self.describe_form2().show_mdi_modal_form()
+        self.describe_form2().run()
 
     def describe_form3(self):
         form = Q2Form("Second form")
@@ -145,7 +145,7 @@ class DemoApp(Q2App):
 
     def show_form3(self):
         form = self.describe_form3()
-        form.show_mdi_modal_form()
+        form.run()
         # print(form.s.input)
 
     def describe_complex_form(self):
@@ -165,7 +165,7 @@ class DemoApp(Q2App):
         return form
 
     def show_complex_form(self):
-        self.describe_complex_form().show_mdi_modal_form()
+        self.describe_complex_form().run()
 
     def describe_form4(self):
         form = Q2Form("Grid form")
@@ -193,7 +193,7 @@ class DemoApp(Q2App):
 
     def show_grid_form(self):
         form = self.describe_grid_form()
-        form.show_mdi_modal_grid()
+        form.run()
 
     def show_hide_menubar(self):
         self.show_menubar(not self.is_menubar_visible())

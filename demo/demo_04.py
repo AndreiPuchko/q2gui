@@ -50,7 +50,7 @@ class DemoApp(Q2App):
         form.model.set_records(links)
         form.build_grid_view_auto_form()
         form.actions.add_action(text="Download", worker=lambda: self.load_and_show_file(form), hotkey="F3")
-        form.show_mdi_modal_grid()
+        form.run()
 
     def load_and_show_file(self, form: Q2App):
         url = form.r.link  # get current row column data
@@ -67,7 +67,7 @@ class DemoApp(Q2App):
         model = q2working(lambda: Q2CsvModel(csv_file_object=csv_file_object), "Loading CSV data")
         form.set_model(model)
         form.build_grid_view_auto_form()
-        form.show_mdi_modal_grid()
+        form.run()
 
 
 def demo():

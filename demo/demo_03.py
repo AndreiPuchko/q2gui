@@ -60,7 +60,7 @@ class DemoApp(Q2App):
         form.actions.add_action(
             "Show Period value", worker=lambda: q2Mess(f"{form.r.Period}"), hotkey="F4"
         )
-        form.show_mdi_modal_grid()
+        form.run()
 
 
 def demo():

@@ -106,12 +106,12 @@ class DemoApp(Q2App):
 
     def show_grid_form(self):
         form = self.describe_grid_form()
-        form.show_mdi_modal_grid()
+        form.run()
 
     def mdi_non_modal(self):
         wait_window = Q2Form("wai")
         wait_window.add_control(label="333333333333")
-        wait_window.show_mdi_form()
+        wait_window.run()
 
 
 def demo():

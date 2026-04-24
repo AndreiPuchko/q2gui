@@ -106,7 +106,7 @@ class DemoApp(Q2App):
         return form
 
     def customers(self):
-        self.form_customers().show_mdi_modal_grid()
+        self.form_customers().run()
 
 
 def demo():
