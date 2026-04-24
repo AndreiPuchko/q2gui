@@ -9,6 +9,10 @@ from q2db.cursor import Q2Cursor
 
 from q2gui import Q2App, Q2Form
 
+from q2gui.q2app import load_q2engine
+
+load_q2engine(globals(), "PyQt6")
+
 
 class dataSchema(Q2DbSchema):
     def __init__(self):
