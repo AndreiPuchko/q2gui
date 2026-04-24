@@ -86,7 +86,7 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         if isinstance(self.to_form, Q2Form):
             if not self.get.is_readonly():
                 self.to_form.add_action(
-                    q2app.ACTION_SELECT_TEXT,
+                    tr(q2app.ACTION_SELECT_TEXT),
                     self.show_related_form_result,
                     hotkey="Enter",
                     tag="select",
