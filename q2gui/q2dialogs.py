@@ -26,7 +26,10 @@ def _(s):
 
 
 def tr(s):
-    return q2app.q2_app.i18n.tr(s)
+    if hasattr(q2app.q2_app, "i18n"):
+        return q2app.q2_app.i18n.tr(s)
+    else:
+        return s
 
 
 
