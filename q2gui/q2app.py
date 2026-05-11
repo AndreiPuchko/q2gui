@@ -674,15 +674,16 @@ class Q2App:
         re_ordered_list = []
         for x in tmp_list:
             # add node element for menu
-            menu_node = "|".join(x.split("|")[:-1])
-            if menu_node not in re_ordered_list:
-                re_ordered_list.append(menu_node)
-                tmp_dict[menu_node] = {
-                    "TEXT": menu_node,
-                    "WORKER": None,
-                    "BEFORE": None,
-                    "TOOLBAR": None,
-                }
+            for y in range(x.count("|")):
+                menu_node = "|".join(x.split("|")[:y + 1])
+                if menu_node not in re_ordered_list:
+                    re_ordered_list.append(menu_node)
+                    tmp_dict[menu_node] = {
+                        "TEXT": menu_node,
+                        "WORKER": None,
+                        "BEFORE": None,
+                        "TOOLBAR": None,
+                    }
             if tmp_dict[x].get("BEFORE") in re_ordered_list:
                 re_ordered_list.insert(re_ordered_list.index(tmp_dict[x].get("BEFORE")), x)
             else:
