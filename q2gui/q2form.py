@@ -864,8 +864,8 @@ class Q2Form:
                 else:
                     widget_text = self._model_record[x]
 
-                if _meta[x]["check"]:
-                    if _meta[x]["num"]:
+                if _meta[x].get("check"):
+                    if _meta[x].get("num"):
                         value = num(self._model_record[x])
                     else:
                         value = self._model_record[x]
