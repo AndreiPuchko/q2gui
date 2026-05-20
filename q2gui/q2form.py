@@ -29,6 +29,11 @@ def tr(s):
     return q2app.q2_app.i18n.tr(s)
 
 
+_("VIEW")
+_("NEW")
+_("COPY")
+_("EDIT")
+
 VIEW = "VIEW"
 NEW = "NEW"
 COPY = "COPY"
@@ -791,7 +796,7 @@ class Q2Form:
         """mode - VIEW, NEW, COPY, EDIT"""
         self.crud_mode = mode
         self.add_crud_buttons(mode)
-        self.crud_form = self._Q2FormWindow_class(self, f"{self.title}.[{mode}]")
+        self.crud_form = self._Q2FormWindow_class(self, f"{self.title}.[{tr(mode)}]")
         self.crud_form.is_crud = True
         self.crud_form.build_form()
         self.set_crud_form_data(mode)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 23:35+0200\n"
+"POT-Creation-Date: 2026-05-20 12:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,7 +153,7 @@ msgid "OK"
 msgstr ""
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:155
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:81
 msgid "Cancel"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgid "Order"
 msgstr ""
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:185
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:497
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:502
 msgid "Filter"
 msgstr ""
 
@@ -288,70 +288,86 @@ msgid "Copy %s?"
 msgstr ""
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:207
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:902
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:903
 msgid "Open file"
 msgstr ""
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:208
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:906
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:907
 msgid "Save file"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:898
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:899
 msgid "Select folder"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:41
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:44
 msgid "Message"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:81
 msgid "Question"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:78
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:81
 msgid "Ok"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:175
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:298
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:178
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:301
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:304
 msgid "Wait..."
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:189
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:32
+msgid "VIEW"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:33
+msgid "NEW"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:34
+msgid "COPY"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:35
+msgid "EDIT"
+msgstr ""
+
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:194
 msgid "Refreshing..."
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:373
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:378
 msgid "Move up"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:376
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:381
 msgid "Move down"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:429
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:434
 msgid "Renumber sequence"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1232
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1239
 msgid "Font color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1235
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1242
 msgid "Background color"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1247
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1254
 msgid "Reset colors"
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1261
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1268
 msgid "Foreground color is not valid! "
 msgstr ""
 
-#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1268
+#: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:1275
 msgid "Background color is not valid! "
 msgstr ""
 
