@@ -766,6 +766,8 @@ class Q2Form:
             if x.startswith("/"):
                 continue
             widget = form.widgets[x]
+            if widget.meta.get("column", "").startswith("/"):
+                continue
             if widget.meta.get("control") in NO_DATA_WIDGETS:
                 continue
 
@@ -1716,7 +1718,7 @@ class Q2FormWindow:
 
         if controls == []:
             controls = self.q2_form.get_controls()
-        # set deafault layout to Form if first line not a layout def
+        # set default layout to Form if first line not a layout def
         if controls and not controls[0].get("column", "").startswith("/"):
             controls.insert(0, {"column": "/f"})
         # Create widgets
