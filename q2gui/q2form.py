@@ -668,13 +668,13 @@ class Q2Form:
                     continue
                 if self.model.delete(row, refresh=False) is not True and show_error_messages:
                     if selected_rows.index(row) == len(selected_rows) - 1:
-                        self._q2dialogs.q2Mess(self.model.get_data_error())
+                        self._q2dialogs.q2Mess(self.get_data_error())
                     else:
                         if (
                             self._q2dialogs.q2AskYN(
                                 tr(q2app.REMOVE_RECORD_ERROR_TEXT)
                                 + "<br>"
-                                + self.model.get_data_error()
+                                + self.get_data_error()
                                 + "<br>"
                                 + tr(q2app.ASK_ROWS_REMOVING_ERRORS_SUPRESS)
                             )
@@ -690,6 +690,9 @@ class Q2Form:
                 self.current_column = -1
             self.set_grid_index(row)
             self.refresh_children()
+
+    def get_data_error(self):
+        return self.model.get_data_error()
 
     def get_grid_selected_rows(self):
         return self.grid_form.get_grid_selected_rows()
@@ -721,7 +724,7 @@ class Q2Form:
                 self.current_row = -1
             self.set_grid_index(ncr)
         if rez is False:
-            self._q2dialogs.q2Mess(self.model.get_data_error())
+            self._q2dialogs.q2Mess(self.get_data_error())
         else:
             if self.crud_mode == COPY:
                 self.copy_children_data()
