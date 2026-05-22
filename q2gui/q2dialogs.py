@@ -32,7 +32,6 @@ def tr(s):
         return s
 
 
-
 def center_window(form: Q2Form):
     w, h = q2app.q2_app.get_size()
     h -= q2app.q2_app.get_stdout_height()
@@ -41,8 +40,8 @@ def center_window(form: Q2Form):
     form.form_stack[0].set_position(int(w * 0.25), int(h * 0.15))
 
 
-def q2Mess(mess="", title=tr("Message"), html=True):
-    form = Q2Form(title)
+def q2Mess(mess="", title="Message", html=True):
+    form = Q2Form(tr(title))
     form.do_not_save_geometry = True
     form.add_control("/v")
     if isinstance(mess, dict) or isinstance(mess, list):
