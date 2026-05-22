@@ -88,6 +88,15 @@ class q2splitter(QSplitter):
                     if widgget.meta.get("control") == "toolbar":
                         init_sizes[x] = str(widgget.sizeHint().height())
                 sizes = ",".join(init_sizes)
+        else:
+            if (delta := self.count()-len(sizes.split(","))) > 0:
+                nsizes = [int_(x) for x in sizes.split(",")]
+                oldsize = sum(nsizes)
+                nsizes = [int_(x/2) for x in nsizes]
+                deltasize = oldsize - sum(nsizes)
+                sizes=",".join([f"{x}" for x in nsizes])
+                for x in range(delta):
+                    sizes += f",{int_(deltasize/delta)}"
         if sizes:
             sizes = [int(x) for x in sizes.split(",")]
             self.setSizes(sizes)
