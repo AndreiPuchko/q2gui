@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "q2gui"
-version = "0.1.224"
+version = "0.1.225"
 description = "Python GUI toolkit"
 authors = ["Andrei Puchko <andrei.puchko@gmx.de>"]
 license = "Apache 2.0"
