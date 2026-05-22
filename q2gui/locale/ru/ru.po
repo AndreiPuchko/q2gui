@@ -299,9 +299,8 @@ msgid "Save file"
 msgstr "Сохранить файл"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:899
-#, fuzzy
 msgid "Select folder"
-msgstr "Выбрано"
+msgstr "Выбор папки"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:44
 msgid "Message"
@@ -346,7 +345,6 @@ msgid "Move up"
 msgstr "Сдвинуть выбранные строки вверх"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:381
-#, fuzzy
 msgid "Move down"
 msgstr "Сдвинуть выбранные строки вниз"
 
@@ -384,7 +382,6 @@ msgid "Find next"
 msgstr "Найти следудующее"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:258
-#, fuzzy
 msgid "Find previous"
 msgstr "Найти предыдущую"
 

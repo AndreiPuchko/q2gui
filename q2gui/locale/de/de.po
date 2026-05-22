@@ -300,9 +300,8 @@ msgid "Save file"
 msgstr "Datei speichern"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2app.py:899
-#, fuzzy
 msgid "Select folder"
-msgstr "Ausgewählt"
+msgstr "Ordner auswählen"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2dialogs.py:44
 msgid "Message"
@@ -344,12 +343,11 @@ msgstr "Aktualisierung..."
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:378
 msgid "Move up"
-msgstr "Ausgewählten Zeilen nach oben Verschieben "
+msgstr "Nach oben schieben"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:381
-#, fuzzy
 msgid "Move down"
-msgstr "Ausgewählten Zeilen nach unten Verschieben "
+msgstr "Nach unten schieben"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\q2form.py:434
 msgid "Renumber sequence"
@@ -385,7 +383,6 @@ msgid "Find next"
 msgstr "Finde nächste"
 
 #: C:\Users\andre\Desktop\dev\q2\q2gui\q2gui\pyqt6\widgets\q2code.py:258
-#, fuzzy
 msgid "Find previous"
 msgstr "Finde vorherige"
 
