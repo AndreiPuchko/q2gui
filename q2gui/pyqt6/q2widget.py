@@ -27,6 +27,10 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
     def __init__(self, meta={}):
         super().__init__()
         q2widget.Q2Widget.__init__(self, meta)
+        if self.meta.get("form"):
+            self._font = self.meta["form"].q2_app.font()
+        else:
+            self._font = self.font()
         if self.meta.get("margins"):
             self.apply_meta_margins()
         else:
@@ -117,7 +121,10 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
                 # self.setMaximumWidth(QFontMetrics(self.font()).width(char) * width)
-                self.setMaximumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
+                if hasattr(self, "_font"):
+                    self.setMaximumWidth(int(QFontMetrics(self._font).horizontalAdvance(char) * width))
+                else:
+                    self.setMaximumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
                 self.setMaximumWidth(int(width))
 
@@ -125,7 +132,10 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         width = self._check_min_width(width)
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
-                self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
+                if hasattr(self, "_font"):
+                    self.setMinimumWidth(int(QFontMetrics(self._font).horizontalAdvance(char) * width))
+                else:
+                    self.setMinimumWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
                 self.setMinimumWidth(int(width))
 
@@ -133,14 +143,21 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         width = self._check_min_width(width)
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
-                self.setFixedWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
+                if hasattr(self, "_font"):
+                    self.setFixedWidth(int(QFontMetrics(self._font).horizontalAdvance(char) * width))
+                else:
+                    self.setFixedWidth(int(QFontMetrics(self.font()).horizontalAdvance(char) * width))
             else:
                 self.setFixedWidth(int(width))
 
     def set_fixed_height(self, height=1, char="O"):
         if self.meta.get("control", "") not in ("radio", "check"):
             if char != "":
-                self.setFixedHeight(int(QFontMetrics(self.font()).height() * height * 1.6))
+                # self.setFixedHeight(int(QFontMetrics(self._font()).height() * height * 1.6))
+                if hasattr(self, "_font"):
+                    self.setFixedHeight(int(QFontMetrics(self._font).height() * height * 1.6))
+                else:
+                    self.setFixedHeight(int(QFontMetrics(self.font()).height() * height * 1.6))
             else:
                 self.setFixedHeight(int(height))
 
@@ -183,7 +200,13 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         return self.sizeHint().height()
 
     def set_maximum_height(self, height, char="O"):
-        self.setMaximumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * height * 1.3))
+        kf = 1.4
+        if hasattr(self, "_font"):
+            self.setMaximumHeight(int(QFontMetrics(self._font).boundingRect(char).height() * height * kf))
+            self.setMinimumHeight(int(QFontMetrics(self._font).boundingRect(char).height() * 3 * kf))
+        else:
+            self.setMaximumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * height * kf))
+            self.setMinimumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * 3 * kf))
 
     # def fix_default_width(self):
     #     self.set_maximum_width(self.get_default_width())
