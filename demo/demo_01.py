@@ -232,7 +232,7 @@ class DemoApp(Q2App):
         form.add_control("/")
 
         if form.add_control("/t", "Tab3"):
-            if form.add_control("/h"):
+            if form.add_control("/h", "-"):
                 form.add_control("", "Label on tab3")
                 form.add_control("z1", "Decimal input", datatype="dec", datalen=15, datadec=2, pic="F")
                 form.add_control("/s")

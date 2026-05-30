@@ -41,7 +41,7 @@ class q2frame(QGroupBox, Q2Widget, Q2Frame):
         if meta.get("label", "") == "":
             self.hide_border()
         elif meta.get("label", "") == "-":
-            self.setStyleSheet("QGroupBox {border:1px solid lightgray}")
+            self.setObjectName("title")
 
     def hide_border(self):
         self.setObjectName("grb")
