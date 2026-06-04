@@ -33,11 +33,11 @@ class q2time(QTimeEdit, Q2Widget):
 
     def set_text(self, text):
         if text.count(":") == 2:
-            self.setTime(QTime.fromString(text, "HH:mm:ss"))
+            self.setTime(QTime.fromString(text, "h:m:s"))
         elif text.count(":") == 1:
-            self.setTime(QTime.fromString(text, "HH:mm"))
+            self.setTime(QTime.fromString(text, "h:m"))
         else:
-            self.setTime(QTime.fromString(text, "HH"))
+            self.setTime(QTime.fromString(text, "h"))
 
     def get_text(self):
         return self.text()
