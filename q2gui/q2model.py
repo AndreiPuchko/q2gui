@@ -261,6 +261,8 @@ class Q2Model:
                     value = 1
                 tmp_list = meta.get("pic").split(";")
                 value = tmp_list[int(num(value)) - 1] if int(num(value)) - 1 < len(tmp_list) else "****"
+            elif meta["datatype"] == "time" and ":" in value:
+                value = ":".join(f"{int(x):02}" for x in value.split(":"))
             elif meta["datatype"] == "date":
                 try:
                     if value == "0001-01-01":
