@@ -1995,7 +1995,7 @@ class Q2FormWindow:
             for count, x in enumerate(self.q2_form.model.headers):
                 data = q2app.q2_app.settings.get(self.window_title, f"grid_column__'{x}'")
                 if data == "":
-                    c_w = 0
+                    c_w = q2app.GRID_COLUMN_WIDTH
                     meta = self.q2_form.model.meta[count]
                     if int_(meta.get("datalen", 0)):
                         if "date" in meta.get("datatype", ""):
@@ -2007,8 +2007,6 @@ class Q2FormWindow:
                             c_w = max([len(opt) for opt in meta.get("pic", "").split(";")])
                         elif not meta.get("relation", "") and "radio" not in meta.get("control", ""):
                             c_w = max(int_(meta.get("datalen")), len(meta.get("label", "")))
-                        else:
-                            c_w = q2app.GRID_COLUMN_WIDTH
                     c_w = int(q2app.q2_app.get_char_width() * (min(c_w, q2app.GRID_COLUMN_WIDTH)))
                     data = f"{count}, {c_w}"
                 if len(self.q2_form.model.headers) == 1:
