@@ -172,6 +172,26 @@ class Q2Form:
 
         return self
 
+    def get_order(self):
+        if self.model:
+            return self.model.get_order()
+
+    def set_order(self, order="", refresh=True):
+        if self.model:
+            self.model.set_order(order)
+            if refresh:
+                self.model.refresh()
+
+    def get_where(self):
+        if self.model:
+            return self.model.get_where()
+
+    def set_where(self, where="", refresh=True):
+        if self.model:
+            self.model.set_where(where)
+            if refresh:
+                self.model.refresh()
+
     def show_progressbar(self, title="", count=""):
         return self._q2dialogs.Q2WaitShow(title, count)
 
@@ -1002,6 +1022,10 @@ class Q2Form:
             if is_refresh:
                 self.grid_index_changed()
 
+    def get_grid_index(self):
+        if self.grid_form:
+            return self.grid_form.get_grid_index()
+
     def move_grid_index(self, mode):
         self.grid_form.move_grid_index(mode)
 
@@ -1676,7 +1700,8 @@ class Q2FormWindow:
             self.set_grid_index(self.get_grid_row_count(), self.get_grid_index()[1])
 
     def set_grid_index(self, row=0, col=0):
-        self.widgets["form__grid"].set_index(row, col)
+        if grid := self.widgets.get("form__grid"):
+            grid.set_index(row, col)
 
     def get_grid_index(self):
         return self.widgets["form__grid"].current_index()
