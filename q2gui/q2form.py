@@ -60,6 +60,7 @@ class Q2Form:
         self.grid_navi_actions = []
         self.controls = q2app.Q2Controls()
         self.system_controls = q2app.Q2Controls()
+        self.ext_system_controls = q2app.Q2Controls()
         self.non_modal = None
         self.model = None
         self.db = None
@@ -298,6 +299,7 @@ class Q2Form:
 
     def get_form_widget(self, title=""):
         form_widget = self._Q2FormWindow_class(self, title)
+        self.before_form_build()
         form_widget.build_form()
         return form_widget
 
@@ -579,6 +581,8 @@ class Q2Form:
         buttons = q2app.Q2Controls()
         buttons.add_control("/")
         buttons.add_control("/h", "-")
+        if self.ext_system_controls:
+            buttons += self.ext_system_controls
         buttons.add_control("/s")
         if self.ok_button:
             buttons.add_control(
@@ -606,6 +610,8 @@ class Q2Form:
         buttons = q2app.Q2Controls()
         buttons.add_control("/")
         buttons.add_control("/h", "-", tag="crud_buttons")
+        if self.ext_system_controls:
+            buttons += self.ext_system_controls
         if not self.no_view_action:
             buttons.add_control(
                 column="_prev_button",
@@ -831,6 +837,7 @@ class Q2Form:
     def show_crud_form(self, mode, modal=""):
         """mode - VIEW, NEW, COPY, EDIT"""
         self.crud_mode = mode
+        self.before_form_build()
         self.add_crud_buttons(mode)
         self.crud_form = self._Q2FormWindow_class(self, f"{self.title}.[{tr(mode)}]")
         self.crud_form.is_crud = True
@@ -1031,7 +1038,7 @@ class Q2Form:
 
     def get_controls(self):
         self.add_ok_cancel_buttons()
-        self.before_form_build()
+        # self.before_form_build()
         return self.controls + self.system_controls
 
     def when(self):
