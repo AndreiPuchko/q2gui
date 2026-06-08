@@ -238,8 +238,9 @@ class Q2Actions(list):
 
     def run(self, text):
         for action in self:
-            if text == action["text"]:
+            if text.upper() == action["text"].upper():
                 action["_worker"]()
+                break
 
     def set_visible(self, text, mode=True):
         for action in self:
@@ -309,11 +310,14 @@ class Q2Actions(list):
     #             kvargs[x] = locals()[x]
     #     self.action_list.insert(before, kvargs)
 
-    # def removeAction(self, text):
-    #     actionIndex = safe_index([x["text"] for x in self.action_list], text)
-    #     if actionIndex is not None:
-    #         self.action_list.pop(actionIndex)
-    pass
+    def remove_action(self, text):
+        actionIndex = None
+        for index, action in enumerate(self):
+            if text.upper() == action["text"].upper():
+                actionIndex = index
+                break
+        if actionIndex is not None:
+            self.pop(actionIndex)
 
 
 class Q2Controls(list):

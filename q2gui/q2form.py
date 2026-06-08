@@ -121,6 +121,9 @@ class Q2Form:
                 x["_worker"]()
                 break
 
+    def remove_action(self, text=""):
+        self.actions.remove_action(text)
+
     def get_action_form(self, action=""):
         return self.a.__getattr__(action).get("child_form_object")
 
@@ -129,6 +132,12 @@ class Q2Form:
 
     def enable_action(self, text="", mode=True):
         self.actions.set_enabled(text, mode)
+
+    def hide_action(self, text="", mode=True):
+        self.actions.set_visible(text, not mode)
+
+    def show_action(self, text="", mode=True):
+        self.actions.set_visible(text, mode)
 
     def run_modalless(self, order="", where=""):
         return self.run(order, where, "")
