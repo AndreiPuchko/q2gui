@@ -203,10 +203,10 @@ class Q2Widget(QWidget, q2widget.Q2Widget):
         kf = 1.4
         if hasattr(self, "_font"):
             self.setMaximumHeight(int(QFontMetrics(self._font).boundingRect(char).height() * height * kf))
-            self.setMinimumHeight(int(QFontMetrics(self._font).boundingRect(char).height() * 3 * kf))
+            # self.setMinimumHeight(int(QFontMetrics(self._font).boundingRect(char).height() * 3 * kf))
         else:
             self.setMaximumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * height * kf))
-            self.setMinimumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * 3 * kf))
+            # self.setMinimumHeight(int(QFontMetrics(self.font()).boundingRect(char).height() * 3 * kf))
 
     # def fix_default_width(self):
     #     self.set_maximum_width(self.get_default_width())
