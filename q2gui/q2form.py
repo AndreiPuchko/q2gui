@@ -106,6 +106,7 @@ class Q2Form:
         self.last_current_row = -1
         self.last_current_column = -1
         self.seq_column = "seq"
+        self._row_to_be_deleted = None
 
         # Must be called in subclass
         # self.on_init()
@@ -663,10 +664,11 @@ class Q2Form:
             for row in selected_rows:
                 if waitbar:
                     waitbar.step(1000)
-
+                self._row_to_be_deleted = row
                 if self.before_delete() is False:
                     continue
-                if self.model.delete(row, refresh=False) is not True and show_error_messages:
+                is_deleted = self.model.delete(row, refresh=False)
+                if is_deleted is not True and show_error_messages:
                     if selected_rows.index(row) == len(selected_rows) - 1:
                         self._q2dialogs.q2Mess(self.get_data_error())
                     else:
@@ -681,7 +683,9 @@ class Q2Form:
                             == 2
                         ):
                             show_error_messages = False
-                self.after_delete()
+                if is_deleted:
+                    self.after_delete()
+                self._row_to_be_deleted = None
             if waitbar:
                 waitbar.close()
             self.model.refresh()
