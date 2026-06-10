@@ -30,9 +30,11 @@ class q2sheet(QTableWidget, Q2Widget):
         super().__init__(meta)
         self.column_headers = []
         self.row_headers = []
-        # print()
         self.selection_background_color = "yellow"
-        self.selection_background_color = self.palette().color(QPalette.ColorRole.Highlight).toRgb().name()
+        self.selection_font_color = "black"
+        if self.meta.get("form"):
+            self.selection_background_color = self.meta["form"].q2_app.q2style.get_styles()["background_focus"]
+            self.selection_font_color = self.meta["form"].q2_app.q2style.get_styles()["color_focus"]
         self.horizontalHeader().setMinimumSectionSize(0)
         self.verticalHeader().setMinimumSectionSize(0)
         self.auto_expand = False
@@ -315,15 +317,19 @@ class q2sheet(QTableWidget, Q2Widget):
             if (row, column) in [(x.row(), x.column()) for x in self.selectedIndexes()]:
                 if isinstance(style_text, dict):
                     style_text["background-color"] = self.selection_background_color
+                    style_text["color"] = self.selection_font_color
                 elif isinstance(style_text, str):
                     style_text += f";background-color:{self.selection_background_color};"
+                    style_text += f";color:{self.selection_font_color};"
                 else:  # None - using self.cell_styles
                     style_text = dict(self.sheet_styles)
                     style_text.update(self.cell_styles.get(cell_key, {}))
                     style_text["background-color"] = self.selection_background_color
+                    style_text["color"] = self.selection_font_color
             else:
                 if isinstance(style_text, str):
                     style_text = style_text.replace(f"background-color:{self.selection_background_color}", "")
+                    style_text = style_text.replace(f"color:{self.selection_font_color}", "")
                 elif style_text is None:
                     style_text = dict(self.sheet_styles)
                     style_text.update(self.cell_styles.get(cell_key, {}))
