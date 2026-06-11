@@ -71,8 +71,8 @@ class Q2Frame(q2window.Q2Frame):
     def set_mode(self, mode="v"):
         self.splitter = None
         super().set_mode(mode=mode)
-        if mode in ("h", "f"):
-            self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        # if mode in ("h", "f"):
+        #     self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         if self.layout() is not None:
             return
         self.setLayout(layout(mode))
