@@ -87,7 +87,6 @@ class q2code(QsciScintilla, Q2Widget):
 
         self.setEdgeColor(QColor("#555555"))  # Темно-серый
 
-
         if self.meta.get("valid"):
             self.textChanged.connect(self.valid)
         self.gotoline_widget = GoToLineWidget(self)
@@ -120,7 +119,6 @@ class q2code(QsciScintilla, Q2Widget):
             self.setEdgeColumn(visual_column)
         else:
             self.setEdgeMode(QsciScintilla.EdgeMode.EdgeNone)
-
 
     def define_highlights(self):
         self.searchIndicator = QsciScintilla.INDIC_CONTAINER
@@ -294,7 +292,15 @@ class q2code(QsciScintilla, Q2Widget):
                 x.setVisible(False)
 
     def show_find(self):
-        self.find_widget.show_find(self.selectedText())
+        if self.selectedText():
+            search_text = self.selectedText()
+        else:
+            if hasattr(q2app.q2_app, "last_search_text"):
+                search_text = q2app.q2_app.last_search_text
+            else:
+                search_text = ""
+
+        self.find_widget.show_find(search_text)
 
     def find_next_(self):
         self.find_widget._next()
@@ -387,6 +393,7 @@ class q2code(QsciScintilla, Q2Widget):
         return self._find(text, False)
 
     def _find(self, text, direction):
+        q2app.q2_app.last_search_text = text
         return self.findFirst(text, False, False, False, False, direction)
 
     def replace_one(self, text1, text2):
