@@ -423,9 +423,14 @@ class q2code(QsciScintilla, Q2Widget):
         return {"hash": md5(self.text().encode()).hexdigest(), "folds": state}
 
     def set_fold_state(self, state):
+        if not isinstance(state, dict):
+            return False
+        
         text_hash = md5(self.text().encode()).hexdigest()
 
-        if text_hash != state["hash"]:
+        if text_hash != state.get("hash"):
+            return False
+        if "folds" not in state:
             return False
 
         self.SendScintilla(self.SCI_FOLDALL, self.SC_FOLDACTION_EXPAND)
