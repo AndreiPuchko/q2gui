@@ -22,6 +22,7 @@ from PyQt6.QtCore import Qt, QTimer, QSize, QRegularExpression
 
 from q2gui.pyqt6.q2widget import Q2Widget
 from q2gui.q2utils import int_
+from hashlib import md5
 
 
 def _(s):
@@ -412,6 +413,27 @@ class q2code(QsciScintilla, Q2Widget):
             self.gotoline_widget.hide()
             return
         super().keyPressEvent(e)
+
+    def get_fold_state(self):
+        state = []
+
+        for line in range(self.lines()):
+            if not self.SendScintilla(self.SCI_GETFOLDEXPANDED, line):
+                state.append(line)
+        return {"hash": md5(self.text().encode()).hexdigest(), "folds": state}
+
+    def set_fold_state(self, state):
+        text_hash = md5(self.text().encode()).hexdigest()
+
+        if text_hash != state["hash"]:
+            return False
+
+        self.SendScintilla(self.SCI_FOLDALL, self.SC_FOLDACTION_EXPAND)
+
+        for line in state["folds"]:
+            self.SendScintilla(self.SCI_FOLDLINE, line, self.SC_FOLDACTION_CONTRACT)
+
+        return True
 
 
 class FindWidget(QWidget):
