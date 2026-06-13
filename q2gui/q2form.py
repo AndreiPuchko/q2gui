@@ -1110,6 +1110,10 @@ class Q2Form:
         index=None,
         hotkey="",
         style="",
+        grid_row=0,
+        grid_column=0,
+        grid_row_span=0,
+        grid_column_span=0,
         **args,
     ):
         """Adds a new control(widget) into the form
@@ -1784,9 +1788,22 @@ class Q2FormWindow:
             meta = q2app.Q2Controls.validate(meta)
             current_frame = frame_stack[-1]
             # do not add widget if it is not first tabpage on the form
-            if not (meta.get("column", "") == ("/t") and self.tab_widget is not None):
+            column = meta.get("column", "")
+            if not (column == ("/t") and self.tab_widget is not None):
                 # get widgets to add
                 label2add, widget2add = self.widget(meta)
+                if current_frame.frame_mode == "g":
+                    # move grid coordinats to label
+                    if label2add:
+                        for x in ["grid_row", "grid_column"]:
+                            if meta.get(x):
+                                label2add.meta[x] = meta[x]
+                                if widget2add:
+                                    del widget2add.meta[x]
+                    elif widget2add:
+                        for x in ["grid_row", "grid_column"]:
+                            if meta.get(x):
+                                widget2add.meta[x] = meta[x]
 
                 if current_frame.frame_mode == "f":  # form layout
                     # if label2add is not None:
@@ -1815,7 +1832,7 @@ class Q2FormWindow:
                         else:
                             current_frame.add_widget(label2add)
                     if widget2add is not None:
-                        if meta.get("column", "") in ("/vr", "/hr"):  # scroller
+                        if column in ("/vr", "/hr"):  # scroller
                             scroller = self._get_widget("scroller")({"widget": widget2add})
                             current_frame.add_widget(scroller)
                         else:
@@ -1828,7 +1845,7 @@ class Q2FormWindow:
                     self.hotkey_widgets[meta.get("hotkey")] = []
                 self.hotkey_widgets[meta.get("hotkey")].append(widget2add)
             # Special cases
-            if meta.get("column", "") == ("/t"):
+            if column == ("/t"):
                 if self.tab_widget is None:
                     self.tab_widget = widget2add
                     frame_stack.append(widget2add)
@@ -1839,16 +1856,16 @@ class Q2FormWindow:
                 tmp_frame = self.widget({"column": "/v"})[1]
                 self.tab_widget.add_tab(tmp_frame, meta.get("label", ""))
                 frame_stack.append(tmp_frame)
-            elif meta.get("column", "") == ("/s"):
+            elif column == ("/s"):
                 continue  # do not touch - see elif +2
-            elif meta.get("column", "") == "/":
+            elif column == "/":
                 if len(frame_stack) > 1:
                     frame_stack.pop()
                     # Remove tab widget if it is at the end of stack
                     if "q2tab.q2tab" in f"{type(frame_stack[-1])}":
                         self.tab_widget = None
                         frame_stack.pop()
-            elif meta.get("column", "").startswith("/"):
+            elif column.startswith("/"):
                 frame_stack.append(widget2add)
 
         if len(self.tab_widget_list) > 1:
@@ -1901,7 +1918,7 @@ class Q2FormWindow:
             if not hasattr(widget2add, "meta"):
                 setattr(widget2add, "meta", meta)
         else:  # Special cases
-            if column[:2] in ("/h", "/v", "/f"):  # frame
+            if column[:2] in ("/h", "/v", "/f", "/g"):  # frame
                 control = "frame"
                 class_name = "frame"
                 label2add = None

@@ -35,7 +35,7 @@ class Q2Frame:
     def add_widget(self, widget=None, label=None):
         if widget is None:
             return
-        if self.frame_mode in ["v", "h"]:
+        if self.frame_mode in ["v", "h", "g"]:
             widget.frame = self
             self.insert_widget(len(self._widgets_list), widget)
 

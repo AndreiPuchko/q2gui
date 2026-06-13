@@ -396,6 +396,10 @@ class Q2Controls(list):
         index=None,
         hotkey="",
         style="",
+        grid_row=0,
+        grid_column=0,
+        grid_row_span=0,
+        grid_column_span=0,
         **args,
     ):
         meta = locals().copy()
