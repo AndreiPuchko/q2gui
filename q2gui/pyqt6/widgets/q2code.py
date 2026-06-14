@@ -211,7 +211,9 @@ class q2code(QsciScintilla, Q2Widget):
             self.setLexer(self.lexer)
 
     def set_custom_autocompletition_list(self, custom_autocompletions_list=[]):
-        custom_autocompletions_list = self.meta["form"].q2_app.get_autocompletition_list()
+        custom_autocompletions_list = (
+            q2app.q2_app.get_autocompletition_list() + self.meta["form"].get_autocompletition_list()
+        )
         self.__api = QsciAPIs(self.lexer)
         for ac in custom_autocompletions_list:
             self.__api.add(ac)
@@ -425,7 +427,6 @@ class q2code(QsciScintilla, Q2Widget):
     def set_fold_state(self, state):
         if not isinstance(state, dict):
             return False
-        
         text_hash = md5(self.text().encode()).hexdigest()
 
         if text_hash != state.get("hash"):

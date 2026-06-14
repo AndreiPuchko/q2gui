@@ -19,6 +19,7 @@ from q2gui.q2utils import int_, num, nums
 import re
 import html
 import json
+import inspect
 
 
 def _(s):
@@ -1507,6 +1508,30 @@ class Q2Form:
     def set_disabled(self, mode=True):
         for x in self.widgets_list():
             x.set_disabled(mode)
+
+    def _get_api(self):
+        result = []
+
+        for name in dir(self):
+            if name.startswith("_"):
+                continue
+
+            member = getattr(self, name)
+
+            if callable(member):
+                try:
+                    sig = str(inspect.signature(member))
+                except Exception:
+                    sig = "()"
+                # doc = inspect.getdoc(member) or ""
+                result.append(f"form.{name}{sig}")
+            else:
+                result.append(f"form.{name}")
+
+        return result
+
+    def get_autocompletition_list(self):
+        return self._get_api()
 
 
 class Q2FormWindow:
