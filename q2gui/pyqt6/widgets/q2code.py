@@ -106,6 +106,7 @@ class q2code(QsciScintilla, Q2Widget):
         self.edge_timer.setSingleShot(True)
         self.edge_timer.timeout.connect(self.sync_edge_with_cursor)
         self.cursorPositionChanged.connect(lambda: self.edge_timer.start(100))
+        self.custom_context_action = []
 
     def sync_edge_with_cursor(self):
         line, col = self.getCursorPosition()
@@ -245,6 +246,15 @@ class q2code(QsciScintilla, Q2Widget):
         for x in self.actions():
             self.removeAction(x)
 
+    def add_action(self, text, worker, shortcuts):
+        self.custom_context_action.append(
+            (
+                text,
+                worker,
+                shortcuts if isinstance(shortcuts, list) else [shortcuts],
+            )
+        )
+
     def addAction(self, text, worker, shortcuts):
         _action = self.context_menu.addAction(text)
         _action.triggered.connect(worker)
@@ -286,6 +296,11 @@ class q2code(QsciScintilla, Q2Widget):
         self.addAction(_("Comment/uncomment line(s)"), self.perform_comment, ["Ctrl+3"])
 
         self.addAction(_("Autocomplete"), self.autoCompleteFromAll, ["Ctrl+Space"])
+
+        if self.custom_context_action:
+            self.context_menu.addSeparator()
+            for x in self.custom_context_action:
+                self.addAction(_(x[0]), x[1], x[2])
 
         self.addActions(self.context_menu.actions())
         for x in self.context_menu.actions():
