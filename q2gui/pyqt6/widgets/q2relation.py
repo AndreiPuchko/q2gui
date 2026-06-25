@@ -72,6 +72,8 @@ class q2relation(QFrame, Q2Widget, Q2Frame):
         self.button.set_style_sheet("margin:0em 0.3em;padding:0.0em 0.4em")
         self.layout().setSpacing(0)
         self.set_content_margins(0)
+        if self.meta.get("disabled"):
+            self.set_disabled()
 
     def setReadOnly(self, arg):
         if hasattr(self, "get"):
