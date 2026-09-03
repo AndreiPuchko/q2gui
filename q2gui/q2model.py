@@ -529,6 +529,9 @@ class Q2CursorModel(Q2Model):
         self.last_order_text = self.order_text
         return self
 
+    def get_order(self):
+        return self.cursor.order
+
     def set_where(self, where_text=""):
         self.cursor.set_where(where_text)
         self.refresh()
