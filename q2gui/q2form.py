@@ -1970,7 +1970,7 @@ class Q2FormWindow:
             # label2add = self._get_widget("check", "check")({"label": meta["label"], "stretch": 0})
             label2add = self._get_widget("check", "check")(
                 {
-                    "label": meta["label"] if meta["control"] != "check" else "Turn on",
+                    "label": meta["label"] if meta["control"] != "check" else tr("Turn on"),
                     "stretch": 0,
                 }
             )
