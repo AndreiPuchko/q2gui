@@ -562,6 +562,7 @@ class Q2Form:
                     "pk": meta["pk"],
                     "ai": meta["ai"],
                     "index": meta["index"],
+                    "uk": meta.get("uk", ""),
                 }
                 rez.append(column)
         return rez
