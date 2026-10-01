@@ -755,6 +755,8 @@ class Q2Form:
             rez = self.model.update(crud_data, self.current_row)
         else:
             rez = self.model.insert(crud_data, self.current_row, refresh=False)
+            pk = self.model.get_meta_primary_key()
+            self.s.__setattr__(pk, crud_data.get(pk))
             if self.crud_mode == COPY:
                 self.prepare_copy_children_data()
             self.model.refresh()
