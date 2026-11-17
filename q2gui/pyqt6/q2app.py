@@ -408,6 +408,11 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         if action:
             action.setEnabled(True)
 
+    def hide_menu(self, menu_path=""):
+        action = self._main_menu.get(menu_path)
+        if action:
+            action.setVisible(False)
+
     def moveEvent(self, ev):
         self.q2_toolbar.move(ev.pos(), ev.oldPos())
         return super().moveEvent(ev)
