@@ -651,8 +651,9 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         # text = text.strip().split("\n")[0][:50]
         self.q2_tabwidget.tabBar().setTabText(self.q2_tabwidget.currentIndex(), text)
         self.setUpdatesEnabled(False)
-        self.q2_tabwidget.tabBar().hide()
-        self.q2_tabwidget.tabBar().show()
+        if self.q2_tabwidget.tabBar().isVisible():
+            self.q2_tabwidget.tabBar().hide()
+            self.q2_tabwidget.tabBar().show()
         self.setUpdatesEnabled(True)
 
     def show_statusbar(self, mode=True):
