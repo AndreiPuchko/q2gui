@@ -127,6 +127,8 @@ class Q2Toolbars:
     def addAction(self, action, toolbar=""):
         if toolbar not in self.toolbars:
             self.toolbars[toolbar] = QToolBar()
+            if not self.visible:
+                self.toolbars[toolbar].hide()
             x = int_(self.q2_app.settings.get(f"toolbar-{toolbar}", "x", None))
             y = int_(self.q2_app.settings.get(f"toolbar-{toolbar}", "y", None))
             floating = self.q2_app.settings.get(f"toolbar-{toolbar}", "floating", None)
@@ -476,7 +478,8 @@ class Q2App(QMainWindow, q2app.Q2App, Q2QtWindow):
         self._main_menu = {}
         QMainWindow.menuBar(self).clear()
         self.q2_toolbar.clear()
-        QMainWindow.menuBar(self).show()
+        if self.is_menubar_visible():
+            QMainWindow.menuBar(self).show()
         for x in self.menu_list:
             _path = x["TEXT"]
             if _path == "" or _path in self._main_menu:
